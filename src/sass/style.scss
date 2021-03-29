@@ -1,4 +1,8 @@
 @charset "utf-8";
 
-//Import Bulma SASS files
+$primary: rgb(0, 141, 54);
+
+$family-primary: "Agency FB";
+
+// Import Bulma SASS files
 @import "./node_modules/bulma/bulma.sass";

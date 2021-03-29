@@ -1,8 +1,9 @@
 import React, { useState, useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBug, faHome, faBook, faMicroscope } from "@fortawesome/free-solid-svg-icons";
+import { faGithub } from "@fortawesome/free-brands-svg-icons";
 
-import smallLogo from "../assets/small-logo.svg";
+import smallLogo from "../assets/images/small-logo.svg";
 import Register from "./modals/Register";
 import LogIn from "./modals/LogIn";
 import BugReport from "./modals/BugReport";
@@ -10,7 +11,7 @@ import { ModalContext } from "../contexts/ModalContext";
 
 const Header = () => {
   const [burgerActive, setBurgerActive] = useState(false);
-  const [activeModal, setActiveModal] = useContext(ModalContext);
+  const [, setActiveModal] = useContext(ModalContext);
 
   return (
     <header>
@@ -74,6 +75,11 @@ const Header = () => {
 
           <div className="navbar-end">
             <div className="navbar-item">
+              <a href="https://github.com/tdherring/OSSAT-Frontend">
+                <FontAwesomeIcon icon={faGithub} className="mr-2 is-size-4 has-text-black" />
+              </a>
+            </div>
+            <div className="navbar-item">
               <div className="buttons">
                 <a
                   className="button is-primary"
@@ -99,9 +105,9 @@ const Header = () => {
           </div>
         </div>
       </nav>
-      <LogIn></LogIn>
-      <Register></Register>
-      <BugReport></BugReport>
+      <LogIn />
+      <Register />
+      <BugReport />
     </header>
   );
 };
