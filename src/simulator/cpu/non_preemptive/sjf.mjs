@@ -6,42 +6,55 @@ class SJF extends CPUScheduler {
   }
 
   /**
-   * Sorts the processes by burst time as required by SJF.
-   * If burst times of two processes same, take the one which is first lexographically.
-   */
-  sortProcessesByBurstTime() {
-    this.processes = this.processes.sort((a, b) => {
-      if (a.getBurstTime() > b.getBurstTime()) {
-        return 1;
-      } else if (a.getBurstTime() == b.getBurstTime()) {
-        if (a.getName() > b.getName()) {
-          return 1;
-        }
-      }
-      return -1;
-    });
-  }
-
-  /**
-   * Generator function. Dispatches the processes one at a time (with the given delay).
+   * Generator function. Dispatches the process queue one at a time (with the given delay).
    *
    * Uses an async method and Promise to achieve non-blocking sleep. This simulates the
    * duration of a CPU burst.
+   *
+   * @param verbose Show debugging information?
    */
-  async *dispatchProcesses() {
-    this.sortProcessesByBurstTime();
+  async *dispatchProcesses(verbose = false) {
+    verbose ? console.log("OSSAT-SJF\n-----------------------------------------") : null;
     let timeDelta = 0;
+    // A non blocking sleep Promise.
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+    let numIters = this.processQueue.length;
 
-    for (let i in this.processes) {
-      let p = this.processes[i];
+    for (let i = 0; i < numIters; i++) {
+      // The queue of waiting processes
+      let waitingQueue = this.getAvailableProcesses(this.processQueue, timeDelta);
+
+      // Are there any available process queue?
+      // Yes? - Take the shortest job first (left).
+      // No? - Take next job available (right).
+      waitingQueue.length != 0 ? (waitingQueue = this.sortProcessesByBurstTime(waitingQueue)) : (waitingQueue = this.sortProcessesByArrivalTime(this.processQueue));
+
+      let p = waitingQueue[0];
       let name = p.getName();
       let burstTime = p.getBurstTime();
       let arrivalTime = p.getArrivalTime();
 
+      // Check whether the CPU needs to idle for the next process.
+      if (arrivalTime > timeDelta) {
+        if (verbose) console.log("[" + timeDelta + "] CPU Idle...");
+        await sleep(((arrivalTime - timeDelta) * 1000) / this.speedMultiplier);
+        timeDelta += arrivalTime;
+      }
+
+      if (verbose) console.log("[" + timeDelta + "] Spawned Process", name);
+
+      // Simulate the actual execution of the process.
       await sleep((burstTime * 1000) / this.speedMultiplier);
+
+      // Keep track of the current time of execution.
       timeDelta += burstTime;
-      console.log("Process", name, "finished!");
+
+      if (verbose) console.log("[" + timeDelta + "] Process", name, "finished executing!");
+
+      // Remove the process that just finished executing.
+      this.processQueue = this.processQueue.filter((process) => process.name != name);
+
+      // Yield necessary values to the generator function caller.
       yield { processName: name, timeDelta: timeDelta, burstTime: burstTime, arrivalTime: arrivalTime };
     }
   }
@@ -51,14 +64,22 @@ class SJF extends CPUScheduler {
 
 let test_sjf = new SJF(1);
 
-test_sjf.createProcess("p1", 5, 0);
-test_sjf.createProcess("p2", 3, 2);
-test_sjf.createProcess("p3", 5, 1);
+test_sjf.createProcess("p1", 6, 2);
+test_sjf.createProcess("p2", 2, 5);
+test_sjf.createProcess("p3", 8, 3);
+test_sjf.createProcess("p4", 3, 3);
+test_sjf.createProcess("p5", 4, 4);
 
-let dispatcher = test_sjf.dispatchProcesses();
+let dispatcher = test_sjf.dispatchProcesses(true);
 
 // Can use .next() to step through the generator (this will be useful in the UI!)
 
-dispatcher.next().then((value) => console.log(value.value));
-dispatcher.next().then((value) => console.log(value.value)));
-dispatcher.next().then((value) => console.log(value.value));
+// dispatcher.next().then((value) => console.log(value.value));
+// dispatcher.next().then((value) => console.log(value.value));
+// dispatcher.next().then((value) => console.log(value.value));
+
+dispatcher.next();
+dispatcher.next();
+dispatcher.next();
+dispatcher.next();
+dispatcher.next();
