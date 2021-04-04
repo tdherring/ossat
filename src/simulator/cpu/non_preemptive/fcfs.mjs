@@ -10,9 +10,11 @@ class FCFS extends CPUScheduler {
    *
    * Uses an async method and Promise to achieve non-blocking sleep. This simulates the
    * duration of a CPU burst.
+   *
+   * @param verbose Show debugging information?
    */
   async *dispatchProcesses(verbose = false) {
-    verbose ? console.log("OSSAT-FCFS\n-----------------------------------------") : null;
+    if (verbose) console.log("OSSAT-FCFS\n-----------------------------------------");
     this.processQueue = this.sortProcessesByArrivalTime(this.processQueue);
     let timeDelta = 0;
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -22,8 +24,8 @@ class FCFS extends CPUScheduler {
     for (let i = 0; i < numIters; i++) {
       let p = this.processQueue[i];
       let name = p.getName();
-      let burstTime = p.getBurstTime();
       let arrivalTime = p.getArrivalTime();
+      let burstTime = p.getBurstTime();
 
       // Check whether the CPU needs to idle for the next process.
       if (arrivalTime > timeDelta) {
@@ -43,7 +45,7 @@ class FCFS extends CPUScheduler {
       verbose ? console.log("[" + timeDelta + "] Process", name, "Finished executing!") : null;
 
       // Yield necessary values to the generator function caller.
-      yield { processName: name, timeDelta: timeDelta, burstTime: burstTime, arrivalTime: arrivalTime };
+      yield { processName: name, timeDelta: timeDelta, arrivalTime: arrivalTime, burstTime: burstTime };
     }
   }
 }
@@ -53,9 +55,9 @@ class FCFS extends CPUScheduler {
 let test_fcfs = new FCFS(3);
 
 test_fcfs.createProcess("p1", 2, 2);
-test_fcfs.createProcess("p2", 1, 0);
-test_fcfs.createProcess("p3", 3, 2);
-test_fcfs.createProcess("p4", 5, 3);
+test_fcfs.createProcess("p2", 0, 1);
+test_fcfs.createProcess("p3", 2, 3);
+test_fcfs.createProcess("p4", 3, 5);
 test_fcfs.createProcess("p5", 4, 4);
 
 let dispatcher = test_fcfs.dispatchProcesses(true);

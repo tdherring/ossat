@@ -1,20 +1,20 @@
 class Process {
-  constructor(name, burstTime, arrivalTime) {
+  constructor(name, arrivalTime, burstTime) {
     this.name = name;
-    this.burstTime = burstTime;
     this.arrivalTime = arrivalTime;
+    this.burstTime = burstTime;
   }
 
   getName() {
     return this.name;
   }
 
-  getBurstTime() {
-    return this.burstTime;
-  }
-
   getArrivalTime() {
     return this.arrivalTime;
+  }
+
+  getBurstTime() {
+    return this.burstTime;
   }
 }
 

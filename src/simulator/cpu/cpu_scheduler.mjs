@@ -6,12 +6,12 @@ class CPUScheduler {
     this.speedMultiplier = speedMultiplier;
   }
 
-  createProcess(name, burstTime, arrivalTime) {
+  createProcess(name, arrivalTime, burstTime) {
     if (this.processQueue.filter((process) => process.name == name).length > 0) {
-      console.log("You can't have two processes with the same ID. Skipping (" + name + "," + burstTime + ", " + arrivalTime + ") and continuing silently.");
+      console.log("You can't have two processes with the same ID. Skipping (" + name + "," + arrivalTime + ", " + burstTime + ") and continuing silently.");
       return;
     }
-    this.processQueue.push(new Process(name, burstTime, arrivalTime));
+    this.processQueue.push(new Process(name, arrivalTime, burstTime));
   }
 
   clearProcesses() {
@@ -41,6 +41,7 @@ class CPUScheduler {
    * Sorts the process queue by burst time as required by SJF.
    * If burst times of two processes same, take the one which is first lexographically.
    *
+   * @param processQueue The queue to sort.
    * @return An array of Processes, sorted by burst time.
    */
   sortProcessesByBurstTime(processQueue) {
@@ -60,6 +61,7 @@ class CPUScheduler {
    * Sorts the process queue by arrival time as required by FCFS/SJF.
    * If burst times of two processes same, take the one which is first lexographically.
    *
+   * @param processQueue The queue to sort.
    * @return An array of Processes, sorted by arrival time.
    */
   sortProcessesByArrivalTime(processQueue) {
@@ -67,7 +69,7 @@ class CPUScheduler {
       if (a.getArrivalTime() > b.getArrivalTime()) {
         return 1;
       } else if (a.getArrivalTime() == b.getArrivalTime()) {
-        if (a.getName() > b.getName()) {
+        if (a.getBurstTime() == b.getBurstTime() && a.getName() > b.getName()) {
           return 1;
         }
       }

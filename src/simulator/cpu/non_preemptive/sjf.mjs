@@ -14,7 +14,7 @@ class SJF extends CPUScheduler {
    * @param verbose Show debugging information?
    */
   async *dispatchProcesses(verbose = false) {
-    verbose ? console.log("OSSAT-SJF\n-----------------------------------------") : null;
+    if (verbose) console.log("OSSAT-SJF\n-----------------------------------------");
     let timeDelta = 0;
     // A non blocking sleep Promise.
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -31,8 +31,8 @@ class SJF extends CPUScheduler {
 
       let p = waitingQueue[0];
       let name = p.getName();
-      let burstTime = p.getBurstTime();
       let arrivalTime = p.getArrivalTime();
+      let burstTime = p.getBurstTime();
 
       // Check whether the CPU needs to idle for the next process.
       if (arrivalTime > timeDelta) {
@@ -55,7 +55,7 @@ class SJF extends CPUScheduler {
       this.processQueue = this.processQueue.filter((process) => process.name != name);
 
       // Yield necessary values to the generator function caller.
-      yield { processName: name, timeDelta: timeDelta, burstTime: burstTime, arrivalTime: arrivalTime };
+      yield { processName: name, timeDelta: timeDelta, arrivalTime: arrivalTime, burstTime: burstTime };
     }
   }
 }
@@ -64,11 +64,11 @@ class SJF extends CPUScheduler {
 
 let test_sjf = new SJF(1);
 
-test_sjf.createProcess("p1", 6, 2);
-test_sjf.createProcess("p2", 2, 5);
-test_sjf.createProcess("p3", 8, 3);
-test_sjf.createProcess("p4", 3, 3);
-test_sjf.createProcess("p5", 4, 4);
+test_sjf.createProcess("p1", 2, 1);
+test_sjf.createProcess("p2", 1, 5);
+test_sjf.createProcess("p3", 4, 1);
+test_sjf.createProcess("p4", 0, 6);
+test_sjf.createProcess("p5", 2, 3);
 
 let dispatcher = test_sjf.dispatchProcesses(true);
 
