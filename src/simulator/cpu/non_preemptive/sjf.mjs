@@ -1,10 +1,6 @@
 import CPUScheduler from "../cpu_scheduler.mjs";
 
 class SJF extends CPUScheduler {
-  constructor(speedMultiplier) {
-    super(speedMultiplier);
-  }
-
   /**
    * Generator function. Dispatches the process queue one at a time (with the given delay).
    *

@@ -1,10 +1,6 @@
 import CPUScheduler from "../cpu_scheduler.mjs";
 
 class FCFS extends CPUScheduler {
-  constructor(speedMultiplier) {
-    super(speedMultiplier);
-  }
-
   /**
    * Generator function. Dispatches the processes one at a time (with the given delay).
    *
@@ -34,7 +30,7 @@ class FCFS extends CPUScheduler {
         timeDelta += arrivalTime - timeDelta;
       }
 
-      verbose ? console.log("[" + timeDelta + "] Spawned Process", name) : null;
+      if (verbose) console.log("[" + timeDelta + "] Spawned Process", name);
 
       // Simulate the actual execution of the process.
       await sleep((burstTime * 1000) / this.speedMultiplier);
@@ -42,7 +38,7 @@ class FCFS extends CPUScheduler {
       // Keep track of the current time of execution.
       timeDelta += burstTime;
 
-      verbose ? console.log("[" + timeDelta + "] Process", name, "Finished executing!") : null;
+      if (verbose) console.log("[" + timeDelta + "] Process", name, "Finished executing!");
 
       // Yield necessary values to the generator function caller.
       yield { processName: name, timeDelta: timeDelta, arrivalTime: arrivalTime, burstTime: burstTime };
@@ -52,7 +48,7 @@ class FCFS extends CPUScheduler {
 
 // Syntax for use on frontend.
 
-let test_fcfs = new FCFS(3);
+let test_fcfs = new FCFS(5);
 
 test_fcfs.createProcess("p1", 2, 2);
 test_fcfs.createProcess("p2", 0, 1);
