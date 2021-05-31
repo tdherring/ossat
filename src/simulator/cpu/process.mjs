@@ -16,6 +16,10 @@ class Process {
   getBurstTime() {
     return this.burstTime;
   }
+
+  setBurstTime(burstTime) {
+    this.burstTime = burstTime;
+  }
 }
 
 export default Process;
