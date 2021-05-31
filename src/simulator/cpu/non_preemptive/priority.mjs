@@ -1,6 +1,6 @@
-import CPUScheduler from "../cpu_scheduler.mjs";
+import NonPreemptiveScheduler from "./non_preemptive_scheduler.mjs";
 
-class Priority extends CPUScheduler {
+class Priority extends NonPreemptiveScheduler {
   /**
    * Generates a SJF schedule for a set of input priority processes.
    *

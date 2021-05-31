@@ -1,6 +1,6 @@
-import CPUScheduler from "../cpu_scheduler.mjs";
+import NonPreemptiveScheduler from "./non_preemptive_scheduler.mjs";
 
-class SJF extends CPUScheduler {
+class SJF extends NonPreemptiveScheduler {
   /**
    * Generates a SJF schedule for a set of input processes.
    *
@@ -45,6 +45,26 @@ class SJF extends CPUScheduler {
       // Remove the process that just finished executing.
       this.processQueue = this.processQueue.filter((process) => process.name != name);
     }
+  }
+
+  /**
+   * Sorts the process queue by burst time as required by SJF.
+   * If burst times of two processes same, take the one which is first lexographically.
+   *
+   * @param processQueue The queue to sort.
+   * @return An array of Processes, sorted by burst time.
+   */
+  sortProcessesByBurstTime(processQueue) {
+    return processQueue.sort((a, b) => {
+      if (a.getBurstTime() > b.getBurstTime()) {
+        return 1;
+      } else if (a.getBurstTime() == b.getBurstTime()) {
+        if (a.getName() > b.getName()) {
+          return 1;
+        }
+      }
+      return -1;
+    });
   }
 }
 
