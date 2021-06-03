@@ -9,18 +9,18 @@ class SJF extends NonPreemptiveScheduler {
   dispatchProcesses(verbose = false) {
     if (verbose) console.log("\nOSSAT-SJF\n-----------------------------------------");
     let timeDelta = 0;
-    let numIters = this.processQueue.length;
+    let numIters = this.jobQueue.length;
 
     for (let i = 0; i < numIters; i++) {
       // The queue of waiting processes.
-      let waitingQueue = this.getAvailableProcesses(this.processQueue, timeDelta);
+      let readyQueue = this.getAvailableProcesses(this.jobQueue, timeDelta);
 
-      // Are there any available process queue?
+      // Are there any available processes in the ready queue?
       // Yes? - Take the shortest job first (left).
       // No? - Take next job available (right).
-      waitingQueue.length != 0 ? (waitingQueue = this.sortProcessesByBurstTime(waitingQueue)) : (waitingQueue = this.sortProcessesByArrivalTime(this.processQueue));
+      readyQueue.length != 0 ? (readyQueue = this.sortProcessesByBurstTime(readyQueue)) : (readyQueue = this.sortProcessesByArrivalTime(this.jobQueue));
 
-      let p = waitingQueue[0];
+      let p = readyQueue[0];
       let name = p.getName();
       let arrivalTime = p.getArrivalTime();
       let burstTime = p.getBurstTime();
@@ -43,19 +43,19 @@ class SJF extends NonPreemptiveScheduler {
       if (verbose) console.log("[" + timeDelta + "] Process", name, "finished executing!");
 
       // Remove the process that just finished executing.
-      this.processQueue = this.processQueue.filter((process) => process.name != name);
+      this.jobQueue = this.jobQueue.filter((process) => process.name != name);
     }
   }
 
   /**
-   * Sorts the process queue by burst time as required by SJF.
+   * Sorts the job queue by burst time as required by SJF.
    * If burst times of two processes same, take the one which is first lexographically.
    *
-   * @param processQueue The queue to sort.
+   * @param jobQueue The queue to sort.
    * @return An array of Processes, sorted by burst time.
    */
-  sortProcessesByBurstTime(processQueue) {
-    return processQueue.sort((a, b) => {
+  sortProcessesByBurstTime(jobQueue) {
+    return jobQueue.sort((a, b) => {
       if (a.getBurstTime() > b.getBurstTime()) {
         return 1;
       } else if (a.getBurstTime() == b.getBurstTime()) {

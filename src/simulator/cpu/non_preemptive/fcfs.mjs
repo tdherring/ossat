@@ -8,13 +8,13 @@ class FCFS extends NonPreemptiveScheduler {
    */
   dispatchProcesses(verbose = false) {
     if (verbose) console.log("\nOSSAT-FCFS\n-----------------------------------------");
-    this.processQueue = this.sortProcessesByArrivalTime(this.processQueue);
+    this.jobQueue = this.sortProcessesByArrivalTime(this.jobQueue);
     let timeDelta = 0;
-    let numIters = this.processQueue.length;
+    let numIters = this.jobQueue.length;
 
     // Iterate over the processes which have been sorted in order of their arrival time above.
     for (let i = 0; i < numIters; i++) {
-      let p = this.processQueue[i];
+      let p = this.jobQueue[i];
       let name = p.getName();
       let arrivalTime = p.getArrivalTime();
       let burstTime = p.getBurstTime();

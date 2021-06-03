@@ -3,19 +3,19 @@ import PriorityProcess from "./priority_process.mjs";
 
 class CPUScheduler {
   constructor() {
-    this.processQueue = [];
+    this.jobQueue = [];
     this.schedule = [];
   }
 
   createProcess(name, arrivalTime, burstTime, priority = null) {
-    if (this.processQueue.filter((process) => process.name == name).length > 0) {
+    if (this.jobQueue.filter((process) => process.name == name).length > 0) {
       console.warn(
         "You can't have two processes with the same ID. Skipping (" + name + ", " + arrivalTime + ", " + burstTime + (priority == null ? null : ", " + priority) + ") and continuing silently."
       );
       return;
     }
-    // If process given priority, create a PriorityProcess object, otherwise create a standard Process object.
-    this.processQueue.push(priority == null ? new Process(name, arrivalTime, burstTime) : new PriorityProcess(name, arrivalTime, burstTime, priority));
+    // If process given priority, create a PriorityProcess object (left), otherwise create a standard Process object (right).
+    this.jobQueue.push(priority == null ? new Process(name, arrivalTime, burstTime) : new PriorityProcess(name, arrivalTime, burstTime, priority));
   }
 
   getSchedule() {
@@ -25,12 +25,12 @@ class CPUScheduler {
   /**
    * Extracts all processes available at the current time delta.
    *
-   * @param processQueue The process queue to filter.
+   * @param jobQueue The job queue to filter.
    * @param timeDelta The value to check availability against.
    * @returns An array of available Processes.
    */
-  getAvailableProcesses(processQueue, timeDelta) {
-    return processQueue.filter((process) => process.getArrivalTime() <= timeDelta);
+  getAvailableProcesses(jobQueue, timeDelta) {
+    return jobQueue.filter((process) => process.getArrivalTime() <= timeDelta);
   }
 
   /**

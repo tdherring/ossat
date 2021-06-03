@@ -9,10 +9,10 @@ class Priority extends NonPreemptiveScheduler {
   dispatchProcesses(verbose = false) {
     if (verbose) console.log("\nOSSAT-Priority\n-----------------------------------------");
     let timeDelta = 0;
-    this.processQueue = this.sortProcessesByPriority(this.processQueue, timeDelta);
+    this.jobQueue = this.sortProcessesByPriority(this.jobQueue, timeDelta);
 
-    for (let i = 0; i < this.processQueue.length; i++) {
-      let p = this.processQueue[i];
+    for (let i = 0; i < this.jobQueue.length; i++) {
+      let p = this.jobQueue[i];
       let name = p.getName();
       let arrivalTime = p.getArrivalTime();
       let burstTime = p.getBurstTime();
@@ -38,14 +38,14 @@ class Priority extends NonPreemptiveScheduler {
   }
 
   /**
-   * Sorts the process queue by priority as required by the Priority Scheduler.
+   * Sorts the job queue by priority as required by the Priority Scheduler.
    * If priorities / burst times of two processes same, take the one which is first lexographically.
    *
-   * @param processQueue The queue to sort.
+   * @param jobQueue The queue to sort.
    * @return An array of Processes, sorted by burst time.
    */
-  sortProcessesByPriority(processQueue) {
-    return processQueue.sort((a, b) => {
+  sortProcessesByPriority(jobQueue) {
+    return jobQueue.sort((a, b) => {
       if (a.getPriority() > b.getPriority()) {
         return 1;
       } else if (a.getPriority() == b.getPriority() && a.getBurstTime() == b.getBurstTime()) {

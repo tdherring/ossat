@@ -9,13 +9,15 @@ class RR extends PreemptiveScheduler {
   dispatchProcesses(verbose = false) {
     if (verbose) console.log("\nOSSAT-RR\n-----------------------------------------");
     let timeDelta = 0;
+    let endDispatch = false;
 
-    while (true) {
-      let numIters = this.processQueue.length;
-      let endDispatch = true;
+    // Execute until all processes have been dispatched and run for their full burst time.
+    while (!endDispatch) {
+      let numIters = this.jobQueue.length;
+      endDispatch = true;
 
       for (let i = 0; i < numIters; i++) {
-        let p = this.processQueue[i];
+        let p = this.jobQueue[i];
         let name = p.getName();
         let burstTime = p.getBurstTime();
 
@@ -24,8 +26,8 @@ class RR extends PreemptiveScheduler {
           if (verbose) console.log("[" + timeDelta + "] Spawned Process", name);
 
           if (burstTime <= this.timeQuantum || burstTime - this.timeQuantum <= 0) {
-            // Applying a full quantum would take this processes burstTime below 0, so only execute for the burstTime -OR-
-            // Process will run to completion after this quantum.
+            // Applying a full quantum would take this processes burst time below 0, so only execute for the burst time -OR-
+            // Process will run to completion after this quantum, so only execute for the burst time.
             this.schedule.push({ processName: name, timeDelta: timeDelta, arrivalTime: 0, burstTime: burstTime });
             timeDelta += burstTime;
             p.setBurstTime(0);
@@ -40,9 +42,6 @@ class RR extends PreemptiveScheduler {
           endDispatch = false;
         }
       }
-
-      // If all processes have executed to completion (all burstTimes are 0)
-      if (endDispatch) break;
     }
   }
 }
