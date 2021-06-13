@@ -30,7 +30,7 @@ class SJF extends NonPreemptiveScheduler {
         if (verbose) console.log("[" + timeDelta + "] CPU Idle...");
         this.schedule.push({ processName: "IDLE", timeDelta: timeDelta, arrivalTime: null, burstTime: arrivalTime - timeDelta });
         // Adjust time delta with respect to idle length.
-        timeDelta += arrivalTime;
+        timeDelta += arrivalTime - timeDelta;
       }
 
       if (verbose) console.log("[" + timeDelta + "] Spawned Process", name);
@@ -45,26 +45,6 @@ class SJF extends NonPreemptiveScheduler {
       // Remove the process that just finished executing.
       this.jobQueue = this.jobQueue.filter((process) => process.name != name);
     }
-  }
-
-  /**
-   * Sorts the job queue by burst time as required by SJF.
-   * If burst times of two processes same, take the one which is first lexographically.
-   *
-   * @param jobQueue The queue to sort.
-   * @return An array of Processes, sorted by burst time.
-   */
-  sortProcessesByBurstTime(jobQueue) {
-    return jobQueue.sort((a, b) => {
-      if (a.getBurstTime() > b.getBurstTime()) {
-        return 1;
-      } else if (a.getBurstTime() == b.getBurstTime()) {
-        if (a.getName() > b.getName()) {
-          return 1;
-        }
-      }
-      return -1;
-    });
   }
 }
 

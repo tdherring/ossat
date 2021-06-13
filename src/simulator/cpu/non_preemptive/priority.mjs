@@ -23,7 +23,7 @@ class Priority extends NonPreemptiveScheduler {
         if (verbose) console.log("[" + timeDelta + "] CPU Idle...");
         this.schedule.push({ processName: "IDLE", timeDelta: timeDelta, arrivalTime: null, burstTime: arrivalTime - timeDelta, priority: null });
         // Adjust time delta with respect to idle length.
-        timeDelta += arrivalTime;
+        timeDelta += arrivalTime - timeDelta;
       }
 
       if (verbose) console.log("[" + timeDelta + "] Spawned Process", name);
