@@ -6,6 +6,11 @@ class RR extends PreemptiveScheduler {
     this.timeQuantum = timeQuantum;
   }
 
+  /**
+   * Generates a RR schedule for a set of input processes.
+   *
+   * @param verbose Show debugging information?
+   */
   dispatchProcesses(verbose = false) {
     if (verbose) console.log("\nOSSAT-RR\n-----------------------------------------");
     this.jobQueue = this.sortProcessesByArrivalTime(this.jobQueue);
