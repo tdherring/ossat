@@ -2,7 +2,16 @@
 
 $primary: rgb(0, 141, 54);
 
-$family-primary: "Agency FB";
+// Set the global font.
+@import "../assets/fonts/OpenSans-Regular.ttf";
+$family-serif: "OpenSans", sans-serif;
+$family-primary: $family-serif;
 
-// Import Bulma SASS files
+// Globally hide the scrollbar.
+html {
+  overflow: hidden !important;
+}
+
+
+// Import Bulma SASS files.
 @import "./node_modules/bulma/bulma.sass";

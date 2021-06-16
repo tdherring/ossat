@@ -2,7 +2,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import React from "react";
 import { ModalProvider } from "./contexts/ModalContext";
-import Welcome from "./components/Welcome";
+import Body from "./components/Body";
 
 function App() {
   return (
@@ -11,7 +11,7 @@ function App() {
         <Header />
       </ModalProvider>
 
-      <Welcome />
+      <Body />
 
       <Footer />
     </>
