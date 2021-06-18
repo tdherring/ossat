@@ -11,11 +11,11 @@ class SRTF extends PreemptiveScheduler {
     let timeDelta = 0;
     let numIters = 0;
     let idleDuration = 0;
-    let p = null;
-    let name = null;
-    let arrivalTime = null;
-    let burstTime = null;
-    let lastP = null;
+    let p;
+    let name;
+    let arrivalTime;
+    let burstTime;
+    let lastP;
 
     // Initialise job queue to be first sorted by burst time, then arrival time.
     this.jobQueue = this.sortProcessesByArrivalTime(this.sortProcessesByBurstTime(this.jobQueue));
@@ -26,8 +26,8 @@ class SRTF extends PreemptiveScheduler {
     for (let i = 0; i < numIters; i++) {
       let availableProcesses = this.getAvailableProcesses(this.jobQueue, timeDelta);
 
-      if (availableProcesses.length == 0) {
-        if (idleDuration == 0 && verbose) console.log("[" + timeDelta + "] CPU Idle...");
+      if (availableProcesses.length === 0) {
+        if (idleDuration === 0 && verbose) console.log("[" + timeDelta + "] CPU Idle...");
         idleDuration++;
         // Extend number of iterations since we have had to delay due to idle.
         numIters++;
@@ -43,7 +43,7 @@ class SRTF extends PreemptiveScheduler {
         arrivalTime = p.getArrivalTime();
 
         // If the process has changed since the last iteration, this process has been preempted or executed to completion.
-        if (lastP != p || lastP == null) {
+        if (lastP !== p || lastP === null) {
           // Tell the user that the process has finished executing.
           if (lastP != null && verbose) console.log("[" + timeDelta + "] Process", lastP.getName(), "finished executing!");
           // Inform them of the new process.
@@ -66,14 +66,16 @@ class SRTF extends PreemptiveScheduler {
 
 // Syntax for use on frontend.
 
-let test_srtf = new SRTF();
+// let test_srtf = new SRTF();
 
-test_srtf.createProcess("p1", 0, 7);
-test_srtf.createProcess("p2", 1, 5);
-test_srtf.createProcess("p3", 2, 3);
-test_srtf.createProcess("p4", 3, 1);
-test_srtf.createProcess("p5", 4, 2);
-test_srtf.createProcess("p6", 5, 1);
+// test_srtf.createProcess("p1", 0, 7);
+// test_srtf.createProcess("p2", 1, 5);
+// test_srtf.createProcess("p3", 2, 3);
+// test_srtf.createProcess("p4", 3, 1);
+// test_srtf.createProcess("p5", 4, 2);
+// test_srtf.createProcess("p6", 5, 1);
 
-test_srtf.dispatchProcesses(true);
-test_srtf.outputGraphicalRepresentation();
+// test_srtf.dispatchProcesses(true);
+// test_srtf.outputGraphicalRepresentation();
+
+export default SRTF;

@@ -8,14 +8,14 @@ class CPUScheduler {
   }
 
   createProcess(name, arrivalTime, burstTime, priority = null) {
-    if (this.jobQueue.filter((process) => process.name == name).length > 0) {
+    if (this.jobQueue.filter((process) => process.name === name).length > 0) {
       console.warn(
         "You can't have two processes with the same ID. Skipping (" + name + ", " + arrivalTime + ", " + burstTime + (priority == null ? null : ", " + priority) + ") and continuing silently."
       );
       return;
     }
     // If process given priority, create a PriorityProcess object (left), otherwise create a standard Process object (right).
-    this.jobQueue.push(priority == null ? new Process(name, arrivalTime, burstTime) : new PriorityProcess(name, arrivalTime, burstTime, priority));
+    this.jobQueue.push(priority === null ? new Process(name, arrivalTime, burstTime) : new PriorityProcess(name, arrivalTime, burstTime, priority));
   }
 
   getSchedule() {
@@ -44,7 +44,7 @@ class CPUScheduler {
     return jobQueue.sort((a, b) => {
       if (a.getBurstTime() >= b.getBurstTime()) {
         return 1;
-      } else if (a.getBurstTime() == b.getBurstTime()) {
+      } else if (a.getBurstTime() === b.getBurstTime()) {
         if (a.getName() > b.getName()) {
           return 1;
         }
@@ -64,7 +64,7 @@ class CPUScheduler {
     return jobQueue.sort((a, b) => {
       if (a.getArrivalTime() >= b.getArrivalTime()) {
         return 1;
-      } else if (a.getArrivalTime() == b.getArrivalTime() && a.getBurstTime() == b.getBurstTime()) {
+      } else if (a.getArrivalTime() === b.getArrivalTime() && a.getBurstTime() === b.getBurstTime()) {
         if (a.getName() > b.getName()) {
           return 1;
         }
@@ -102,8 +102,8 @@ class CPUScheduler {
       }
       timingStr = timingStr.substr(0, timingStr.length + 1 - timeDelta.toString().length);
       for (let j = 0; j < burstTime * 3; j++) {
-        if (j == Math.floor((burstTime * 3) / 2)) {
-          processName == "IDLE" ? (processStr += "  ") : (processStr += processName);
+        if (j === Math.floor((burstTime * 3) / 2)) {
+          processName === "IDLE" ? (processStr += "  ") : (processStr += processName);
         } else {
           processStr += " ";
         }

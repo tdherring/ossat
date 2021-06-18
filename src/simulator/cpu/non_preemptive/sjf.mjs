@@ -18,7 +18,7 @@ class SJF extends NonPreemptiveScheduler {
       // Are there any available processes in the ready queue?
       // Yes? - Take the shortest job first (left).
       // No? - Take next job available (right).
-      readyQueue.length != 0 ? (readyQueue = this.sortProcessesByBurstTime(readyQueue)) : (readyQueue = this.sortProcessesByArrivalTime(this.jobQueue));
+      readyQueue.length !== 0 ? (readyQueue = this.sortProcessesByBurstTime(readyQueue)) : (readyQueue = this.sortProcessesByArrivalTime(this.jobQueue));
 
       let p = readyQueue[0];
       let name = p.getName();
@@ -43,20 +43,22 @@ class SJF extends NonPreemptiveScheduler {
       if (verbose) console.log("[" + timeDelta + "] Process", name, "finished executing!");
 
       // Remove the process that just finished executing.
-      this.jobQueue = this.jobQueue.filter((process) => process.name != name);
+      this.jobQueue = this.jobQueue.filter((process) => process.name !== name);
     }
   }
 }
 
 // Syntax for use on frontend.
 
-let test_sjf = new SJF();
+// let test_sjf = new SJF();
 
-test_sjf.createProcess("p1", 2, 1);
-test_sjf.createProcess("p2", 1, 5);
-test_sjf.createProcess("p3", 4, 1);
-test_sjf.createProcess("p4", 0, 6);
-test_sjf.createProcess("p5", 2, 3);
+// test_sjf.createProcess("p1", 2, 1);
+// test_sjf.createProcess("p2", 1, 5);
+// test_sjf.createProcess("p3", 4, 1);
+// test_sjf.createProcess("p4", 0, 6);
+// test_sjf.createProcess("p5", 2, 3);
 
-test_sjf.dispatchProcesses(true);
-test_sjf.outputGraphicalRepresentation();
+// test_sjf.dispatchProcesses(true);
+// test_sjf.outputGraphicalRepresentation();
+
+export default SJF;

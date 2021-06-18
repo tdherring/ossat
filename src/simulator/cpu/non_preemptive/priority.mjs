@@ -48,7 +48,7 @@ class Priority extends NonPreemptiveScheduler {
     return jobQueue.sort((a, b) => {
       if (a.getPriority() > b.getPriority()) {
         return 1;
-      } else if (a.getPriority() == b.getPriority() && a.getBurstTime() == b.getBurstTime()) {
+      } else if (a.getPriority() === b.getPriority() && a.getBurstTime() === b.getBurstTime()) {
         if (a.getName() > b.getName()) {
           return 1;
         }
@@ -60,15 +60,17 @@ class Priority extends NonPreemptiveScheduler {
 
 // Syntax for use on frontend.
 
-let test_priority = new Priority();
+// let test_priority = new Priority();
 
-test_priority.createProcess("p1", 0, 3, 2);
-test_priority.createProcess("p2", 2, 5, 6);
-test_priority.createProcess("p3", 1, 4, 3);
-test_priority.createProcess("p4", 4, 2, 5);
-test_priority.createProcess("p5", 6, 9, 7);
-test_priority.createProcess("p6", 5, 4, 4);
-test_priority.createProcess("p7", 7, 10, 10);
+// test_priority.createProcess("p1", 0, 3, 2);
+// test_priority.createProcess("p2", 2, 5, 6);
+// test_priority.createProcess("p3", 1, 4, 3);
+// test_priority.createProcess("p4", 4, 2, 5);
+// test_priority.createProcess("p5", 6, 9, 7);
+// test_priority.createProcess("p6", 5, 4, 4);
+// test_priority.createProcess("p7", 7, 10, 10);
 
-test_priority.dispatchProcesses(true);
-test_priority.outputGraphicalRepresentation();
+// test_priority.dispatchProcesses(true);
+// test_priority.outputGraphicalRepresentation();
+
+export default Priority;

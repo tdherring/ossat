@@ -41,13 +41,15 @@ class FCFS extends NonPreemptiveScheduler {
 
 // Syntax for use on frontend.
 
-let test_fcfs = new FCFS();
+// let test_fcfs = new FCFS();
 
-test_fcfs.createProcess("p1", 2, 2);
-test_fcfs.createProcess("p2", 0, 1);
-test_fcfs.createProcess("p3", 2, 3);
-test_fcfs.createProcess("p4", 3, 5);
-test_fcfs.createProcess("p5", 4, 4);
+// test_fcfs.createProcess("p1", 2, 2);
+// test_fcfs.createProcess("p2", 0, 1);
+// test_fcfs.createProcess("p3", 2, 3);
+// test_fcfs.createProcess("p4", 3, 5);
+// test_fcfs.createProcess("p5", 4, 4);
 
-test_fcfs.dispatchProcesses(true);
-test_fcfs.outputGraphicalRepresentation();
+// test_fcfs.dispatchProcesses(true);
+// test_fcfs.outputGraphicalRepresentation();
+
+export default FCFS;

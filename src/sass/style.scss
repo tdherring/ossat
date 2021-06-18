@@ -9,9 +9,8 @@ $family-primary: $family-serif;
 
 // Globally hide the scrollbar.
 html {
-  overflow: hidden !important;
+  overflow: auto !important;
 }
-
 
 // Import Bulma SASS files.
 @import "./node_modules/bulma/bulma.sass";

@@ -30,7 +30,7 @@ class RR extends PreemptiveScheduler {
     }
 
     // Keep scheduling until all processes have no burst time left.
-    while (this.jobQueue.filter((x) => x.getBurstTime() != 0).length > 0) {
+    while (this.jobQueue.filter((x) => x.getBurstTime() !== 0).length > 0) {
       let p = readyQueue[i];
       let name = p.getName();
       let arrivalTime = p.getArrivalTime();
@@ -92,12 +92,14 @@ class RR extends PreemptiveScheduler {
 
 // Syntax for use on frontend.
 
-let test_rr = new RR(5);
+// let test_rr = new RR(5);
 
-test_rr.createProcess("p1", 4, 4);
-test_rr.createProcess("p2", 0, 10);
-test_rr.createProcess("p3", 17, 17);
-test_rr.createProcess("p4", 2, 18);
+// test_rr.createProcess("p1", 4, 4);
+// test_rr.createProcess("p2", 0, 10);
+// test_rr.createProcess("p3", 17, 17);
+// test_rr.createProcess("p4", 2, 18);
 
-test_rr.dispatchProcesses(true);
-test_rr.outputGraphicalRepresentation();
+// test_rr.dispatchProcesses(true);
+// test_rr.outputGraphicalRepresentation();
+
+export default RR;

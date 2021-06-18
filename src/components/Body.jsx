@@ -4,7 +4,7 @@ import MemoryModule from "./body/memory/MemoryModule";
 
 const Body = () => {
   return (
-    <div className="py-6 px-6">
+    <div className="p-3">
       <div className="tile is-ancestor">
         <MemoryModule />
         <CPUModule />

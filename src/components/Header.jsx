@@ -4,6 +4,7 @@ import { faBug, faHome, faBook, faMicroscope } from "@fortawesome/free-solid-svg
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 
 import smallLogo from "../assets/images/small-logo.svg";
+import fullLogo from "../assets/images/full-logo.svg";
 import Register from "./modals/Register";
 import LogIn from "./modals/LogIn";
 import BugReport from "./modals/BugReport";
@@ -11,14 +12,15 @@ import { ModalContext } from "../contexts/ModalContext";
 
 const Header = () => {
   const [burgerActive, setBurgerActive] = useState(false);
-  const [, setActiveModal] = useContext(ModalContext);
+  const [activeModal, setActiveModal] = useContext(ModalContext);
 
   return (
     <header>
       <nav className="navbar is-light" role="navigation" aria-label="main navigation">
         <div className="navbar-brand">
           <a className="navbar-item" href="/#">
-            <img src={smallLogo} alt="OSSAT Logo" style={{ height: "70px", maxHeight: "70px" }}></img>
+            <img className="is-hidden-touch" src={smallLogo} alt="OSSAT Logo" style={{ height: "70px", maxHeight: "70px" }}></img>
+            <img className="is-hidden-desktop" src={fullLogo} alt="OSSAT Logo" style={{ height: "70px", maxHeight: "70px" }}></img>
           </a>
           {/* Burger menu. Small bit of logic to make active when pressed.*/}
           <a
@@ -39,7 +41,7 @@ const Header = () => {
           </a>
         </div>
 
-        <div className="navbar-menu">
+        <div className={`navbar-menu ${burgerActive ? "is-active" : ""}`}>
           <div className="navbar-start">
             <a className="navbar-item" href="/#">
               <FontAwesomeIcon icon={faHome} className="mr-2" />
