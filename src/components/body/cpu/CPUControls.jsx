@@ -14,7 +14,7 @@ import SRTF from "../../../simulator/cpu/preemptive/srtf.mjs";
 const CPUControls = () => {
   const { active, speed } = useContext(CPUSimulatorContext);
   const { width } = useContext(ResizeContext);
-  const [activeModal, setActiveModal] = useContext(ModalContext);
+  const [, setActiveModal] = useContext(ModalContext);
 
   const [activeCPUScheduler, setActiveCPUScheduler] = active;
   const [, setSimulationSpeed] = speed;
@@ -52,13 +52,13 @@ const CPUControls = () => {
       <span className="control">
         <div className="dropdown is-hoverable">
           <div className="dropdown-trigger">
-            <button className="button" aria-haspopup="true" aria-controls="dropdown-menu">
+            <button className="button" aria-haspopup="true" aria-controls="dropdown-menu" style={{ width: "20rem" }}>
               <span>{activeSchedulerName}</span>
               <FontAwesomeIcon icon={faAngleDown} className="ml-2" />
             </button>
           </div>
 
-          <div className="dropdown-menu" id="dropdown-menu" role="menu">
+          <div className="dropdown-menu" id="dropdown-menu" role="menu" style={{ width: "20rem" }}>
             <div className="dropdown-content" value="FCFS">
               {dropdownOptions.map((option) => (
                 <a

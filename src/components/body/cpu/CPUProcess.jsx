@@ -1,8 +1,11 @@
 import React, { useContext } from "react";
 import { ResizeContext } from "../../../contexts/ResizeContext";
+import { CPUSimulatorContext } from "../../../contexts/CPUSimulatorContext";
 
 const CPUProcess = ({ name, arrivalTime, burstTime, priority, status }) => {
   const { width } = useContext(ResizeContext);
+  const [activeCPUScheduler] = useContext(CPUSimulatorContext).active;
+  const [jobQueue, setJobQueue] = useContext(CPUSimulatorContext).jQueue;
   const [widthValue] = width;
 
   return (
@@ -13,7 +16,20 @@ const CPUProcess = ({ name, arrivalTime, burstTime, priority, status }) => {
             {status === "EXECUTING" && <span className="tag is-success">Executing</span>}
             {status === "FINISHED" && <span className="tag is-danger">Finished</span>}
             {status === "WAITING" && <span className="tag is-info">Waiting</span>}
-            <a href="/#" className="ml-2 tag is-delete has-background-grey-lighter"></a>
+            <a
+              href="/#"
+              className="ml-2 tag is-delete has-background-grey-lighter"
+              onClick={() => {
+                // Remove the process from the job queue on the GUI.
+                setJobQueue(
+                  jobQueue.filter((process) => {
+                    return process.name !== name;
+                  })
+                );
+                // Remove the process from the actual job queue.
+                activeCPUScheduler.removeProcess(name);
+              }}
+            ></a>
           </span>
           <strong>{name}</strong>
         </h6>

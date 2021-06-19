@@ -6,6 +6,11 @@ export const CPUSimulatorContext = createContext();
 export const CPUSimulatorProvider = (props) => {
   const [activeCPUScheduler, setActiveCPUScheduler] = useState(new FCFS());
   const [simulationSpeed, setSimulationSpeed] = useState(1);
+  const [jobQueue, setJobQueue] = useState([]);
 
-  return <CPUSimulatorContext.Provider value={{ active: [activeCPUScheduler, setActiveCPUScheduler], speed: [simulationSpeed, setSimulationSpeed] }}>{props.children}</CPUSimulatorContext.Provider>;
+  return (
+    <CPUSimulatorContext.Provider value={{ active: [activeCPUScheduler, setActiveCPUScheduler], speed: [simulationSpeed, setSimulationSpeed], jQueue: [jobQueue, setJobQueue] }}>
+      {props.children}
+    </CPUSimulatorContext.Provider>
+  );
 };

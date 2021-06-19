@@ -12,7 +12,7 @@ import { ModalContext } from "../contexts/ModalContext";
 
 const Header = () => {
   const [burgerActive, setBurgerActive] = useState(false);
-  const [activeModal, setActiveModal] = useContext(ModalContext);
+  const [, setActiveModal] = useContext(ModalContext);
 
   return (
     <header>
@@ -41,7 +41,7 @@ const Header = () => {
           </a>
         </div>
 
-        <div className={`navbar-menu ${burgerActive ? "is-active" : ""}`}>
+        <div className={`navbar-menu has-background-white-ter ${burgerActive ? "is-active" : ""}`}>
           <div className="navbar-start">
             <a className="navbar-item" href="/#">
               <FontAwesomeIcon icon={faHome} className="mr-2" />
@@ -60,7 +60,6 @@ const Header = () => {
                   <FontAwesomeIcon icon={faMicroscope} className="mr-2" />
                   About
                 </a>
-                <hr className="navbar-divider"></hr>
                 <a
                   className="navbar-item"
                   href="/#"
@@ -76,7 +75,7 @@ const Header = () => {
           </div>
 
           <div className="navbar-end">
-            <div className="navbar-item">
+            <div className="navbar-item is-hidden-touch">
               <a href="https://github.com/tdherring/OSSAT-Frontend">
                 <FontAwesomeIcon icon={faGithub} className="mr-2 is-size-4 has-text-black" />
               </a>
@@ -94,7 +93,7 @@ const Header = () => {
                 </a>
 
                 <a
-                  className="button is-light"
+                  className="button is-outlined"
                   href="/#"
                   onClick={() => {
                     setActiveModal("logIn");

@@ -10,7 +10,7 @@ class CPUScheduler {
   createProcess(name, arrivalTime, burstTime, priority = null) {
     if (this.jobQueue.filter((process) => process.name === name).length > 0) {
       console.warn(
-        "You can't have two processes with the same ID. Skipping (" + name + ", " + arrivalTime + ", " + burstTime + (priority == null ? null : ", " + priority) + ") and continuing silently."
+        "You can't have two processes with the same ID. Skipping (" + name + ", " + arrivalTime + ", " + burstTime + ", " + (priority == null ? null : ", " + priority) + ") and continuing silently."
       );
       return;
     }
@@ -18,8 +18,18 @@ class CPUScheduler {
     this.jobQueue.push(priority === null ? new Process(name, arrivalTime, burstTime) : new PriorityProcess(name, arrivalTime, burstTime, priority));
   }
 
+  removeProcess(name) {
+    this.jobQueue = this.jobQueue.filter((process) => {
+      return process.name !== name;
+    });
+  }
+
   getSchedule() {
     return this.schedule;
+  }
+
+  getJobQueue() {
+    return this.jobQueue;
   }
 
   /**

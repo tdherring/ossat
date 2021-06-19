@@ -5,14 +5,15 @@ const LogIn = () => {
   const [activeModal, setActiveModal] = useContext(ModalContext);
 
   return (
-    <div className={`modal ${activeModal === "logIn" ? "is-active" : ""}`}>
+    <div className={`modal p-3 ${activeModal === "logIn" ? "is-active" : ""}`}>
       <div className="modal-background" />
       <div className="modal-card">
         <header className="modal-card-head">
           <p className="modal-card-title">Log In</p>
           <button
             className="delete"
-            onClick={() => {
+            onClick={(event) => {
+              event.preventDefault();
               setActiveModal(null);
             }}
           />
@@ -24,7 +25,8 @@ const LogIn = () => {
           <a
             className="button"
             href="/#"
-            onClick={() => {
+            onClick={(event) => {
+              event.preventDefault();
               setActiveModal(null);
             }}
           >
