@@ -12,13 +12,11 @@ import RR from "../../../simulator/cpu/preemptive/rr.mjs";
 import SRTF from "../../../simulator/cpu/preemptive/srtf.mjs";
 
 const CPUControls = () => {
-  const { active, speed } = useContext(CPUSimulatorContext);
-  const { width } = useContext(ResizeContext);
   const [, setActiveModal] = useContext(ModalContext);
-
-  const [activeCPUScheduler, setActiveCPUScheduler] = active;
-  const [, setSimulationSpeed] = speed;
-  const [widthValue] = width;
+  const [activeCPUScheduler, setActiveCPUScheduler] = useContext(CPUSimulatorContext).active;
+  const [, setSimulationSpeed] = useContext(CPUSimulatorContext).speed;
+  const [widthValue] = useContext(ResizeContext).width;
+  const [running, setRunning] = useContext(CPUSimulatorContext).running;
 
   const Scheduler = { FCFS: new FCFS(), SJF: new SJF(), Priority: new Priority(), RR: new RR(2), SRTF: new SRTF() };
 
@@ -102,6 +100,7 @@ const CPUControls = () => {
             href="/#"
             onClick={() => {
               activeCPUScheduler.dispatchProcesses(true);
+              setRunning(!running);
             }}
           >
             <FontAwesomeIcon icon={faPlay} />

@@ -7,22 +7,38 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 const AddProcess = ({ isPriorityProcess }) => {
   const [activeCPUScheduler] = useContext(CPUSimulatorContext).active;
   const [jobQueue, setJobQueue] = useContext(CPUSimulatorContext).jQueue;
+  const [running, setRunning] = useContext(CPUSimulatorContext).running;
 
   const [activeModal, setActiveModal] = useContext(ModalContext);
 
-  // State for processes
+  // State for processes.
   const [processName, setProcessName] = useState("");
   const [arrivalTime, setArrivalTime] = useState(0);
   const [burstTime, setBurstTime] = useState(1);
   const [priority, setPriority] = useState(null);
 
+  // Track whether user has attempted to submit the add process form.
+  const [submissionAttempt, setSubmissionAttempt] = useState(false);
+
   const handleSubmit = (event) => {
     event.preventDefault(); // Stop the page from refreshing upon submission.
 
-    activeCPUScheduler.createProcess(processName, arrivalTime, burstTime, priority);
-
-    // Only add the process the the GUI if there isn't already one with the same name.
-    if (!jobQueue.some((process) => process.name === processName)) setJobQueue(jobQueue.concat({ name: processName, arrivalTime: arrivalTime, burstTime: burstTime, priority: priority }));
+    // Only add the process the the GUI if there isn't already one with the same name and the process name field isn't empty.
+    if (!jobQueue.some((process) => process.name === processName) && processName !== "") {
+      activeCPUScheduler.createProcess(processName, arrivalTime, burstTime, priority);
+      // Flip this hook var to cause a rerender of the job and ready queues.
+      setRunning(!running);
+      setSubmissionAttempt(false);
+      // Close the modal and reset all the input fields and the process attributes.
+      setActiveModal(null);
+      event.target.reset();
+      setProcessName("");
+      setArrivalTime(0);
+      setBurstTime(1);
+      setPriority(null);
+    } else {
+      setSubmissionAttempt(true);
+    }
   };
 
   return (
@@ -45,9 +61,14 @@ const AddProcess = ({ isPriorityProcess }) => {
               <div className="field">
                 <label className="label">Process Name</label>
                 <div className="control">
-                  <input className="input is-danger" type="text" onChange={(event) => setProcessName(event.target.value)} />
+                  <input
+                    className={`input ${submissionAttempt && (processName === "" || jobQueue.some((process) => process.name === processName)) ? "is-danger" : null}`}
+                    type="text"
+                    onChange={(event) => setProcessName(event.target.value)}
+                  />
                 </div>
-                <p className="help is-danger">This field is required</p>
+                {submissionAttempt && processName === "" ? <p className="help is-danger">This field is required</p> : null}
+                {submissionAttempt && jobQueue.some((process) => process.name === processName) ? <p className="help is-danger">There is already a process with that name</p> : null}
               </div>
               <div className="field">
                 <label className="label">Arrival Time</label>

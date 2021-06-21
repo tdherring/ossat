@@ -2,11 +2,10 @@ import React, { useContext } from "react";
 import { ResizeContext } from "../../../contexts/ResizeContext";
 import { CPUSimulatorContext } from "../../../contexts/CPUSimulatorContext";
 
-const CPUProcess = ({ name, arrivalTime, burstTime, priority, status }) => {
-  const { width } = useContext(ResizeContext);
+const CPUProcess = ({ name, arrivalTime, burstTime, priority, status, jobQueueProcess }) => {
   const [activeCPUScheduler] = useContext(CPUSimulatorContext).active;
-  const [jobQueue, setJobQueue] = useContext(CPUSimulatorContext).jQueue;
-  const [widthValue] = width;
+  const [running, setRunning] = useContext(CPUSimulatorContext).running;
+  const [widthValue] = useContext(ResizeContext).width;
 
   return (
     <div className={`column ${widthValue > 2400 ? "is-2" : widthValue > 1680 ? "is-3" : widthValue > 1250 ? "is-4" : "is-6"}`}>
@@ -16,20 +15,18 @@ const CPUProcess = ({ name, arrivalTime, burstTime, priority, status }) => {
             {status === "EXECUTING" && <span className="tag is-success">Executing</span>}
             {status === "FINISHED" && <span className="tag is-danger">Finished</span>}
             {status === "WAITING" && <span className="tag is-info">Waiting</span>}
-            <a
-              href="/#"
-              className="ml-2 tag is-delete has-background-grey-lighter"
-              onClick={() => {
-                // Remove the process from the job queue on the GUI.
-                setJobQueue(
-                  jobQueue.filter((process) => {
-                    return process.name !== name;
-                  })
-                );
-                // Remove the process from the actual job queue.
-                activeCPUScheduler.removeProcess(name);
-              }}
-            ></a>
+            {jobQueueProcess && (
+              <a
+                href="/#"
+                className="ml-2 tag is-delete has-background-grey-lighter"
+                onClick={() => {
+                  // Remove the process from the job queue.
+                  activeCPUScheduler.removeProcess(name);
+                  // Flip this hook var to cause a rerender of the job and ready queues.
+                  setRunning(!running);
+                }}
+              ></a>
+            )}
           </span>
           <strong>{name}</strong>
         </h6>
