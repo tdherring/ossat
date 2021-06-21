@@ -10,31 +10,60 @@ class FCFS extends NonPreemptiveScheduler {
     if (verbose) console.log("\nOSSAT-FCFS\n-----------------------------------------");
     this.jobQueue = this.sortProcessesByArrivalTime(this.jobQueue);
     let timeDelta = 0;
-    let numIters = this.jobQueue.length;
+    let i = 0;
+    let lastP;
+    let p;
+    let name;
+    let arrivalTime;
+    let burstTime;
 
-    // Iterate over the processes which have been sorted in order of their arrival time above.
-    for (let i = 0; i < numIters; i++) {
-      let p = this.jobQueue[i];
-      let name = p.getName();
-      let arrivalTime = p.getArrivalTime();
-      let burstTime = p.getBurstTime();
+    // Keep scheduling until all processes have no burst time left.
+    while (this.jobQueue.filter((x) => x.getBurstTime() !== 0).length > 0) {
+      // Sort the processes by burst time and then arrival time, so if two processes have the same arrival time, take the one with the lower burst time first.
+      this.readyQueue = this.sortProcessesByArrivalTime(this.sortProcessesByBurstTime(this.getAvailableProcesses(this.jobQueue, timeDelta, true)));
+      this.allReadyQueues.push(this.readyQueue);
 
-      // Check whether the CPU needs to idle for the next process.
-      if (arrivalTime > timeDelta) {
+      // If the ready queue has no processes, we need to wait until one becomes available.
+      if (this.getAvailableProcesses(this.jobQueue, timeDelta).length === 0) {
         if (verbose) console.log("[" + timeDelta + "] CPU Idle...");
-        this.schedule.push({ processName: "IDLE", timeDelta: timeDelta, arrivalTime: null, burstTime: arrivalTime - timeDelta });
-        // Adjust time delta with respect to idle length.
-        timeDelta += arrivalTime - timeDelta;
+        this.schedule.push({ processName: "IDLE", timeDelta: timeDelta, arrivalTime: null, burstTime: 0 });
+        while (true) {
+          this.readyQueue = this.sortProcessesByArrivalTime(this.sortProcessesByBurstTime(this.getAvailableProcesses(this.jobQueue, timeDelta, true)));
+          if (this.getAvailableProcesses(this.jobQueue, timeDelta).length > 0) break;
+
+          this.schedule[this.schedule.length - 1]["burstTime"] += 1;
+          timeDelta++;
+        }
       }
 
-      if (verbose) console.log("[" + timeDelta + "] Spawned Process", name);
+      p = this.readyQueue[i];
+      name = p.getName();
+      arrivalTime = p.getArrivalTime();
+      burstTime = p.getBurstTime();
 
-      this.schedule.push({ processName: name, timeDelta: timeDelta, arrivalTime: arrivalTime, burstTime: burstTime });
+      // If the process has changed since the last iteration, the previous process has ran to completion.
+      if (lastP !== p || lastP === null) {
+        // Inform the user of the newly spawned process.
+        if (verbose) console.log("[" + timeDelta + "] Spawned Process", name);
+        // Add it to the schedule.
+        this.schedule.push({ processName: name, timeDelta: timeDelta, arrivalTime: arrivalTime, burstTime: 0 });
+      }
 
-      // Keep track of the current time of execution.
-      timeDelta += burstTime;
+      // Continue to increment the burst time of this process as long as it has execution time remaining.
+      if (burstTime > 0) {
+        p.setBurstTime(burstTime - 1);
+        this.schedule[this.schedule.length - 1]["burstTime"] += 1;
+      }
 
-      if (verbose) console.log("[" + timeDelta + "] Process", name, "Finished executing!");
+      lastP = p;
+      // Increment time delta to track execution progress.
+      timeDelta++;
+
+      // If the burst time is 0 the process has finished executing.
+      if (p.getBurstTime() === 0) {
+        if (verbose) console.log("[" + timeDelta + "] Process", name, "finished executing!");
+        i++;
+      }
     }
   }
 }

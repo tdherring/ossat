@@ -5,6 +5,8 @@ class CPUScheduler {
   constructor() {
     this.jobQueue = [];
     this.schedule = [];
+    this.readyQueue = [];
+    this.allReadyQueues = []; // Ready Queues at each time delta (index = time delta)
   }
 
   createProcess(name, arrivalTime, burstTime, priority = null) {
@@ -32,6 +34,14 @@ class CPUScheduler {
     return this.jobQueue;
   }
 
+  getReadyQueue() {
+    return this.readyQueue;
+  }
+
+  getReadyQueueAtDelta(timeDelta) {
+    return this.allReadyQueues[timeDelta];
+  }
+
   /**
    * Extracts all processes available at the current time delta.
    *
@@ -39,7 +49,10 @@ class CPUScheduler {
    * @param timeDelta The value to check availability against.
    * @returns An array of available Processes.
    */
-  getAvailableProcesses(jobQueue, timeDelta) {
+  getAvailableProcesses(jobQueue, timeDelta, keepCompleteProcesses = false) {
+    if (keepCompleteProcesses) {
+      return jobQueue.filter((process) => process.getArrivalTime() <= timeDelta);
+    }
     return jobQueue.filter((process) => process.getArrivalTime() <= timeDelta && process.getBurstTime() > 0);
   }
 
