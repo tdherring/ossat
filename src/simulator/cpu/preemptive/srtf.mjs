@@ -24,7 +24,7 @@ class SRTF extends PreemptiveScheduler {
     numIters = this.jobQueue.reduce((x, y) => (numIters += y.getBurstTime()), 0);
 
     for (let i = 0; i < numIters; i++) {
-      let availableProcesses = this.getAvailableProcesses(this.jobQueue, timeDelta);
+      let availableProcesses = this.getAvailableProcesses(timeDelta);
 
       if (availableProcesses.length === 0) {
         if (idleDuration === 0 && verbose) console.log("[" + timeDelta + "] CPU Idle...");

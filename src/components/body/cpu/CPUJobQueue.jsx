@@ -9,8 +9,8 @@ const CPUJobQueue = () => {
     <div>
       <h5 className="is-size-5">Job Queue</h5>
       {jobQueue.length === 0 ? (
-        <article class="message is-dark mx-2 my-4">
-          <div class="message-body">Waiting for processes...</div>
+        <article className="message is-dark mx-2 my-4">
+          <div className="message-body">Waiting for processes...</div>
         </article>
       ) : (
         <div className="columns is-multiline px-2 py-4 is-vcentered">

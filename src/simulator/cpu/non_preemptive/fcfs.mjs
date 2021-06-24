@@ -20,17 +20,21 @@ class FCFS extends NonPreemptiveScheduler {
     // Keep scheduling until all processes have no burst time left.
     while (this.jobQueue.filter((x) => x.getBurstTime() !== 0).length > 0) {
       // Sort the processes by burst time and then arrival time, so if two processes have the same arrival time, take the one with the lower burst time first.
-      this.readyQueue = this.sortProcessesByArrivalTime(this.sortProcessesByBurstTime(this.getAvailableProcesses(this.jobQueue, timeDelta, true)));
-      this.allReadyQueues.push(this.readyQueue);
+      this.readyQueue = this.sortProcessesByArrivalTime(this.sortProcessesByBurstTime(this.getAvailableProcesses(timeDelta, true)));
+      // Clone the process so it is not affected by changes to the true process object.
+      this.allReadyQueues.push(JSON.parse(JSON.stringify(this.readyQueue)));
+      this.allJobQueues.push(JSON.parse(JSON.stringify(this.jobQueue)));
 
       // If the ready queue has no processes, we need to wait until one becomes available.
-      if (this.getAvailableProcesses(this.jobQueue, timeDelta).length === 0) {
+      if (this.getAvailableProcesses(timeDelta).length === 0) {
         if (verbose) console.log("[" + timeDelta + "] CPU Idle...");
         this.schedule.push({ processName: "IDLE", timeDelta: timeDelta, arrivalTime: null, burstTime: 0 });
         while (true) {
-          this.readyQueue = this.sortProcessesByArrivalTime(this.sortProcessesByBurstTime(this.getAvailableProcesses(this.jobQueue, timeDelta, true)));
-          if (this.getAvailableProcesses(this.jobQueue, timeDelta).length > 0) break;
-
+          this.readyQueue = this.sortProcessesByArrivalTime(this.sortProcessesByBurstTime(this.getAvailableProcesses(timeDelta, true)));
+          this.allReadyQueues.push(JSON.parse(JSON.stringify(this.readyQueue)));
+          this.allJobQueues.push(JSON.parse(JSON.stringify(this.jobQueue)));
+          if (this.getAvailableProcesses(timeDelta).length > 0) break;
+          // Don't increment the burst time / time delta if the ready queue now has something in it.
           this.schedule[this.schedule.length - 1]["burstTime"] += 1;
           timeDelta++;
         }
@@ -65,6 +69,8 @@ class FCFS extends NonPreemptiveScheduler {
         i++;
       }
     }
+    this.allReadyQueues.push(JSON.parse(JSON.stringify(this.readyQueue)));
+    this.allJobQueues.push(JSON.parse(JSON.stringify(this.jobQueue)));
   }
 }
 

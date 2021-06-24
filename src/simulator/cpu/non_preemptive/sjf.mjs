@@ -13,7 +13,7 @@ class SJF extends NonPreemptiveScheduler {
 
     for (let i = 0; i < numIters; i++) {
       // The queue of waiting processes.
-      let readyQueue = this.getAvailableProcesses(this.jobQueue, timeDelta);
+      let readyQueue = this.getAvailableProcesses(timeDelta);
 
       // Are there any available processes in the ready queue?
       // Yes? - Take the shortest job first (left).

@@ -6,7 +6,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 const AddProcess = ({ isPriorityProcess }) => {
   const [activeCPUScheduler] = useContext(CPUSimulatorContext).active;
-  const [jobQueue, setJobQueue] = useContext(CPUSimulatorContext).jQueue;
+  const [jobQueue] = useContext(CPUSimulatorContext).jQueue;
   const [running, setRunning] = useContext(CPUSimulatorContext).running;
 
   const [activeModal, setActiveModal] = useContext(ModalContext);
@@ -64,7 +64,7 @@ const AddProcess = ({ isPriorityProcess }) => {
                   <input
                     className={`input ${submissionAttempt && (processName === "" || jobQueue.some((process) => process.name === processName)) ? "is-danger" : null}`}
                     type="text"
-                    onChange={(event) => setProcessName(event.target.value)}
+                    onInput={(event) => setProcessName(event.target.value)}
                   />
                 </div>
                 {submissionAttempt && processName === "" ? <p className="help is-danger">This field is required</p> : null}
@@ -73,20 +73,28 @@ const AddProcess = ({ isPriorityProcess }) => {
               <div className="field">
                 <label className="label">Arrival Time</label>
                 <div className="control">
-                  <input className="input" type="number" defaultValue="0" min="0" onChange={(event) => setArrivalTime(parseInt(event.target.value))} />
+                  <input
+                    className="input"
+                    type="number"
+                    defaultValue="0"
+                    min="0"
+                    onInput={(event) => {
+                      setArrivalTime(parseInt(event.target.value));
+                    }}
+                  />
                 </div>
               </div>
               <div className="field">
                 <label className="label">Burst Time</label>
                 <div className="control">
-                  <input className="input" type="number" defaultValue="1" min="0" onChange={(event) => setBurstTime(parseInt(event.target.value))} />
+                  <input className="input" type="number" defaultValue="1" min="0" onInput={(event) => setBurstTime(parseInt(event.target.value))} />
                 </div>
               </div>
               {isPriorityProcess && (
                 <div className="field">
                   <label className="label">Priority</label>
                   <div className="control">
-                    <input className="input" type="number" defaultValue="0" min="0" onChange={(event) => setPriority(parseInt(event.target.value))} />
+                    <input className="input" type="number" defaultValue="0" min="0" onInput={(event) => setPriority(parseInt(event.target.value))} />
                   </div>
                 </div>
               )}

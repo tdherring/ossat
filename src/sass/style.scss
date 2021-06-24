@@ -6,6 +6,11 @@ $primary: rgb(0, 141, 54);
 @import "../assets/fonts/OpenSans-Regular.ttf";
 $family-serif: "OpenSans", sans-serif;
 $family-primary: $family-serif;
+// Globally remove the focus highlight.
+$button-focus-box-shadow-size: 0;
+$button-focus-border-color: black;
+$input-focus-box-shadow-size: 0;
+$input-focus-border-color: black;
 
 // Globally hide the scrollbar.
 html {

@@ -6,7 +6,9 @@ class CPUScheduler {
     this.jobQueue = [];
     this.schedule = [];
     this.readyQueue = [];
-    this.allReadyQueues = []; // Ready Queues at each time delta (index = time delta)
+    // Job and Ready Queue at each time delta (index = time delta)
+    this.allReadyQueues = [];
+    this.allJobQueues = [];
   }
 
   createProcess(name, arrivalTime, burstTime, priority = null) {
@@ -30,16 +32,22 @@ class CPUScheduler {
     return this.schedule;
   }
 
-  getJobQueue() {
+  getJobQueue(timeDelta = null) {
+    if (timeDelta !== null) return this.allJobQueues[timeDelta];
     return this.jobQueue;
   }
 
-  getReadyQueue() {
+  getReadyQueue(timeDelta = null) {
+    if (timeDelta !== null) return this.allReadyQueues[timeDelta];
     return this.readyQueue;
   }
 
-  getReadyQueueAtDelta(timeDelta) {
-    return this.allReadyQueues[timeDelta];
+  getAllJobQueues() {
+    return this.allJobQueues;
+  }
+
+  getAllReadyQueues() {
+    return this.allReadyQueues;
   }
 
   /**
@@ -49,11 +57,9 @@ class CPUScheduler {
    * @param timeDelta The value to check availability against.
    * @returns An array of available Processes.
    */
-  getAvailableProcesses(jobQueue, timeDelta, keepCompleteProcesses = false) {
-    if (keepCompleteProcesses) {
-      return jobQueue.filter((process) => process.getArrivalTime() <= timeDelta);
-    }
-    return jobQueue.filter((process) => process.getArrivalTime() <= timeDelta && process.getBurstTime() > 0);
+  getAvailableProcesses(timeDelta, keepCompleteProcesses = false) {
+    if (keepCompleteProcesses) return this.jobQueue.filter((process) => process.getArrivalTime() <= timeDelta);
+    return this.jobQueue.filter((process) => process.getArrivalTime() <= timeDelta && process.getBurstTime() > 0);
   }
 
   /**

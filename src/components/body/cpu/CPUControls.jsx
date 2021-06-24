@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleDown, faPlay, faBackward, faForward, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faAngleDown, faPlay, faStepBackward, faStepForward, faFastBackward, faFastForward, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { CPUSimulatorContext } from "../../../contexts/CPUSimulatorContext";
 import { ResizeContext } from "../../../contexts/ResizeContext";
 import { ModalContext } from "../../../contexts/ModalContext";
@@ -17,6 +17,7 @@ const CPUControls = () => {
   const [, setSimulationSpeed] = useContext(CPUSimulatorContext).speed;
   const [widthValue] = useContext(ResizeContext).width;
   const [running, setRunning] = useContext(CPUSimulatorContext).running;
+  const [timeDelta, setTimeDelta] = useContext(CPUSimulatorContext).time;
 
   const Scheduler = { FCFS: new FCFS(), SJF: new SJF(), Priority: new Priority(), RR: new RR(2), SRTF: new SRTF() };
 
@@ -90,24 +91,44 @@ const CPUControls = () => {
           }}
         />
       </span>
+      <span className="control buttons is-grouped has-addons">
+        <button className="button is-primary" href="/#">
+          <FontAwesomeIcon icon={faFastBackward} />
+        </button>
+        <button
+          className="button is-primary"
+          href="/#"
+          onClick={() => {
+            if (timeDelta > 0) setTimeDelta(timeDelta - 1);
+          }}
+        >
+          <FontAwesomeIcon icon={faStepBackward} />
+        </button>
+        <button
+          className="button is-primary"
+          href="/#"
+          onClick={() => {
+            activeCPUScheduler.dispatchProcesses(true);
+            setRunning(!running);
+          }}
+        >
+          <FontAwesomeIcon icon={faPlay} />
+        </button>
+        <button
+          className="button is-primary"
+          href="/#"
+          onClick={() => {
+            if (timeDelta < activeCPUScheduler.getAllReadyQueues().length - 1) setTimeDelta(timeDelta + 1);
+          }}
+        >
+          <FontAwesomeIcon icon={faStepForward} />
+        </button>
+        <button className="button is-primary" href="/#">
+          <FontAwesomeIcon icon={faFastForward} />
+        </button>
+      </span>
       <span className="control">
-        <span className="field is-grouped">
-          <button className="button is-primary mr-2" href="/#">
-            <FontAwesomeIcon icon={faBackward} />
-          </button>
-          <button
-            className="button is-primary mr-2"
-            href="/#"
-            onClick={() => {
-              activeCPUScheduler.dispatchProcesses(true);
-              setRunning(!running);
-            }}
-          >
-            <FontAwesomeIcon icon={faPlay} />
-          </button>
-          <button className="button is-primary mr-2" href="/#">
-            <FontAwesomeIcon icon={faForward} />
-          </button>
+        <span className="field">
           <button
             className="button is-primary"
             href="/#"

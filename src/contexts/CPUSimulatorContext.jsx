@@ -7,15 +7,16 @@ export const CPUSimulatorProvider = (props) => {
   const [activeCPUScheduler, setActiveCPUScheduler] = useState(new FCFS());
   const [simulationSpeed, setSimulationSpeed] = useState(1);
   const [jobQueue, setJobQueue] = useState([]);
-  const [readyQueue, setReadyQueue] = useState(activeCPUScheduler.getReadyQueue());
+  const [readyQueue, setReadyQueue] = useState([]);
+  const [timeDelta, setTimeDelta] = useState(0);
 
+  // Flipped between true / false to call useEffect() and update the job / ready queue.
   const [running, setRunning] = useState(false);
 
   // Update the job and ready queues.
   useEffect(() => {
-    console.log(activeCPUScheduler.getJobQueue());
-    setJobQueue(activeCPUScheduler.getJobQueue());
-    setReadyQueue(activeCPUScheduler.getReadyQueue());
+    timeDelta === 0 && activeCPUScheduler.getSchedule().length === 0 ? setJobQueue(activeCPUScheduler.getJobQueue()) : setJobQueue(activeCPUScheduler.getJobQueue(timeDelta));
+    setReadyQueue(activeCPUScheduler.getReadyQueue(timeDelta));
   });
 
   return (
@@ -26,6 +27,7 @@ export const CPUSimulatorProvider = (props) => {
         jQueue: [jobQueue, setJobQueue],
         rQueue: [readyQueue, setReadyQueue],
         running: [running, setRunning],
+        time: [timeDelta, setTimeDelta],
       }}
     >
       {props.children}

@@ -18,12 +18,12 @@ class RR extends PreemptiveScheduler {
     let i = 0;
     let readyQueue = [];
 
-    let availableProcesses = this.getAvailableProcesses(this.jobQueue, timeDelta);
+    let availableProcesses = this.getAvailableProcesses(timeDelta);
 
     if (availableProcesses.length > 0) {
       // If processes are available from time delta 0.
       // Initialise the ready queue to hold all processes which are available at this time delta (0).
-      readyQueue = this.getAvailableProcesses(this.jobQueue, timeDelta);
+      readyQueue = this.getAvailableProcesses(timeDelta);
     } else {
       // Otherwise, we need to idle at the first iteration, so set the first item in the ready queue to the process which arrives quickest.
       readyQueue.push(this.jobQueue[0]);
@@ -70,7 +70,7 @@ class RR extends PreemptiveScheduler {
       }
 
       // Find all processes which are available at this timestep (diff the arrays).
-      let newlyAvailable = this.getAvailableProcesses(this.jobQueue, timeDelta).filter((x) => this.getAvailableProcesses(this.jobQueue, timeDelta - deltaIncrement).indexOf(x) === -1);
+      let newlyAvailable = this.getAvailableProcesses(timeDelta).filter((x) => this.getAvailableProcesses(timeDelta - deltaIncrement).indexOf(x) === -1);
 
       // If after this quantum there are new processes available, add the the front of the ready queue.
       if (newlyAvailable.length > 0) {
