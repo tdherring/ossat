@@ -1,6 +1,6 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleDown, faPlay, faStepBackward, faStepForward, faFastBackward, faFastForward, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faAngleDown, faPlay, faStepBackward, faStepForward, faFastBackward, faFastForward, faPlus, faPause, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { CPUSimulatorContext } from "../../../contexts/CPUSimulatorContext";
 import { ResizeContext } from "../../../contexts/ResizeContext";
 import { ModalContext } from "../../../contexts/ModalContext";
@@ -14,7 +14,7 @@ import SRTF from "../../../simulator/cpu/preemptive/srtf.mjs";
 const CPUControls = () => {
   const [, setActiveModal] = useContext(ModalContext);
   const [activeCPUScheduler, setActiveCPUScheduler] = useContext(CPUSimulatorContext).active;
-  const [, setSimulationSpeed] = useContext(CPUSimulatorContext).speed;
+  const [simulationSpeed, setSimulationSpeed] = useContext(CPUSimulatorContext).speed;
   const [widthValue] = useContext(ResizeContext).width;
   const [running, setRunning] = useContext(CPUSimulatorContext).running;
   const [timeDelta, setTimeDelta] = useContext(CPUSimulatorContext).time;
@@ -49,8 +49,20 @@ const CPUControls = () => {
 
   let schedule = activeCPUScheduler.getSchedule();
 
+  const [autoScheduling, setAutoScheduling] = useState(false);
+  const [intervalVal, setIntervalVal] = useState(null);
+
+  // Stop the auto scheduler from overflowing the schedule boundaries.
+  useEffect(() => {
+    if (schedule.length > 0 && timeDelta >= schedule[schedule.length - 1].timeDelta + schedule[schedule.length - 1].burstTime) {
+      setAutoScheduling(false);
+      clearInterval(intervalVal);
+    }
+    if (!autoScheduling) clearInterval(intervalVal);
+  }, [timeDelta, intervalVal]);
+
   return (
-    <div className={`field is-grouped is-grouped-multiline ${widthValue < 1115 && "is-grouped-centered"}`}>
+    <div className={`field is-grouped is-grouped-multiline ${widthValue < 1127 && "is-grouped-centered"}`}>
       <span className="control">
         <div className="dropdown is-hoverable">
           <div className="dropdown-trigger">
@@ -60,7 +72,7 @@ const CPUControls = () => {
             </button>
           </div>
 
-          <div className="dropdown-menu" id="dropdown-menu" role="menu" style={{ width: "20rem" }}>
+          <div className="dropdown-menu" id="dropdown-menu" role="menu">
             <div className="dropdown-content" value="FCFS">
               {dropdownOptions.map((option) => (
                 <a
@@ -80,7 +92,7 @@ const CPUControls = () => {
           </div>
         </div>
       </span>
-      <span className="control">
+      <span className="control mb-0">
         <input
           className="input"
           style={{ width: "4.5rem" }}
@@ -93,16 +105,28 @@ const CPUControls = () => {
             setSimulationSpeed(event.target.valueAsNumber);
           }}
         />
+
+        <FontAwesomeIcon className="ml-2 my-3" icon={faTimes} />
       </span>
       <span className="control buttons is-grouped has-addons">
-        <button className="button is-primary" href="/#" onClick={() => setTimeDelta(0)}>
+        <button
+          className="button is-primary"
+          href="/#"
+          onClick={() => {
+            setTimeDelta(0);
+            setAutoScheduling(false);
+          }}
+        >
           <FontAwesomeIcon icon={faFastBackward} />
         </button>
         <button
           className="button is-primary"
           href="/#"
           onClick={() => {
-            if (timeDelta > 0) setTimeDelta(timeDelta - 1);
+            if (timeDelta > 0) {
+              setTimeDelta(timeDelta - 1);
+              setAutoScheduling(false);
+            }
           }}
         >
           <FontAwesomeIcon icon={faStepBackward} />
@@ -114,16 +138,32 @@ const CPUControls = () => {
             if (jobQueue.length > 0) {
               activeCPUScheduler.dispatchProcesses(true);
               setRunning(!running);
+              if (schedule.length > 0) setAutoScheduling(!autoScheduling);
+              // Ensure the pause happens immediately.
+              if (autoScheduling) clearInterval(intervalVal);
+              // Every 1000 / simulation speed seconds, automatically increment the time delta.
+              if (!autoScheduling && timeDelta < schedule[schedule.length - 1].timeDelta + schedule[schedule.length - 1].burstTime) {
+                setIntervalVal(
+                  setInterval(() => {
+                    setTimeDelta((timeDelta) => timeDelta + 1);
+                  }, 1000 / simulationSpeed)
+                );
+              } else {
+                setAutoScheduling(false);
+              }
             }
           }}
         >
-          <FontAwesomeIcon icon={faPlay} />
+          <FontAwesomeIcon icon={autoScheduling ? faPause : faPlay} />
         </button>
         <button
           className="button is-primary"
           href="/#"
           onClick={() => {
-            if (timeDelta < schedule[schedule.length - 1].timeDelta + schedule[schedule.length - 1].burstTime) setTimeDelta(timeDelta + 1);
+            if (schedule.length > 0 && timeDelta < schedule[schedule.length - 1].timeDelta + schedule[schedule.length - 1].burstTime) {
+              setTimeDelta(timeDelta + 1);
+              setAutoScheduling(false);
+            }
           }}
         >
           <FontAwesomeIcon icon={faStepForward} />
@@ -132,8 +172,10 @@ const CPUControls = () => {
           className="button is-primary"
           href="/#"
           onClick={() => {
-            if (timeDelta < schedule[schedule.length - 1].timeDelta + schedule[schedule.length - 1].burstTime)
+            if (schedule.length > 0 && timeDelta < schedule[schedule.length - 1].timeDelta + schedule[schedule.length - 1].burstTime) {
               setTimeDelta(schedule[schedule.length - 1].timeDelta + schedule[schedule.length - 1].burstTime);
+              setAutoScheduling(false);
+            }
           }}
         >
           <FontAwesomeIcon icon={faFastForward} />
