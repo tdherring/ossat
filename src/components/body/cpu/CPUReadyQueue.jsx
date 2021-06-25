@@ -4,8 +4,8 @@ import { CPUSimulatorContext } from "../../../contexts/CPUSimulatorContext";
 
 const CPUReadyQueue = () => {
   const [readyQueue] = useContext(CPUSimulatorContext).rQueue;
-
-  console.log(readyQueue);
+  const [activeCPUScheduler] = useContext(CPUSimulatorContext).active;
+  const [currentProcess] = useContext(CPUSimulatorContext).current;
 
   return (
     <div>
@@ -17,7 +17,13 @@ const CPUReadyQueue = () => {
       ) : (
         <div className="columns is-multiline px-2 py-4 is-vcentered">
           {readyQueue.map((process) => (
-            <CPUProcess key={process.name} name={process.name} arrivalTime={process.arrivalTime} burstTime={process.burstTime} status={process.burstTime === 0 ? "FINISHED" : "WAITING"} />
+            <CPUProcess
+              key={process.name}
+              name={process.name}
+              arrivalTime={process.arrivalTime}
+              burstTime={process.burstTime}
+              status={process.burstTime === 0 ? "FINISHED" : activeCPUScheduler.getAllReadyQueues().length > 0 && currentProcess.processName === process.name ? "EXECUTING" : "WAITING"}
+            />
           ))}
         </div>
       )}

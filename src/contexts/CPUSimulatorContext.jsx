@@ -9,6 +9,7 @@ export const CPUSimulatorProvider = (props) => {
   const [jobQueue, setJobQueue] = useState([]);
   const [readyQueue, setReadyQueue] = useState([]);
   const [timeDelta, setTimeDelta] = useState(0);
+  const [currentProcess, setCurrentProcess] = useState(null);
 
   // Flipped between true / false to call useEffect() and update the job / ready queue.
   const [running, setRunning] = useState(false);
@@ -16,6 +17,7 @@ export const CPUSimulatorProvider = (props) => {
   // Update the job and ready queues.
   useEffect(() => {
     timeDelta === 0 && activeCPUScheduler.getSchedule().length === 0 ? setJobQueue(activeCPUScheduler.getJobQueue()) : setJobQueue(activeCPUScheduler.getJobQueue(timeDelta));
+
     setReadyQueue(activeCPUScheduler.getReadyQueue(timeDelta));
   });
 
@@ -28,6 +30,7 @@ export const CPUSimulatorProvider = (props) => {
         rQueue: [readyQueue, setReadyQueue],
         running: [running, setRunning],
         time: [timeDelta, setTimeDelta],
+        current: [currentProcess, setCurrentProcess],
       }}
     >
       {props.children}

@@ -25,7 +25,9 @@ const CPUProcess = ({ name, arrivalTime, burstTime, priority, status, jobQueuePr
                   // Flip this hook var to cause a rerender of the job and ready queues.
                   setRunning(!running);
                 }}
-              ></a>
+              >
+                {" "}
+              </a>
             )}
           </span>
           <strong>{name}</strong>

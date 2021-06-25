@@ -17,5 +17,16 @@ html {
   overflow: auto !important;
 }
 
+// Alignment of time markers above the schedule.
+th {
+  border: 0 !important;
+  min-width: 100px !important;
+}
+
+th > h6 {
+  display: inline-block !important;
+  transform: translateX(-50%) !important;
+}
+
 // Import Bulma SASS files.
 @import "./node_modules/bulma/bulma.sass";

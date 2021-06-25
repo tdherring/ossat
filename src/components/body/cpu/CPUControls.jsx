@@ -18,6 +18,7 @@ const CPUControls = () => {
   const [widthValue] = useContext(ResizeContext).width;
   const [running, setRunning] = useContext(CPUSimulatorContext).running;
   const [timeDelta, setTimeDelta] = useContext(CPUSimulatorContext).time;
+  const [jobQueue] = useContext(CPUSimulatorContext).jQueue;
 
   const Scheduler = { FCFS: new FCFS(), SJF: new SJF(), Priority: new Priority(), RR: new RR(2), SRTF: new SRTF() };
 
@@ -46,8 +47,10 @@ const CPUControls = () => {
     },
   ];
 
+  let schedule = activeCPUScheduler.getSchedule();
+
   return (
-    <div className={`field is-grouped is-grouped-multiline ${widthValue < 1024 && "is-grouped-centered"}`}>
+    <div className={`field is-grouped is-grouped-multiline ${widthValue < 1115 && "is-grouped-centered"}`}>
       <span className="control">
         <div className="dropdown is-hoverable">
           <div className="dropdown-trigger">
@@ -92,7 +95,7 @@ const CPUControls = () => {
         />
       </span>
       <span className="control buttons is-grouped has-addons">
-        <button className="button is-primary" href="/#">
+        <button className="button is-primary" href="/#" onClick={() => setTimeDelta(0)}>
           <FontAwesomeIcon icon={faFastBackward} />
         </button>
         <button
@@ -108,8 +111,10 @@ const CPUControls = () => {
           className="button is-primary"
           href="/#"
           onClick={() => {
-            activeCPUScheduler.dispatchProcesses(true);
-            setRunning(!running);
+            if (jobQueue.length > 0) {
+              activeCPUScheduler.dispatchProcesses(true);
+              setRunning(!running);
+            }
           }}
         >
           <FontAwesomeIcon icon={faPlay} />
@@ -118,12 +123,19 @@ const CPUControls = () => {
           className="button is-primary"
           href="/#"
           onClick={() => {
-            if (timeDelta < activeCPUScheduler.getAllReadyQueues().length - 1) setTimeDelta(timeDelta + 1);
+            if (timeDelta < schedule[schedule.length - 1].timeDelta + schedule[schedule.length - 1].burstTime) setTimeDelta(timeDelta + 1);
           }}
         >
           <FontAwesomeIcon icon={faStepForward} />
         </button>
-        <button className="button is-primary" href="/#">
+        <button
+          className="button is-primary"
+          href="/#"
+          onClick={() => {
+            if (timeDelta < schedule[schedule.length - 1].timeDelta + schedule[schedule.length - 1].burstTime)
+              setTimeDelta(schedule[schedule.length - 1].timeDelta + schedule[schedule.length - 1].burstTime);
+          }}
+        >
           <FontAwesomeIcon icon={faFastForward} />
         </button>
       </span>

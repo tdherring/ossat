@@ -8,6 +8,7 @@ class FCFS extends NonPreemptiveScheduler {
    */
   dispatchProcesses(verbose = false) {
     if (verbose) console.log("\nOSSAT-FCFS\n-----------------------------------------");
+    this.initialJobQueue = JSON.parse(JSON.stringify(this.jobQueue));
     this.jobQueue = this.sortProcessesByArrivalTime(this.jobQueue);
     let timeDelta = 0;
     let i = 0;
@@ -31,12 +32,13 @@ class FCFS extends NonPreemptiveScheduler {
         this.schedule.push({ processName: "IDLE", timeDelta: timeDelta, arrivalTime: null, burstTime: 0 });
         while (true) {
           this.readyQueue = this.sortProcessesByArrivalTime(this.sortProcessesByBurstTime(this.getAvailableProcesses(timeDelta, true)));
-          this.allReadyQueues.push(JSON.parse(JSON.stringify(this.readyQueue)));
-          this.allJobQueues.push(JSON.parse(JSON.stringify(this.jobQueue)));
+
           if (this.getAvailableProcesses(timeDelta).length > 0) break;
           // Don't increment the burst time / time delta if the ready queue now has something in it.
           this.schedule[this.schedule.length - 1]["burstTime"] += 1;
           timeDelta++;
+          this.allReadyQueues.push(JSON.parse(JSON.stringify(this.readyQueue)));
+          this.allJobQueues.push(JSON.parse(JSON.stringify(this.jobQueue)));
         }
       }
 
@@ -68,9 +70,13 @@ class FCFS extends NonPreemptiveScheduler {
         if (verbose) console.log("[" + timeDelta + "] Process", name, "finished executing!");
         i++;
       }
+
+      // Add the final job and ready queue states.
+      if (this.jobQueue.filter((x) => x.getBurstTime() !== 0).length === 0) {
+        this.allReadyQueues.push(JSON.parse(JSON.stringify(this.readyQueue)));
+        this.allJobQueues.push(JSON.parse(JSON.stringify(this.jobQueue)));
+      }
     }
-    this.allReadyQueues.push(JSON.parse(JSON.stringify(this.readyQueue)));
-    this.allJobQueues.push(JSON.parse(JSON.stringify(this.jobQueue)));
   }
 }
 

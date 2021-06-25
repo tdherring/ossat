@@ -4,6 +4,8 @@ import { CPUSimulatorContext } from "../../../contexts/CPUSimulatorContext";
 
 const CPUJobQueue = () => {
   const [jobQueue] = useContext(CPUSimulatorContext).jQueue;
+  const [activeCPUScheduler] = useContext(CPUSimulatorContext).active;
+  const [currentProcess] = useContext(CPUSimulatorContext).current;
 
   return (
     <div>
@@ -20,7 +22,7 @@ const CPUJobQueue = () => {
               name={process.name}
               arrivalTime={process.arrivalTime}
               burstTime={process.burstTime}
-              status={process.burstTime === 0 ? "FINISHED" : "WAITING"}
+              status={process.burstTime === 0 ? "FINISHED" : activeCPUScheduler.getAllReadyQueues().length > 0 && currentProcess.processName === process.name ? "EXECUTING" : "WAITING"}
               jobQueueProcess
             />
           ))}
