@@ -27,8 +27,6 @@ const CPUSchedule = () => {
 
   useEffect(() => setCurrentProcess(process));
 
-  console.log(generatedSchedule);
-
   return (
     <div>
       <h5 className="is-size-5">Schedule</h5>

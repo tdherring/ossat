@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { ResizeContext } from "../../../contexts/ResizeContext";
 import { CPUSimulatorContext } from "../../../contexts/CPUSimulatorContext";
 
-const CPUProcess = ({ name, arrivalTime, burstTime, priority, status, jobQueueProcess }) => {
+const CPUProcess = ({ name, arrivalTime, burstTime, remainingTime, priority, status, jobQueueProcess }) => {
   const [activeCPUScheduler] = useContext(CPUSimulatorContext).active;
   const [running, setRunning] = useContext(CPUSimulatorContext).running;
   const [widthValue] = useContext(ResizeContext).width;
@@ -35,7 +35,8 @@ const CPUProcess = ({ name, arrivalTime, burstTime, priority, status, jobQueuePr
         <hr className="is-divider my-3" />
         <h6 className="is-size-6">Arrival Time: {arrivalTime}</h6>
         <h6 className="is-size-6">Burst Time: {burstTime}</h6>
-        {priority && <h6 className="is-size-6">Priority: {priority}</h6>}
+        <h6 className="is-size-6">Remaining Time: {remainingTime}</h6>
+        {priority !== undefined && <h6 className="is-size-6">Priority: {priority}</h6>}
       </div>
     </div>
   );

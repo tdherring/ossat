@@ -8,74 +8,86 @@ class SRTF extends PreemptiveScheduler {
    */
   dispatchProcesses(verbose = false) {
     if (verbose) console.log("\nOSSAT-SRTF\n-----------------------------------------");
+    this.jobQueue = this.sortProcessesByArrivalTime(this.jobQueue);
     let timeDelta = 0;
-    let numIters = 0;
-    let idleDuration = 0;
-    let p;
-    let name;
-    let arrivalTime;
-    let burstTime;
-    let lastP;
+    let i = 0;
+    let lastP, p, name, arrivalTime, remainingTime;
 
-    // Initialise job queue to be first sorted by burst time, then arrival time.
-    this.jobQueue = this.sortProcessesByArrivalTime(this.sortProcessesByBurstTime(this.jobQueue));
+    // Keep scheduling until all processes have no remaining execution time.
+    while (this.jobQueue.filter((x) => x.getRemainingTime() !== 0).length > 0) {
+      // Sort the processes by remaining time.
+      this.readyQueue = this.sortProcessesByRemainingTime(this.getAvailableProcesses(timeDelta, true));
+      // Clone the process so it is not affected by changes to the true process object.
+      this.allReadyQueues.push(JSON.parse(JSON.stringify(this.readyQueue)));
+      this.allJobQueues.push(JSON.parse(JSON.stringify(this.jobQueue)));
 
-    // Set number of iterations to total burst time (not counting idle).
-    numIters = this.jobQueue.reduce((x, y) => (numIters += y.getBurstTime()), 0);
+      // If the ready queue has no processes, we need to wait until one becomes available.
+      if (this.getAvailableProcesses(timeDelta).length === 0) {
+        if (verbose) console.log("[" + timeDelta + "] CPU Idle...");
+        this.schedule.push({ processName: "IDLE", timeDelta: timeDelta, arrivalTime: null, burstTime: 0, remainingTime: null });
+        while (true) {
+          this.readyQueue = this.sortProcessesByRemainingTime(this.getAvailableProcesses(timeDelta, true));
 
-    for (let i = 0; i < numIters; i++) {
-      let availableProcesses = this.getAvailableProcesses(timeDelta);
-
-      if (availableProcesses.length === 0) {
-        if (idleDuration === 0 && verbose) console.log("[" + timeDelta + "] CPU Idle...");
-        idleDuration++;
-        // Extend number of iterations since we have had to delay due to idle.
-        numIters++;
-      } else {
-        // If the CPU has been idle.
-        if (idleDuration > 0) this.schedule.push({ processName: "IDLE", timeDelta: timeDelta - idleDuration, arrivalTime: null, burstTime: idleDuration });
-        idleDuration = 0;
-
-        // Out of all available processes at this time delta, take the process which is arriving soonest.
-        p = this.sortProcessesByBurstTime(availableProcesses)[0];
-        name = p.getName();
-        burstTime = p.getBurstTime();
-        arrivalTime = p.getArrivalTime();
-
-        // If the process has changed since the last iteration, this process has been preempted or executed to completion.
-        if (lastP !== p || lastP === null) {
-          // Tell the user that the process has finished executing.
-          if (lastP != null && verbose) console.log("[" + timeDelta + "] Process", lastP.getName(), "finished executing!");
-          // Inform them of the new process.
-          if (verbose) console.log("[" + timeDelta + "] Spawned Process", name);
-          this.schedule.push({ processName: name, timeDelta: timeDelta, arrivalTime: arrivalTime, burstTime: 0 });
+          if (this.getAvailableProcesses(timeDelta).length > 0) break;
+          // Don't increment the burst time / time delta if the ready queue now has something in it.
+          this.schedule[this.schedule.length - 1]["burstTime"] += 1;
+          timeDelta++;
+          this.allReadyQueues.push(JSON.parse(JSON.stringify(this.readyQueue)));
+          this.allJobQueues.push(JSON.parse(JSON.stringify(this.jobQueue)));
         }
-
-        lastP = p;
-        // Set the "remaining burst time".
-        p.setBurstTime(burstTime - 1);
-        this.schedule[this.schedule.length - 1]["burstTime"] += 1;
       }
 
+      p = this.readyQueue[i];
+      name = p.getName();
+      arrivalTime = p.getArrivalTime();
+      remainingTime = p.getRemainingTime();
+
+      // If the process has changed since the last iteration, the previous process has ran to completion.
+      if (lastP !== p || lastP === null) {
+        // Inform the user of the newly spawned process.
+        if (verbose) console.log("[" + timeDelta + "] Spawned Process", name);
+        // Add it to the schedule.
+        this.schedule.push({ processName: name, timeDelta: timeDelta, arrivalTime: arrivalTime, burstTime: 0 });
+      }
+
+      // Continue to increment the burst time of this process as long as it has execution time remaining.
+      if (remainingTime > 0) {
+        p.setRemainingTime(remainingTime - 1);
+        this.schedule[this.schedule.length - 1].burstTime += 1;
+        this.schedule[this.schedule.length - 1].remainingTime -= 1;
+      }
+
+      lastP = p;
       // Increment time delta to track execution progress.
       timeDelta++;
+
+      // If the burst time is 0 the process has finished executing.
+      if (p.getRemainingTime() === 0) {
+        if (verbose) console.log("[" + timeDelta + "] Process", name, "finished executing!");
+        i++;
+      }
+
+      // Add the final job and ready queue states.
+      if (this.jobQueue.filter((x) => x.getRemainingTime() !== 0).length === 0) {
+        this.allReadyQueues.push(JSON.parse(JSON.stringify(this.readyQueue)));
+        this.allJobQueues.push(JSON.parse(JSON.stringify(this.jobQueue)));
+      }
     }
-    if (verbose) console.log("[" + timeDelta + "] Process", name, "finished executing!");
   }
 }
 
 // Syntax for use on frontend.
 
-// let test_srtf = new SRTF();
+let test_srtf = new SRTF();
 
-// test_srtf.createProcess("p1", 0, 7);
-// test_srtf.createProcess("p2", 1, 5);
-// test_srtf.createProcess("p3", 2, 3);
-// test_srtf.createProcess("p4", 3, 1);
-// test_srtf.createProcess("p5", 4, 2);
-// test_srtf.createProcess("p6", 5, 1);
+test_srtf.createProcess("p1", 0, 7);
+test_srtf.createProcess("p2", 1, 5);
+test_srtf.createProcess("p3", 2, 3);
+test_srtf.createProcess("p4", 3, 1);
+test_srtf.createProcess("p5", 4, 2);
+test_srtf.createProcess("p6", 5, 1);
 
-// test_srtf.dispatchProcesses(true);
-// test_srtf.outputGraphicalRepresentation();
+test_srtf.dispatchProcesses(true);
+test_srtf.outputGraphicalRepresentation();
 
 export default SRTF;

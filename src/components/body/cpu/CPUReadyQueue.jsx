@@ -22,7 +22,11 @@ const CPUReadyQueue = () => {
               name={process.name}
               arrivalTime={process.arrivalTime}
               burstTime={process.burstTime}
-              status={process.burstTime === 0 ? "FINISHED" : activeCPUScheduler.getAllReadyQueues().length > 0 && currentProcess.processName === process.name ? "EXECUTING" : "WAITING"}
+              remainingTime={process.remainingTime}
+              priority={process.priority}
+              status={
+                process.remainingTime === 0 ? "FINISHED" : activeCPUScheduler.getAllReadyQueues().length > 0 && currentProcess && currentProcess.processName === process.name ? "EXECUTING" : "WAITING"
+              }
             />
           ))}
         </div>

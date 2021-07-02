@@ -38,10 +38,6 @@ class CPUScheduler {
     return this.jobQueue;
   }
 
-  getInitialJobQueue() {
-    return this.initialJobQueue;
-  }
-
   getReadyQueue(timeDelta = null) {
     if (timeDelta !== null) return this.allReadyQueues[timeDelta];
     return this.readyQueue;
@@ -64,22 +60,25 @@ class CPUScheduler {
    */
   getAvailableProcesses(timeDelta, keepCompleteProcesses = false) {
     if (keepCompleteProcesses) return this.jobQueue.filter((process) => process.getArrivalTime() <= timeDelta);
-    return this.jobQueue.filter((process) => process.getArrivalTime() <= timeDelta && process.getBurstTime() > 0);
+    return this.jobQueue.filter((process) => process.getArrivalTime() <= timeDelta && process.getRemainingTime() > 0);
   }
 
   /**
    * Sorts the job queue by burst time as required by SJF.
-   * If burst times of two processes same, take the one which is first lexographically.
+   * Burst times the same? - Soonest arriving first.
+   * Burst and arrival times the same? - Lexicographic order, ie: a > c.
    *
    * @param jobQueue The queue to sort.
    * @return An array of Processes, sorted by burst time.
    */
   sortProcessesByBurstTime(jobQueue) {
     return jobQueue.sort((a, b) => {
-      if (a.getBurstTime() >= b.getBurstTime()) {
+      if (a.getBurstTime() > b.getBurstTime()) {
         return 1;
       } else if (a.getBurstTime() === b.getBurstTime()) {
-        if (a.getName() > b.getName()) {
+        if (a.getArrivalTime() > b.getArrivalTime()) {
+          return 1;
+        } else if (a.getArrivalTime() === b.getArrivalTime() && a.getName() > b.getName()) {
           return 1;
         }
       }
@@ -89,17 +88,72 @@ class CPUScheduler {
 
   /**
    * Sorts the job queue by arrival time as required by FCFS/SJF/RR.
-   * If burst / arrival times of two processes same, take the one which is first lexographically.
+   * Arrival times the same? - Shortest burst time first.
+   * Arrival and Burst times the same? - Lexicographic order, ie: a > c.
    *
    * @param jobQueue The queue to sort.
    * @return An array of Processes, sorted by arrival time.
    */
   sortProcessesByArrivalTime(jobQueue) {
     return jobQueue.sort((a, b) => {
-      if (a.getArrivalTime() >= b.getArrivalTime()) {
+      if (a.getArrivalTime() > b.getArrivalTime()) {
         return 1;
-      } else if (a.getArrivalTime() === b.getArrivalTime() && a.getBurstTime() === b.getBurstTime()) {
-        if (a.getName() > b.getName()) {
+      } else if (a.getArrivalTime() === b.getArrivalTime()) {
+        if (a.getBurstTime() > b.getBurstTime()) {
+          return 1;
+        } else if (a.getBurstTime() === b.getBurstTime() && a.getName() > b.getName()) {
+          return 1;
+        }
+      }
+      return -1;
+    });
+  }
+
+  /**
+   * Sorts the job queue by priority as required by the Priority Scheduler.
+   * Priorities times the same? - Soonest arriving first.
+   * Priorities and Arrival times the same? - Shortest burst time first.
+   * Priorities, Arrival, and Burst times the same? - Lexicographic order, ie: a > c.
+   *
+   * @param jobQueue The queue to sort.
+   * @return An array of Processes, sorted by burst time.
+   */
+  sortProcessesByPriority(jobQueue) {
+    return jobQueue.sort((a, b) => {
+      if (a.getPriority() > b.getPriority()) {
+        return 1;
+      } else if (a.getPriority() === b.getPriority()) {
+        if (a.getArrivalTime() > b.getArrivalTime()) {
+          return 1;
+        } else if (a.getArrivalTime() === b.getArrivalTime() && a.getBurstTime() > b.getBurstTime()) {
+          return 1;
+        } else if (a.getArrivalTime() === b.getArrivalTime() && a.getBurstTime() === b.getBurstTime() && a.getName() > b.getName()) {
+          return 1;
+        }
+      }
+      return -1;
+    });
+  }
+
+  /**
+   * Sorts the job queue by arrival time as required by SRTF
+   * Remaining times the same? - Soonest arriving first.
+   * Remaining and Arrival times the same? - Shortest burst time first.
+   * Remaining, Arrival, and Burst times the same? - Lexicographic order, ie: a > c.
+   *
+   * @param jobQueue The queue to sort.
+   * @return An array of Processes, sorted by arrival time.
+   */
+  sortProcessesByRemainingTime(jobQueue) {
+    return jobQueue.sort((a, b) => {
+      if (a.getRemainingTime() >= b.getRemainingTime()) {
+        return 1;
+      } else if (a.getRemainingTime() === b.getRemainingTime()) {
+        if (a.getArrivalTime() > b.getArrivalTime()) {
+          return 1;
+        } else if (a.getArrivalTime() === b.getArrivalTime() && a.getBurstTime() > b.getBurstTime()) {
+          return 1;
+        } else if (a.getArrivalTime() === b.getArrivalTime() && a.getBurstTime() === b.getBurstTime() && a.getName() > b.getName()) {
           return 1;
         }
       }

@@ -5,24 +5,19 @@ import { CPUSimulatorContext } from "../../../contexts/CPUSimulatorContext";
 import { ResizeContext } from "../../../contexts/ResizeContext";
 import { ModalContext } from "../../../contexts/ModalContext";
 import AddProcess from "../../modals/AddProcess";
-import FCFS from "../../../simulator/cpu/non_preemptive/fcfs.mjs";
-import SJF from "../../../simulator/cpu/non_preemptive/sjf.mjs";
-import Priority from "../../../simulator/cpu/non_preemptive/priority.mjs";
-import RR from "../../../simulator/cpu/preemptive/rr.mjs";
-import SRTF from "../../../simulator/cpu/preemptive/srtf.mjs";
+
+import ConfirmSwitch from "../../modals/ConfirmSwitch";
 
 const CPUControls = () => {
   const [, setActiveModal] = useContext(ModalContext);
   const [activeCPUScheduler, setActiveCPUScheduler] = useContext(CPUSimulatorContext).active;
+  const [activeSchedulerName, setActiveSchedulerName] = useContext(CPUSimulatorContext).activeName;
   const [simulationSpeed, setSimulationSpeed] = useContext(CPUSimulatorContext).speed;
   const [widthValue] = useContext(ResizeContext).width;
   const [running, setRunning] = useContext(CPUSimulatorContext).running;
   const [timeDelta, setTimeDelta] = useContext(CPUSimulatorContext).time;
-  const [jobQueue] = useContext(CPUSimulatorContext).jQueue;
-
-  const Scheduler = { FCFS: new FCFS(), SJF: new SJF(), Priority: new Priority(), RR: new RR(2), SRTF: new SRTF() };
-
-  const [activeSchedulerName, setActiveSchedulerName] = useState("First Come First Served (FCFS)");
+  const [jobQueue, setJobQueue] = useContext(CPUSimulatorContext).jQueue;
+  const Scheduler = useContext(CPUSimulatorContext).scheduler;
 
   const dropdownOptions = [
     {
@@ -51,6 +46,9 @@ const CPUControls = () => {
 
   const [autoScheduling, setAutoScheduling] = useState(false);
   const [intervalVal, setIntervalVal] = useState(null);
+
+  const [possibleNewSchedulerName, setPossibleNewSchedulerName] = useState(false);
+  const [possibleNewScheduler, setPossibleNewScheduler] = useState(null);
 
   // Stop the auto scheduler from overflowing the schedule boundaries.
   useEffect(() => {
@@ -81,8 +79,18 @@ const CPUControls = () => {
                   className="dropdown-item"
                   value={option.value}
                   onClick={() => {
-                    setActiveSchedulerName(option.label);
-                    setActiveCPUScheduler(Scheduler[option.value]);
+                    setAutoScheduling(false);
+
+                    if (jobQueue.length > 0) {
+                      setPossibleNewSchedulerName(option.label);
+                      setPossibleNewScheduler(option.value);
+
+                      setActiveModal("confirmSwitch");
+                    } else {
+                      setActiveSchedulerName(option.label);
+                      setActiveCPUScheduler(Scheduler[option.value]);
+                      setJobQueue([]);
+                    }
                   }}
                 >
                   {option.label}
@@ -92,6 +100,21 @@ const CPUControls = () => {
           </div>
         </div>
       </span>
+      {activeSchedulerName === "Round Robin (RR)" && (
+        <span className="control mb-0">
+          {" "}
+          <input
+            className="input"
+            style={{ width: "4.5rem" }}
+            type="number"
+            defaultValue="2"
+            min="1"
+            onInput={(event) => {
+              activeCPUScheduler.setTimeQuantum(event.target.valueAsNumber);
+            }}
+          />
+        </span>
+      )}
       <span className="control mb-0">
         <input
           className="input"
@@ -195,7 +218,8 @@ const CPUControls = () => {
           </button>
         </span>
       </span>
-      <AddProcess />
+      {activeSchedulerName === "Priority" ? <AddProcess isPriorityProcess /> : <AddProcess />}
+      <ConfirmSwitch label={possibleNewSchedulerName} value={possibleNewScheduler} />
     </div>
   );
 };

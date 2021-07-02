@@ -8,53 +8,72 @@ class Priority extends NonPreemptiveScheduler {
    */
   dispatchProcesses(verbose = false) {
     if (verbose) console.log("\nOSSAT-Priority\n-----------------------------------------");
+    this.jobQueue = this.sortProcessesByArrivalTime(this.jobQueue);
     let timeDelta = 0;
-    this.jobQueue = this.sortProcessesByPriority(this.jobQueue, timeDelta);
+    let i = 0;
+    let lastP, p, name, arrivalTime, remainingTime;
 
-    for (let i = 0; i < this.jobQueue.length; i++) {
-      let p = this.jobQueue[i];
-      let name = p.getName();
-      let arrivalTime = p.getArrivalTime();
-      let burstTime = p.getBurstTime();
-      let priority = p.getPriority();
+    // Keep scheduling until all processes have no remaining execution time.
+    while (this.jobQueue.filter((x) => x.getRemainingTime() !== 0).length > 0) {
+      // Sort the processes by burst time, then arrival time, and then priority, so if two processes have the same priority, take the one with the lower arrival time first.
+      // If two process have the same priority and arrival time, take the one with the lower burst time first.
+      this.readyQueue = this.sortProcessesByPriority(this.getAvailableProcesses(timeDelta, true));
+      // Clone the process so it is not affected by changes to the true process object.
+      this.allReadyQueues.push(JSON.parse(JSON.stringify(this.readyQueue)));
+      this.allJobQueues.push(JSON.parse(JSON.stringify(this.jobQueue)));
 
-      // Check whether the CPU needs to idle for the next process.
-      if (arrivalTime > timeDelta) {
+      // If the ready queue has no processes, we need to wait until one becomes available.
+      if (this.getAvailableProcesses(timeDelta).length === 0) {
         if (verbose) console.log("[" + timeDelta + "] CPU Idle...");
-        this.schedule.push({ processName: "IDLE", timeDelta: timeDelta, arrivalTime: null, burstTime: arrivalTime - timeDelta, priority: null });
-        // Adjust time delta with respect to idle length.
-        timeDelta += arrivalTime - timeDelta;
-      }
+        this.schedule.push({ processName: "IDLE", timeDelta: timeDelta, arrivalTime: null, burstTime: 0, remainingTime: null });
+        while (true) {
+          this.readyQueue = this.sortProcessesByPriority(this.getAvailableProcesses(timeDelta, true));
 
-      if (verbose) console.log("[" + timeDelta + "] Spawned Process", name);
-
-      this.schedule.push({ processName: name, timeDelta: timeDelta, arrivalTime: arrivalTime, burstTime: burstTime, priority: priority });
-
-      // Keep track of the current time of execution.
-      timeDelta += burstTime;
-
-      if (verbose) console.log("[" + timeDelta + "] Process", name, "finished executing!");
-    }
-  }
-
-  /**
-   * Sorts the job queue by priority as required by the Priority Scheduler.
-   * If priorities / burst times of two processes same, take the one which is first lexographically.
-   *
-   * @param jobQueue The queue to sort.
-   * @return An array of Processes, sorted by burst time.
-   */
-  sortProcessesByPriority(jobQueue) {
-    return jobQueue.sort((a, b) => {
-      if (a.getPriority() > b.getPriority()) {
-        return 1;
-      } else if (a.getPriority() === b.getPriority() && a.getBurstTime() === b.getBurstTime()) {
-        if (a.getName() > b.getName()) {
-          return 1;
+          if (this.getAvailableProcesses(timeDelta).length > 0) break;
+          // Don't increment the burst time / time delta if the ready queue now has something in it.
+          this.schedule[this.schedule.length - 1]["burstTime"] += 1;
+          timeDelta++;
+          this.allReadyQueues.push(JSON.parse(JSON.stringify(this.readyQueue)));
+          this.allJobQueues.push(JSON.parse(JSON.stringify(this.jobQueue)));
         }
       }
-      return -1;
-    });
+
+      p = this.readyQueue[i];
+      name = p.getName();
+      arrivalTime = p.getArrivalTime();
+      remainingTime = p.getRemainingTime();
+
+      // If the process has changed since the last iteration, the previous process has ran to completion.
+      if (lastP !== p || lastP === null) {
+        // Inform the user of the newly spawned process.
+        if (verbose) console.log("[" + timeDelta + "] Spawned Process", name);
+        // Add it to the schedule.
+        this.schedule.push({ processName: name, timeDelta: timeDelta, arrivalTime: arrivalTime, burstTime: 0 });
+      }
+
+      // Continue to increment the burst time of this process as long as it has execution time remaining.
+      if (remainingTime > 0) {
+        p.setRemainingTime(remainingTime - 1);
+        this.schedule[this.schedule.length - 1].burstTime += 1;
+        this.schedule[this.schedule.length - 1].remainingTime -= 1;
+      }
+
+      lastP = p;
+      // Increment time delta to track execution progress.
+      timeDelta++;
+
+      // If the burst time is 0 the process has finished executing.
+      if (p.getRemainingTime() === 0) {
+        if (verbose) console.log("[" + timeDelta + "] Process", name, "finished executing!");
+        i++;
+      }
+
+      // Add the final job and ready queue states.
+      if (this.jobQueue.filter((x) => x.getRemainingTime() !== 0).length === 0) {
+        this.allReadyQueues.push(JSON.parse(JSON.stringify(this.readyQueue)));
+        this.allJobQueues.push(JSON.parse(JSON.stringify(this.jobQueue)));
+      }
+    }
   }
 }
 

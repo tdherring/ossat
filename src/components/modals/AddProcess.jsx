@@ -6,7 +6,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 const AddProcess = ({ isPriorityProcess }) => {
   const [activeCPUScheduler] = useContext(CPUSimulatorContext).active;
-  const [jobQueue] = useContext(CPUSimulatorContext).jQueue;
+  const [jobQueue, setJobQueue] = useContext(CPUSimulatorContext).jQueue;
   const [running, setRunning] = useContext(CPUSimulatorContext).running;
 
   const [activeModal, setActiveModal] = useContext(ModalContext);
@@ -15,7 +15,7 @@ const AddProcess = ({ isPriorityProcess }) => {
   const [processName, setProcessName] = useState("");
   const [arrivalTime, setArrivalTime] = useState(0);
   const [burstTime, setBurstTime] = useState(1);
-  const [priority, setPriority] = useState(null);
+  const [priority, setPriority] = useState(0);
 
   // Track whether user has attempted to submit the add process form.
   const [submissionAttempt, setSubmissionAttempt] = useState(false);
@@ -25,7 +25,7 @@ const AddProcess = ({ isPriorityProcess }) => {
 
     // Only add the process the the GUI if there isn't already one with the same name and the process name field isn't empty.
     if (!jobQueue.some((process) => process.name === processName) && processName !== "") {
-      activeCPUScheduler.createProcess(processName, arrivalTime, burstTime, priority);
+      activeCPUScheduler.createProcess(processName, arrivalTime, burstTime, isPriorityProcess ? priority : null);
       // Flip this hook var to cause a rerender of the job and ready queues.
       setRunning(!running);
       setSubmissionAttempt(false);
@@ -35,10 +35,12 @@ const AddProcess = ({ isPriorityProcess }) => {
       setProcessName("");
       setArrivalTime(0);
       setBurstTime(1);
-      setPriority(null);
+      setPriority(0);
     } else {
       setSubmissionAttempt(true);
     }
+
+    setJobQueue(activeCPUScheduler.getJobQueue());
   };
 
   return (

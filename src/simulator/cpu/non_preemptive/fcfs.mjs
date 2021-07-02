@@ -8,20 +8,15 @@ class FCFS extends NonPreemptiveScheduler {
    */
   dispatchProcesses(verbose = false) {
     if (verbose) console.log("\nOSSAT-FCFS\n-----------------------------------------");
-    this.initialJobQueue = JSON.parse(JSON.stringify(this.jobQueue));
     this.jobQueue = this.sortProcessesByArrivalTime(this.jobQueue);
     let timeDelta = 0;
     let i = 0;
-    let lastP;
-    let p;
-    let name;
-    let arrivalTime;
-    let burstTime;
+    let lastP, p, name, arrivalTime, remainingTime;
 
-    // Keep scheduling until all processes have no burst time left.
-    while (this.jobQueue.filter((x) => x.getBurstTime() !== 0).length > 0) {
-      // Sort the processes by burst time and then arrival time, so if two processes have the same arrival time, take the one with the lower burst time first.
-      this.readyQueue = this.sortProcessesByArrivalTime(this.sortProcessesByBurstTime(this.getAvailableProcesses(timeDelta, true)));
+    // Keep scheduling until all processes have no remaining execution time.
+    while (this.jobQueue.filter((x) => x.getRemainingTime() !== 0).length > 0) {
+      // Sort the processes by arrival time.
+      this.readyQueue = this.sortProcessesByArrivalTime(this.getAvailableProcesses(timeDelta, true));
       // Clone the process so it is not affected by changes to the true process object.
       this.allReadyQueues.push(JSON.parse(JSON.stringify(this.readyQueue)));
       this.allJobQueues.push(JSON.parse(JSON.stringify(this.jobQueue)));
@@ -29,9 +24,9 @@ class FCFS extends NonPreemptiveScheduler {
       // If the ready queue has no processes, we need to wait until one becomes available.
       if (this.getAvailableProcesses(timeDelta).length === 0) {
         if (verbose) console.log("[" + timeDelta + "] CPU Idle...");
-        this.schedule.push({ processName: "IDLE", timeDelta: timeDelta, arrivalTime: null, burstTime: 0 });
+        this.schedule.push({ processName: "IDLE", timeDelta: timeDelta, arrivalTime: null, burstTime: 0, remainingTime: null });
         while (true) {
-          this.readyQueue = this.sortProcessesByArrivalTime(this.sortProcessesByBurstTime(this.getAvailableProcesses(timeDelta, true)));
+          this.readyQueue = this.sortProcessesByArrivalTime(this.getAvailableProcesses(timeDelta, true));
 
           if (this.getAvailableProcesses(timeDelta).length > 0) break;
           // Don't increment the burst time / time delta if the ready queue now has something in it.
@@ -45,7 +40,7 @@ class FCFS extends NonPreemptiveScheduler {
       p = this.readyQueue[i];
       name = p.getName();
       arrivalTime = p.getArrivalTime();
-      burstTime = p.getBurstTime();
+      remainingTime = p.getRemainingTime();
 
       // If the process has changed since the last iteration, the previous process has ran to completion.
       if (lastP !== p || lastP === null) {
@@ -56,9 +51,10 @@ class FCFS extends NonPreemptiveScheduler {
       }
 
       // Continue to increment the burst time of this process as long as it has execution time remaining.
-      if (burstTime > 0) {
-        p.setBurstTime(burstTime - 1);
-        this.schedule[this.schedule.length - 1]["burstTime"] += 1;
+      if (remainingTime > 0) {
+        p.setRemainingTime(remainingTime - 1);
+        this.schedule[this.schedule.length - 1].burstTime += 1;
+        this.schedule[this.schedule.length - 1].remainingTime -= 1;
       }
 
       lastP = p;
@@ -66,13 +62,13 @@ class FCFS extends NonPreemptiveScheduler {
       timeDelta++;
 
       // If the burst time is 0 the process has finished executing.
-      if (p.getBurstTime() === 0) {
+      if (p.getRemainingTime() === 0) {
         if (verbose) console.log("[" + timeDelta + "] Process", name, "finished executing!");
         i++;
       }
 
       // Add the final job and ready queue states.
-      if (this.jobQueue.filter((x) => x.getBurstTime() !== 0).length === 0) {
+      if (this.jobQueue.filter((x) => x.getRemainingTime() !== 0).length === 0) {
         this.allReadyQueues.push(JSON.parse(JSON.stringify(this.readyQueue)));
         this.allJobQueues.push(JSON.parse(JSON.stringify(this.jobQueue)));
       }
