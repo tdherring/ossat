@@ -1,6 +1,6 @@
-import Process from "./process.mjs";
+import CPUProcess from "./cpu_process.mjs";
 
-class PriorityProcess extends Process {
+class CPUPriorityProcess extends CPUProcess {
   constructor(name, arrivalTime, burstTime, priority) {
     super(name, arrivalTime, burstTime);
     this.priority = priority;
@@ -11,4 +11,4 @@ class PriorityProcess extends Process {
   }
 }
 
-export default PriorityProcess;
+export default CPUPriorityProcess;

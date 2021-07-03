@@ -1,4 +1,4 @@
-class Process {
+class CPUProcess {
   constructor(name, arrivalTime, burstTime) {
     this.name = name;
     this.arrivalTime = arrivalTime;
@@ -32,4 +32,4 @@ class Process {
   }
 }
 
-export default Process;
+export default CPUProcess;

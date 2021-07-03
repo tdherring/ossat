@@ -1,5 +1,5 @@
-import Process from "./process.mjs";
-import PriorityProcess from "./priority_process.mjs";
+import CPUProcess from "./cpu_process.mjs";
+import CPUPriorityProcess from "./cpu_priority_process.mjs";
 
 class CPUScheduler {
   constructor() {
@@ -20,7 +20,7 @@ class CPUScheduler {
       return;
     }
     // If process given priority, create a PriorityProcess object (left), otherwise create a standard Process object (right).
-    this.jobQueue.push(priority === null ? new Process(name, arrivalTime, burstTime) : new PriorityProcess(name, arrivalTime, burstTime, priority));
+    this.jobQueue.push(priority === null ? new CPUProcess(name, arrivalTime, burstTime) : new CPUPriorityProcess(name, arrivalTime, burstTime, priority));
   }
 
   removeProcess(name) {
