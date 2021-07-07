@@ -28,5 +28,13 @@ th > h6 {
   transform: translateX(-50%) !important;
 }
 
+.block-counter {
+  border: 0 !important;
+  vertical-align: bottom !important;
+  h6 {
+    transform: translateY(+80%) !important;
+  }
+}
+
 // Import Bulma SASS files.
 @import "./node_modules/bulma/bulma.sass";

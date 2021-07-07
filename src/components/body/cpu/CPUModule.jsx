@@ -11,7 +11,7 @@ const CPUModule = () => {
       <div className="tile is-8 is-vertical is-parent">
         <div className="tile is-child box">
           <CPUControls />
-          <hr className="is-divider mt-1" />
+          <hr className="is-divider mt-0" />
           <CPUJobQueue />
           <CPUReadyQueue />
           <hr className="is-divider" />

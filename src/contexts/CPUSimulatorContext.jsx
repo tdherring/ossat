@@ -8,14 +8,15 @@ import SRTF from "../simulator/cpu/preemptive/srtf.mjs";
 export const CPUSimulatorContext = createContext();
 
 export const CPUSimulatorProvider = (props) => {
-  const [activeCPUScheduler, setActiveCPUScheduler] = useState(new FCFS());
+  const Scheduler = { FCFS: new FCFS(), SJF: new SJF(), Priority: new Priority(), RR: new RR(2), SRTF: new SRTF() };
+
+  const [activeCPUScheduler, setActiveCPUScheduler] = useState(Scheduler["FCFS"]);
   const [activeSchedulerName, setActiveSchedulerName] = useState("First Come First Served (FCFS)");
   const [simulationSpeed, setSimulationSpeed] = useState(1);
   const [jobQueue, setJobQueue] = useState([]);
   const [readyQueue, setReadyQueue] = useState([]);
   const [timeDelta, setTimeDelta] = useState(0);
   const [currentProcess, setCurrentProcess] = useState(null);
-  const Scheduler = { FCFS: new FCFS(), SJF: new SJF(), Priority: new Priority(), RR: new RR(2), SRTF: new SRTF() };
 
   // Flipped between true / false to call useEffect() and update the job / ready queue.
   const [running, setRunning] = useState(false);

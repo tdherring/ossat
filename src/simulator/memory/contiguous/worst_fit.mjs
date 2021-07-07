@@ -30,23 +30,23 @@ class WorstFit extends MemoryManager {
 
 // Syntax for use on frontend.
 
-let test_worst_fit = new WorstFit();
+// let test_worst_fit = new WorstFit();
 
-// Create the blocks.
+// // Create the blocks.
 
-test_worst_fit.createBlock(100);
-test_worst_fit.createBlock(500);
-test_worst_fit.createBlock(200);
-test_worst_fit.createBlock(300);
-test_worst_fit.createBlock(600);
+// test_worst_fit.createBlock(100);
+// test_worst_fit.createBlock(500);
+// test_worst_fit.createBlock(200);
+// test_worst_fit.createBlock(300);
+// test_worst_fit.createBlock(600);
 
-// Create the processes.
+// // Create the processes.
 
-test_worst_fit.createProcess("p1", 212);
-test_worst_fit.createProcess("p2", 417);
-test_worst_fit.createProcess("p3", 112);
-test_worst_fit.createProcess("p4", 426);
+// test_worst_fit.createProcess("p1", 212);
+// test_worst_fit.createProcess("p2", 417);
+// test_worst_fit.createProcess("p3", 112);
+// test_worst_fit.createProcess("p4", 426);
 
-test_worst_fit.allocateProcesses(true);
+// test_worst_fit.allocateProcesses(true);
 
 export default WorstFit;

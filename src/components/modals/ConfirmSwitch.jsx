@@ -4,9 +4,9 @@ import { CPUSimulatorContext } from "../../contexts/CPUSimulatorContext";
 
 const ConfirmSwitch = ({ label, value }) => {
   const [activeModal, setActiveModal] = useContext(ModalContext);
-  const [activeCPUScheduler, setActiveCPUScheduler] = useContext(CPUSimulatorContext).active;
-  const [activeSchedulerName, setActiveSchedulerName] = useContext(CPUSimulatorContext).activeName;
-  const [jobQueue, setJobQueue] = useContext(CPUSimulatorContext).jQueue;
+  const [, setActiveCPUScheduler] = useContext(CPUSimulatorContext).active;
+  const [, setActiveSchedulerName] = useContext(CPUSimulatorContext).activeName;
+  const [, setJobQueue] = useContext(CPUSimulatorContext).jQueue;
   const Scheduler = useContext(CPUSimulatorContext).scheduler;
 
   return (

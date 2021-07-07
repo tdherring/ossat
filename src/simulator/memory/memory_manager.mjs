@@ -14,16 +14,26 @@ class MemoryManager {
 
   createProcess(name, size) {
     if (this.jobQueue.filter((process) => process.name === name).length > 0) {
-      console.warn(
-        "You can't have two processes with the same ID. Skipping (" + name + ", " + arrivalTime + ", " + burstTime + ", " + (priority == null ? null : ", " + priority) + ") and continuing silently."
-      );
+      console.warn("You can't have two processes with the same ID. Skipping (" + name + ", " + size + ") and continuing silently.");
       return;
     }
     this.jobQueue.push(new MemoryProcess(name, size));
   }
 
+  getJobQueue() {
+    return this.jobQueue;
+  }
+
   getBlocks() {
     return this.blocks;
+  }
+
+  getAllocated() {
+    return this.allocated;
+  }
+
+  getProcessByName(name) {
+    return this.jobQueue.filter((process) => process.name === name)[0];
   }
 }
 

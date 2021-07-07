@@ -4,7 +4,7 @@ import { CPUSimulatorContext } from "../../contexts/CPUSimulatorContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
-const AddProcess = ({ isPriorityProcess }) => {
+const AddCPUProcess = ({ isPriorityProcess }) => {
   const [activeCPUScheduler] = useContext(CPUSimulatorContext).active;
   const [jobQueue, setJobQueue] = useContext(CPUSimulatorContext).jQueue;
   const [running, setRunning] = useContext(CPUSimulatorContext).running;
@@ -44,12 +44,12 @@ const AddProcess = ({ isPriorityProcess }) => {
   };
 
   return (
-    <div className={`modal p-3 ${activeModal === "addProcess" ? "is-active" : ""}`}>
+    <div className={`modal p-3 ${activeModal === "addCPUProcess" ? "is-active" : ""}`}>
       <div className="modal-background" />
       <div className="modal-card">
         <form onSubmit={handleSubmit}>
           <header className="modal-card-head">
-            <p className="modal-card-title">Add Process</p>
+            <p className="modal-card-title">Add CPU Process</p>
             <button
               className="delete"
               onClick={(event) => {
@@ -75,15 +75,7 @@ const AddProcess = ({ isPriorityProcess }) => {
               <div className="field">
                 <label className="label">Arrival Time</label>
                 <div className="control">
-                  <input
-                    className="input"
-                    type="number"
-                    defaultValue="0"
-                    min="0"
-                    onInput={(event) => {
-                      setArrivalTime(parseInt(event.target.value));
-                    }}
-                  />
+                  <input className="input" type="number" defaultValue="0" min="0" onInput={(event) => setArrivalTime(parseInt(event.target.value))} />
                 </div>
               </div>
               <div className="field">
@@ -124,4 +116,4 @@ const AddProcess = ({ isPriorityProcess }) => {
   );
 };
 
-export default AddProcess;
+export default AddCPUProcess;

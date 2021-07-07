@@ -4,7 +4,7 @@ import { faAngleDown, faPlay, faStepBackward, faStepForward, faFastBackward, faF
 import { CPUSimulatorContext } from "../../../contexts/CPUSimulatorContext";
 import { ResizeContext } from "../../../contexts/ResizeContext";
 import { ModalContext } from "../../../contexts/ModalContext";
-import AddProcess from "../../modals/AddProcess";
+import AddCPUProcess from "../../modals/AddCPUProcess";
 
 import ConfirmSwitch from "../../modals/ConfirmSwitch";
 
@@ -42,13 +42,13 @@ const CPUControls = () => {
     },
   ];
 
-  let schedule = activeCPUScheduler.getSchedule();
-
   const [autoScheduling, setAutoScheduling] = useState(false);
   const [intervalVal, setIntervalVal] = useState(null);
 
   const [possibleNewSchedulerName, setPossibleNewSchedulerName] = useState(false);
   const [possibleNewScheduler, setPossibleNewScheduler] = useState(null);
+
+  let schedule = activeCPUScheduler.getSchedule();
 
   // Stop the auto scheduler from overflowing the schedule boundaries.
   useEffect(() => {
@@ -60,7 +60,7 @@ const CPUControls = () => {
   }, [timeDelta, intervalVal]);
 
   return (
-    <div className={`field is-grouped is-grouped-multiline ${widthValue < 1127 && "is-grouped-centered"}`}>
+    <div className={`field is-grouped is-grouped-multiline ${widthValue < 1382 && "is-grouped-centered"}`}>
       <span className="control">
         <div className="dropdown is-hoverable">
           <div className="dropdown-trigger">
@@ -206,19 +206,13 @@ const CPUControls = () => {
       </span>
       <span className="control">
         <span className="field">
-          <button
-            className="button is-primary"
-            href="/#"
-            onClick={() => {
-              setActiveModal("addProcess");
-            }}
-          >
+          <button className="button is-primary" href="/#" onClick={() => setActiveModal("addCPUProcess")}>
             <FontAwesomeIcon icon={faPlus} className="mr-2" />
             Add Process
           </button>
         </span>
       </span>
-      {activeSchedulerName === "Priority" ? <AddProcess isPriorityProcess /> : <AddProcess />}
+      {activeSchedulerName === "Priority" ? <AddCPUProcess isPriorityProcess /> : <AddCPUProcess />}
       <ConfirmSwitch label={possibleNewSchedulerName} value={possibleNewScheduler} />
     </div>
   );

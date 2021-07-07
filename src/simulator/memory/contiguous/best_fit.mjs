@@ -30,23 +30,23 @@ class BestFit extends MemoryManager {
 
 // Syntax for use on frontend.
 
-let test_best_fit = new BestFit();
+// let test_best_fit = new BestFit();
 
-// Create the blocks.
+// // Create the blocks.
 
-test_best_fit.createBlock(100);
-test_best_fit.createBlock(500);
-test_best_fit.createBlock(200);
-test_best_fit.createBlock(300);
-test_best_fit.createBlock(600);
+// test_best_fit.createBlock(100);
+// test_best_fit.createBlock(500);
+// test_best_fit.createBlock(200);
+// test_best_fit.createBlock(300);
+// test_best_fit.createBlock(600);
 
-// Create the processes.
+// // Create the processes.
 
-test_best_fit.createProcess("p1", 212);
-test_best_fit.createProcess("p2", 417);
-test_best_fit.createProcess("p3", 112);
-test_best_fit.createProcess("p4", 426);
+// test_best_fit.createProcess("p1", 212);
+// test_best_fit.createProcess("p2", 417);
+// test_best_fit.createProcess("p3", 112);
+// test_best_fit.createProcess("p4", 426);
 
-test_best_fit.allocateProcesses(true);
+// test_best_fit.allocateProcesses(true);
 
 export default BestFit;

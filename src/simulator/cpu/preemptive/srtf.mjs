@@ -78,16 +78,16 @@ class SRTF extends PreemptiveScheduler {
 
 // Syntax for use on frontend.
 
-let test_srtf = new SRTF();
+// let test_srtf = new SRTF();
 
-test_srtf.createProcess("p1", 0, 7);
-test_srtf.createProcess("p2", 1, 5);
-test_srtf.createProcess("p3", 2, 3);
-test_srtf.createProcess("p4", 3, 1);
-test_srtf.createProcess("p5", 4, 2);
-test_srtf.createProcess("p6", 5, 1);
+// test_srtf.createProcess("p1", 0, 7);
+// test_srtf.createProcess("p2", 1, 5);
+// test_srtf.createProcess("p3", 2, 3);
+// test_srtf.createProcess("p4", 3, 1);
+// test_srtf.createProcess("p5", 4, 2);
+// test_srtf.createProcess("p6", 5, 1);
 
-test_srtf.dispatchProcesses(true);
-test_srtf.outputGraphicalRepresentation();
+// test_srtf.dispatchProcesses(true);
+// test_srtf.outputGraphicalRepresentation();
 
 export default SRTF;
