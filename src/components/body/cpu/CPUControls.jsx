@@ -1,12 +1,12 @@
 import React, { useContext, useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleDown, faPlay, faStepBackward, faStepForward, faFastBackward, faFastForward, faPlus, faPause, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faAngleDown, faPlay, faStepBackward, faStepForward, faFastBackward, faFastForward, faPlus, faPause, faTimes, faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 import { CPUSimulatorContext } from "../../../contexts/CPUSimulatorContext";
 import { ResizeContext } from "../../../contexts/ResizeContext";
 import { ModalContext } from "../../../contexts/ModalContext";
 import AddCPUProcess from "../../modals/AddCPUProcess";
-
-import ConfirmSwitch from "../../modals/ConfirmSwitch";
+import ConfirmSwitchCPU from "../../modals/ConfirmSwitchCPU";
+import ResetCPU from "../../modals/ResetCPU";
 
 const CPUControls = () => {
   const [, setActiveModal] = useContext(ModalContext);
@@ -45,7 +45,7 @@ const CPUControls = () => {
   const [autoScheduling, setAutoScheduling] = useState(false);
   const [intervalVal, setIntervalVal] = useState(null);
 
-  const [possibleNewSchedulerName, setPossibleNewSchedulerName] = useState(false);
+  const [possibleNewSchedulerName, setPossibleNewSchedulerName] = useState(null);
   const [possibleNewScheduler, setPossibleNewScheduler] = useState(null);
 
   let schedule = activeCPUScheduler.getSchedule();
@@ -84,8 +84,7 @@ const CPUControls = () => {
                     if (jobQueue.length > 0) {
                       setPossibleNewSchedulerName(option.label);
                       setPossibleNewScheduler(option.value);
-
-                      setActiveModal("confirmSwitch");
+                      setActiveModal("confirmSwitchCPU");
                     } else {
                       setActiveSchedulerName(option.label);
                       setActiveCPUScheduler(Scheduler[option.value]);
@@ -115,7 +114,7 @@ const CPUControls = () => {
           />
         </span>
       )}
-      <span className="control mb-0">
+      <span className="control mb-2">
         <input
           className="input"
           style={{ width: "4.5rem" }}
@@ -133,7 +132,7 @@ const CPUControls = () => {
       </span>
       <span className="control buttons is-grouped has-addons">
         <button
-          className="button is-primary"
+          className="button is-primary mb-0"
           href="/#"
           onClick={() => {
             setTimeDelta(0);
@@ -143,7 +142,7 @@ const CPUControls = () => {
           <FontAwesomeIcon icon={faFastBackward} />
         </button>
         <button
-          className="button is-primary"
+          className="button is-primary mb-0"
           href="/#"
           onClick={() => {
             if (timeDelta > 0) {
@@ -155,12 +154,13 @@ const CPUControls = () => {
           <FontAwesomeIcon icon={faStepBackward} />
         </button>
         <button
-          className="button is-primary"
+          className="button is-primary mb-0"
           href="/#"
           onClick={() => {
             if (jobQueue.length > 0) {
               activeCPUScheduler.dispatchProcesses(true);
               setRunning(!running);
+
               if (schedule.length > 0) setAutoScheduling(!autoScheduling);
               // Ensure the pause happens immediately.
               if (autoScheduling) clearInterval(intervalVal);
@@ -180,7 +180,7 @@ const CPUControls = () => {
           <FontAwesomeIcon icon={autoScheduling ? faPause : faPlay} />
         </button>
         <button
-          className="button is-primary"
+          className="button is-primary mb-0"
           href="/#"
           onClick={() => {
             if (schedule.length > 0 && timeDelta < schedule[schedule.length - 1].timeDelta + schedule[schedule.length - 1].burstTime) {
@@ -192,7 +192,7 @@ const CPUControls = () => {
           <FontAwesomeIcon icon={faStepForward} />
         </button>
         <button
-          className="button is-primary"
+          className="button is-primary mb-0"
           href="/#"
           onClick={() => {
             if (schedule.length > 0 && timeDelta < schedule[schedule.length - 1].timeDelta + schedule[schedule.length - 1].burstTime) {
@@ -206,14 +206,25 @@ const CPUControls = () => {
       </span>
       <span className="control">
         <span className="field">
-          <button className="button is-primary" href="/#" onClick={() => setActiveModal("addCPUProcess")}>
+          <button className="button is-primary mb-0" href="/#" onClick={() => setActiveModal("addCPUProcess")}>
             <FontAwesomeIcon icon={faPlus} className="mr-2" />
             Add Process
           </button>
         </span>
       </span>
+      {jobQueue.length > 0 && (
+        <span className="control">
+          <span className="field">
+            <button className="button is-danger mb-0" href="/#" onClick={() => setActiveModal("resetCPU")}>
+              <FontAwesomeIcon icon={faExclamationTriangle} className="mr-2" />
+              Reset
+            </button>
+          </span>
+        </span>
+      )}
       {activeSchedulerName === "Priority" ? <AddCPUProcess isPriorityProcess /> : <AddCPUProcess />}
-      <ConfirmSwitch label={possibleNewSchedulerName} value={possibleNewScheduler} />
+      <ConfirmSwitchCPU label={possibleNewSchedulerName} value={possibleNewScheduler} />
+      <ResetCPU />
     </div>
   );
 };

@@ -20,6 +20,12 @@ class MemoryManager {
     this.jobQueue.push(new MemoryProcess(name, size));
   }
 
+  reset() {
+    this.jobQueue = [];
+    this.blocks = [];
+    this.allocated = [];
+  }
+
   getJobQueue() {
     return this.jobQueue;
   }

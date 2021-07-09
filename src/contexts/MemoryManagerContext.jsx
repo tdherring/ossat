@@ -10,6 +10,8 @@ export const MemoryManagerProvider = (props) => {
 
   const [activeManager, setActiveManager] = useState(Manager["FF"]);
   const [activeManagerName, setActiveManagerName] = useState("First Fit");
+  const [timeDelta, setTimeDelta] = useState(0);
+  const [simulationSpeed, setSimulationSpeed] = useState(1);
   const [jobQueue, setJobQueue] = useState([]);
   const [blocks, setBlocks] = useState([]);
   const [allocated, setAllocated] = useState([]);
@@ -27,6 +29,8 @@ export const MemoryManagerProvider = (props) => {
       value={{
         active: [activeManager, setActiveManager],
         activeName: [activeManagerName, setActiveManagerName],
+        time: [timeDelta, setTimeDelta],
+        speed: [simulationSpeed, setSimulationSpeed],
         jQueue: [jobQueue, setJobQueue],
         blocks: [blocks, setBlocks],
         allocated: [allocated, setAllocated],

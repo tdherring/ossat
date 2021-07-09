@@ -1,16 +1,18 @@
 import React, { useContext } from "react";
+import { MemoryManagerContext } from "../../contexts/MemoryManagerContext";
 import { ModalContext } from "../../contexts/ModalContext";
-import { CPUSimulatorContext } from "../../contexts/CPUSimulatorContext";
 
-const ConfirmSwitch = ({ label, value }) => {
+const ResetMemory = () => {
   const [activeModal, setActiveModal] = useContext(ModalContext);
-  const [, setActiveCPUScheduler] = useContext(CPUSimulatorContext).active;
-  const [, setActiveSchedulerName] = useContext(CPUSimulatorContext).activeName;
-  const [, setJobQueue] = useContext(CPUSimulatorContext).jQueue;
-  const Scheduler = useContext(CPUSimulatorContext).scheduler;
+
+  const [activeManager] = useContext(MemoryManagerContext).active;
+  const [, setJobQueue] = useContext(MemoryManagerContext).jQueue;
+  const [, setBlocks] = useContext(MemoryManagerContext).blocks;
+  const [, setAllocated] = useContext(MemoryManagerContext).allocated;
+  const [, setTimeDelta] = useContext(MemoryManagerContext).time;
 
   return (
-    <div className={`modal p-3 ${activeModal === "confirmSwitch" ? "is-active" : ""}`}>
+    <div className={`modal p-3 ${activeModal === "resetMemory" ? "is-active" : ""}`}>
       <div className="modal-background" />
       <div className="modal-card">
         <header className="modal-card-head">
@@ -24,7 +26,7 @@ const ConfirmSwitch = ({ label, value }) => {
           />
         </header>
         <section className="modal-card-body">
-          <div className="content">Are you sure you want to switch scheduling algorithms? All current processes will be cleared.</div>
+          <div className="content">Are you sure you want to reset? The job queue and memory allocation will be cleared.</div>
         </section>
         <footer className="modal-card-foot">
           <a
@@ -32,9 +34,11 @@ const ConfirmSwitch = ({ label, value }) => {
             href="/#"
             onClick={(event) => {
               event.preventDefault();
-              setActiveSchedulerName(label);
-              setActiveCPUScheduler(Scheduler[value]);
+              activeManager.reset();
               setJobQueue([]);
+              setBlocks([]);
+              setAllocated([]);
+              setTimeDelta(0);
               setActiveModal(null);
             }}
           >
@@ -56,4 +60,4 @@ const ConfirmSwitch = ({ label, value }) => {
   );
 };
 
-export default ConfirmSwitch;
+export default ResetMemory;

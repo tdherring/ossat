@@ -4,7 +4,6 @@ import CPUPriorityProcess from "./cpu_priority_process.mjs";
 class CPUScheduler {
   constructor() {
     this.jobQueue = [];
-    this.initialJobQueue = []; // The job queue before any mutations.
     this.schedule = [];
     this.readyQueue = [];
     // Job and Ready Queue at each time delta (index = time delta).
@@ -27,6 +26,14 @@ class CPUScheduler {
     this.jobQueue = this.jobQueue.filter((process) => {
       return process.name !== name;
     });
+  }
+
+  reset() {
+    this.jobQueue = [];
+    this.schedule = [];
+    this.readyQueue = [];
+    this.allReadyQueues = [];
+    this.allJobQueues = [];
   }
 
   getSchedule() {
