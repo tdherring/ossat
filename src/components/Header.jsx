@@ -9,10 +9,12 @@ import Register from "./modals/Register";
 import LogIn from "./modals/LogIn";
 import BugReport from "./modals/BugReport";
 import { ModalContext } from "../contexts/ModalContext";
+import { PageContext } from "../contexts/PageContext";
 
 const Header = () => {
   const [burgerActive, setBurgerActive] = useState(false);
   const [, setActiveModal] = useContext(ModalContext);
+  const [activePage, setActivePage] = useContext(PageContext);
 
   return (
     <header>
@@ -43,13 +45,27 @@ const Header = () => {
 
         <div className={`navbar-menu has-background-white-ter ${burgerActive ? "is-active" : ""}`}>
           <div className="navbar-start">
-            <a className="navbar-item" href="/#">
+            <a
+              className="navbar-item"
+              href="/#"
+              onClick={(event) => {
+                setActivePage("home");
+                event.target.blur();
+              }}
+            >
               <FontAwesomeIcon icon={faHome} className="mr-2" />
-              Home
+              {activePage === "home" ? <strong>Home</strong> : <>Home</>}
             </a>
-            <a className="navbar-item" href="/#">
+            <a
+              className="navbar-item"
+              href="/#"
+              onClick={(event) => {
+                setActivePage("assessment");
+                event.target.blur();
+              }}
+            >
               <FontAwesomeIcon icon={faBook} className="mr-2" />
-              Assessment
+              {activePage === "assessment" ? <strong>Assessment</strong> : <>Assessment</>}
             </a>
             <div className="navbar-item has-dropdown is-hoverable">
               <a className="navbar-link" href="/#">

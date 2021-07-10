@@ -1,13 +1,13 @@
 import React, { useContext, useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay, faStepBackward, faStepForward, faFastBackward, faFastForward, faPlus, faAngleDown, faTimes, faPause, faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
-import { ResizeContext } from "../../../contexts/ResizeContext";
-import { ModalContext } from "../../../contexts/ModalContext";
-import { MemoryManagerContext } from "../../../contexts/MemoryManagerContext";
-import AddMemoryBlock from "../../modals/AddMemoryBlock";
-import AddMemoryProcess from "../../modals/AddMemoryProcess";
-import ResetMemory from "../../modals/ResetMemory";
-import ConfirmSwitchMemory from "../../modals/ConfirmSwitchMemory";
+import { ResizeContext } from "../../../../contexts/ResizeContext";
+import { ModalContext } from "../../../../contexts/ModalContext";
+import { MemoryManagerContext } from "../../../../contexts/MemoryManagerContext";
+import AddMemoryBlock from "../../../modals/AddMemoryBlock";
+import AddMemoryProcess from "../../../modals/AddMemoryProcess";
+import ResetMemory from "../../../modals/ResetMemory";
+import ConfirmSwitchMemory from "../../../modals/ConfirmSwitchMemory";
 
 const MemoryControls = () => {
   const [widthValue] = useContext(ResizeContext).width;
@@ -179,11 +179,11 @@ const MemoryControls = () => {
         </button>
       </span>
       <span className="control buttons is-grouped has-addons">
-        <button className="button is-primary mb-0" href="/#" onClick={() => setActiveModal("addMemoryBlock")}>
+        <button className="button is-primary mb-0" href="/#" onClick={() => setActiveModal("addMemoryBlock")} disabled={allocated.length > 0 ? true : false}>
           <FontAwesomeIcon icon={faPlus} className="mr-2" />
           Add Block
         </button>
-        <button className="button is-primary mb-0" href="/#" onClick={() => setActiveModal("addMemoryProcess")}>
+        <button className="button is-primary mb-0" href="/#" onClick={() => setActiveModal("addMemoryProcess")} disabled={allocated.length > 0 ? true : false}>
           <FontAwesomeIcon icon={faPlus} className="mr-2" />
           Add Process
         </button>

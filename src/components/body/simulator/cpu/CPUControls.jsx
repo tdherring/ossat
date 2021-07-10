@@ -1,12 +1,12 @@
 import React, { useContext, useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown, faPlay, faStepBackward, faStepForward, faFastBackward, faFastForward, faPlus, faPause, faTimes, faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
-import { CPUSimulatorContext } from "../../../contexts/CPUSimulatorContext";
-import { ResizeContext } from "../../../contexts/ResizeContext";
-import { ModalContext } from "../../../contexts/ModalContext";
-import AddCPUProcess from "../../modals/AddCPUProcess";
-import ConfirmSwitchCPU from "../../modals/ConfirmSwitchCPU";
-import ResetCPU from "../../modals/ResetCPU";
+import { CPUSimulatorContext } from "../../../../contexts/CPUSimulatorContext";
+import { ResizeContext } from "../../../../contexts/ResizeContext";
+import { ModalContext } from "../../../../contexts/ModalContext";
+import AddCPUProcess from "../../../modals/AddCPUProcess";
+import ConfirmSwitchCPU from "../../../modals/ConfirmSwitchCPU";
+import ResetCPU from "../../../modals/ResetCPU";
 
 const CPUControls = () => {
   const [, setActiveModal] = useContext(ModalContext);
@@ -206,7 +206,7 @@ const CPUControls = () => {
       </span>
       <span className="control">
         <span className="field">
-          <button className="button is-primary mb-0" href="/#" onClick={() => setActiveModal("addCPUProcess")}>
+          <button className="button is-primary mb-0" href="/#" onClick={() => setActiveModal("addCPUProcess")} disabled={activeCPUScheduler.getAllReadyQueues().length > 0 ? true : false}>
             <FontAwesomeIcon icon={faPlus} className="mr-2" />
             Add Process
           </button>

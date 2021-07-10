@@ -2,8 +2,8 @@ import React, { useContext } from "react";
 import MemoryControls from "./MemoryControls";
 import MemoryLayout from "./MemoryLayout";
 import MemoryJobQueue from "./MemoryJobQueue";
-import { MemoryManagerProvider } from "../../../contexts/MemoryManagerContext";
-import { ResizeContext } from "../../../contexts/ResizeContext";
+import { MemoryManagerProvider } from "../../../../contexts/MemoryManagerContext";
+import { ResizeContext } from "../../../../contexts/ResizeContext";
 
 const MemoryModule = () => {
   const [widthValue] = useContext(ResizeContext).width;

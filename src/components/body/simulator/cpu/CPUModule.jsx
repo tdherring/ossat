@@ -3,8 +3,8 @@ import CPUControls from "./CPUControls";
 import CPUJobQueue from "./CPUJobQueue";
 import CPUReadyQueue from "./CPUReadyQueue";
 import CPUSchedule from "./CPUSchedule";
-import { CPUSimulatorProvider } from "../../../contexts/CPUSimulatorContext";
-import { ResizeContext } from "../../../contexts/ResizeContext";
+import { CPUSimulatorProvider } from "../../../../contexts/CPUSimulatorContext";
+import { ResizeContext } from "../../../../contexts/ResizeContext";
 
 const CPUModule = () => {
   const [widthValue] = useContext(ResizeContext).width;

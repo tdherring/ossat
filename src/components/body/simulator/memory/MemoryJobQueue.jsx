@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import MemoryProcess from "./MemoryProcess";
-import { MemoryManagerContext } from "../../../contexts/MemoryManagerContext";
+import { MemoryManagerContext } from "../../../../contexts/MemoryManagerContext";
 
 const MemoryJobQueue = () => {
   const [jobQueue] = useContext(MemoryManagerContext).jQueue;

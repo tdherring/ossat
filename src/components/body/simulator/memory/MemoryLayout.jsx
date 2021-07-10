@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { MemoryManagerContext } from "../../../contexts/MemoryManagerContext";
+import { MemoryManagerContext } from "../../../../contexts/MemoryManagerContext";
 
 const MemoryLayout = () => {
   const [activeManager] = useContext(MemoryManagerContext).active;

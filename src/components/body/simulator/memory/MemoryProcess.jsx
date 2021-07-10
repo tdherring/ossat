@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { ResizeContext } from "../../../contexts/ResizeContext";
+import { ResizeContext } from "../../../../contexts/ResizeContext";
 
 const MemoryProcess = ({ name, size }) => {
   const [widthValue] = useContext(ResizeContext).width;

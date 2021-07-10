@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { CPUSimulatorContext } from "../../../contexts/CPUSimulatorContext";
+import { CPUSimulatorContext } from "../../../../contexts/CPUSimulatorContext";
 
 const CPUSchedule = () => {
   const [activeCPUScheduler] = useContext(CPUSimulatorContext).active;
@@ -55,7 +55,7 @@ const CPUSchedule = () => {
           </tbody>
         </table>
       </div>
-    </div>  
+    </div>
   );
 };
 

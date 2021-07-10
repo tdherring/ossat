@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import CPUProcess from "./CPUProcess";
-import { CPUSimulatorContext } from "../../../contexts/CPUSimulatorContext";
+import { CPUSimulatorContext } from "../../../../contexts/CPUSimulatorContext";
 
 const CPUJobQueue = () => {
   const [jobQueue] = useContext(CPUSimulatorContext).jQueue;

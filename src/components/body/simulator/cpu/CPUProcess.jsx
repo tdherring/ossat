@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
-import { ResizeContext } from "../../../contexts/ResizeContext";
-import { CPUSimulatorContext } from "../../../contexts/CPUSimulatorContext";
+import { ResizeContext } from "../../../../contexts/ResizeContext";
+import { CPUSimulatorContext } from "../../../../contexts/CPUSimulatorContext";
 
 const CPUProcess = ({ name, arrivalTime, burstTime, remainingTime, priority, status, jobQueueProcess }) => {
   const [activeCPUScheduler] = useContext(CPUSimulatorContext).active;

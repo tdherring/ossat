@@ -1,13 +1,21 @@
-import React from "react";
-import CPUModule from "./body/cpu/CPUModule";
-import MemoryModule from "./body/memory/MemoryModule";
+import React, { useContext } from "react";
+import CPUModule from "./body/simulator/cpu/CPUModule";
+import MemoryModule from "./body/simulator/memory/MemoryModule";
+import AssessmentModule from "./body/assessment/AssessmentModule";
+import { PageContext } from "../contexts/PageContext";
 
 const Body = () => {
+  const [activePage] = useContext(PageContext);
+
   return (
-    <div className="p-3">
+    <div className="section">
       <div className="tile is-ancestor">
-        <MemoryModule />
-        <CPUModule />
+        {activePage === "home" && (
+          <>
+            <MemoryModule /> <CPUModule />
+          </>
+        )}
+        {activePage === "assessment" && <AssessmentModule />}
       </div>
     </div>
   );

@@ -3,16 +3,19 @@ import Footer from "./components/Footer";
 import React from "react";
 import { ModalProvider } from "./contexts/ModalContext";
 import { ResizeProvider } from "./contexts/ResizeContext";
+import { PageProvider } from "./contexts/PageContext";
 import Body from "./components/Body";
 
 function App() {
   return (
     <>
       <ResizeProvider>
-        <ModalProvider>
-          <Header />
-          <Body />
-        </ModalProvider>
+        <PageProvider>
+          <ModalProvider>
+            <Header />
+            <Body />
+          </ModalProvider>
+        </PageProvider>
       </ResizeProvider>
       <Footer />
     </>
