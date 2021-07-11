@@ -7,6 +7,7 @@ import smallLogo from "../assets/images/small-logo.svg";
 import fullLogo from "../assets/images/full-logo.svg";
 import Register from "./modals/Register";
 import LogIn from "./modals/LogIn";
+import About from "./modals/About";
 import BugReport from "./modals/BugReport";
 import { ModalContext } from "../contexts/ModalContext";
 import { PageContext } from "../contexts/PageContext";
@@ -27,9 +28,7 @@ const Header = () => {
           {/* Burger menu. Small bit of logic to make active when pressed.*/}
           <a
             role="button"
-            onClick={() => {
-              setBurgerActive(!burgerActive);
-            }}
+            onClick={() => setBurgerActive(!burgerActive)}
             className={`navbar-burger ${burgerActive ? "is-active" : ""}`}
             style={{ height: "auto" }}
             aria-label="menu"
@@ -60,29 +59,23 @@ const Header = () => {
               className="navbar-item"
               href="/#"
               onClick={(event) => {
-                setActivePage("assessment");
+                setActivePage("assessmentLanding");
                 event.target.blur();
               }}
             >
               <FontAwesomeIcon icon={faBook} className="mr-2" />
-              {activePage === "assessment" ? <strong>Assessment</strong> : <>Assessment</>}
+              {activePage === "assessmentLanding" ? <strong>Assessment</strong> : <>Assessment</>}
             </a>
             <div className="navbar-item has-dropdown is-hoverable">
               <a className="navbar-link" href="/#">
                 More
               </a>
               <div className="navbar-dropdown">
-                <a className="navbar-item" href="/#">
+                <a className="navbar-item" href="/#" onClick={() => setActiveModal("about")}>
                   <FontAwesomeIcon icon={faMicroscope} className="mr-2" />
                   About
                 </a>
-                <a
-                  className="navbar-item"
-                  href="/#"
-                  onClick={() => {
-                    setActiveModal("bugReport");
-                  }}
-                >
+                <a className="navbar-item" href="/#" onClick={() => setActiveModal("bugReport")}>
                   <FontAwesomeIcon icon={faBug} className="mr-2" />
                   Bug Report
                 </a>
@@ -98,23 +91,11 @@ const Header = () => {
             </div>
             <div className="navbar-item">
               <div className="buttons">
-                <a
-                  className="button is-primary"
-                  href="/#"
-                  onClick={() => {
-                    setActiveModal("register");
-                  }}
-                >
+                <a className="button is-primary" href="/#" onClick={() => setActiveModal("register")}>
                   <strong>Register</strong>
                 </a>
 
-                <a
-                  className="button is-outlined"
-                  href="/#"
-                  onClick={() => {
-                    setActiveModal("logIn");
-                  }}
-                >
+                <a className="button is-outlined" href="/#" onClick={() => setActiveModal("logIn")}>
                   Log in
                 </a>
               </div>
@@ -124,6 +105,7 @@ const Header = () => {
       </nav>
       <LogIn />
       <Register />
+      <About />
       <BugReport />
     </header>
   );

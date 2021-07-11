@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import GeneralQuizOption from "./GeneralQuizOption";
+import { PageContext } from "../../../../contexts/PageContext";
 
 const AssessmentLandingPage = () => {
+  const [, setActivePage] = useContext(PageContext);
+
   return (
     <div className="tile is-vertical is-parent is-12 container">
       <div className="tile is-child box">
@@ -10,7 +13,7 @@ const AssessmentLandingPage = () => {
         <p>
           Before we can generate assessments which are best suited to you, you have to complete the <strong>initial quiz</strong>. Click the button below to begin.
         </p>
-        <button className="button is-primary mt-4" href="/#">
+        <button className="button is-primary mt-4" href="/#" onClick={() => setActivePage("quiz")}>
           Take Initial Quiz
         </button>
       </div>

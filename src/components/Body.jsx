@@ -1,7 +1,8 @@
 import React, { useContext } from "react";
 import CPUModule from "./body/simulator/cpu/CPUModule";
 import MemoryModule from "./body/simulator/memory/MemoryModule";
-import AssessmentModule from "./body/assessment/AssessmentModule";
+import AssessmentLandingPage from "./body/assessment/landing/AssessmentLandingPage";
+import QuizModule from "./body/assessment/quiz/QuizModule";
 import { PageContext } from "../contexts/PageContext";
 
 const Body = () => {
@@ -15,7 +16,8 @@ const Body = () => {
             <MemoryModule /> <CPUModule />
           </>
         )}
-        {activePage === "assessment" && <AssessmentModule />}
+        {activePage === "assessmentLanding" && <AssessmentLandingPage />}
+        {activePage === "quiz" && <QuizModule />}
       </div>
     </div>
   );
