@@ -1,8 +1,8 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { QuizContext } from "../../../../contexts/QuizContext";
 
 const QuizQuestion = ({ questionNum, questionText, answers }) => {
-  const [quizAnswers, setQuizAnswers] = useContext(QuizContext).answers;
+  const [, setQuizAnswers] = useContext(QuizContext).answers;
 
   return (
     <div className="tile is-child box">

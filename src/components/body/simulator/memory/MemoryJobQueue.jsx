@@ -4,7 +4,6 @@ import { MemoryManagerContext } from "../../../../contexts/MemoryManagerContext"
 
 const MemoryJobQueue = () => {
   const [jobQueue] = useContext(MemoryManagerContext).jQueue;
-  const [activeManager] = useContext(MemoryManagerContext).active;
 
   return (
     <div>

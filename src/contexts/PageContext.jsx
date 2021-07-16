@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
-import { useCookies, Cookies } from "react-cookie";
+import { useCookies } from "react-cookie";
 
 export const PageContext = createContext();
 
