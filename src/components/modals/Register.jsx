@@ -12,7 +12,7 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   // GraphQL mutation to register the user.
-  const REGISTER = gql`
+  const [register] = useMutation(gql`
     mutation Register($email: String!, $username: String!, $password: String!, $confirmPassword: String!) {
       register(email: $email, username: $username, password1: $password, password2: $confirmPassword) {
         success
@@ -21,9 +21,7 @@ const Register = () => {
         refreshToken
       }
     }
-  `;
-
-  const [register] = useMutation(REGISTER);
+  `);
   const [registerResult, setRegisterResult] = useState(null);
   const [registerResultErrors, setRegisterResultErrors] = useState({});
 

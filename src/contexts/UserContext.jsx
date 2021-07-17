@@ -9,45 +9,45 @@ export const UserProvider = (props) => {
   const [firstName, setFirstName] = useState(null);
   const [lastName, setLastName] = useState(null);
   const [username, setUsername] = useState(null);
+  const [email, setEmail] = useState(null);
   const [cookies, setCookie, removeCookie] = useCookies(["refreshToken"]);
   const REFRESH_INTERVAL = 300000;
 
-  const REFRESH_TOKEN = gql`
+  // GraphQL mutation to refresh the access token.
+  const [refreshToken] = useMutation(gql`
     mutation RefreshToken($token: String!) {
       refreshToken(refreshToken: $token) {
         token
         refreshToken
       }
     }
-  `;
-
-  const [refreshToken] = useMutation(REFRESH_TOKEN);
-
-  const GET_USER_INFO = gql`
-    query GetUserInfo {
-      me {
-        id
-        username
-        firstName
-        lastName
-      }
-    }
-  `;
+  `);
 
   const client = useApolloClient();
 
   const validate = () => {
     setLoggedIn(true);
-
+    // GraphQL Query for user information.
     client
       .query({
-        query: GET_USER_INFO,
+        query: gql`
+          query GetUserInfo {
+            me {
+              id
+              username
+              firstName
+              lastName
+              email
+            }
+          }
+        `,
       })
       .then((result) => {
         if (result.data.me) {
           setFirstName(result.data.me.firstName);
           setLastName(result.data.me.lastName);
           setUsername(result.data.me.username);
+          setEmail(result.data.me.email);
         }
       });
   };
@@ -57,6 +57,7 @@ export const UserProvider = (props) => {
     setFirstName(null);
     setLastName(null);
     setUsername(null);
+    setEmail(null);
   };
 
   useEffect(() => {
@@ -109,6 +110,7 @@ export const UserProvider = (props) => {
         firstName: [firstName, setFirstName],
         lastName: [lastName, setLastName],
         username: [username, setUsername],
+        email: [email, setEmail],
       }}
     >
       {props.children}

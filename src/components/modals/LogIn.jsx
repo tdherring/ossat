@@ -18,7 +18,7 @@ const LogIn = () => {
   const [password, setPassword] = useState("");
 
   // GraphQL mutation to login.
-  const LOGIN = gql`
+  const [logIn] = useMutation(gql`
     mutation LogIn($username: String!, $password: String!) {
       tokenAuth(username: $username, password: $password) {
         success
@@ -33,9 +33,8 @@ const LogIn = () => {
         }
       }
     }
-  `;
+  `);
 
-  const [logIn] = useMutation(LOGIN);
   const [logInResult, setLogInResult] = useState(null);
   const [logInResultErrors, setLogInResultErrors] = useState({});
 

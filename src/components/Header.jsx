@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBug, faHome, faBook, faMicroscope, faUser, faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
+import { faBug, faHome, faBook, faMicroscope, faUser, faSignOutAlt, faKey } from "@fortawesome/free-solid-svg-icons";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 
 import smallLogo from "../assets/images/small-logo.svg";
@@ -9,6 +9,8 @@ import Register from "./modals/Register";
 import LogIn from "./modals/LogIn";
 import About from "./modals/About";
 import BugReport from "./modals/BugReport";
+import MyProfile from "./modals/MyProfile";
+import ChangePassword from "./modals/ChangePassword";
 import { ModalContext } from "../contexts/ModalContext";
 import { PageContext } from "../contexts/PageContext";
 import { UserContext } from "../contexts/UserContext";
@@ -109,9 +111,13 @@ const Header = () => {
                   Welcome, {username}
                 </a>
                 <div className="navbar-dropdown">
-                  <a className="navbar-item" href="/#">
+                  <a className="navbar-item" href="/#" onClick={() => setActiveModal("myProfile")}>
                     <FontAwesomeIcon icon={faUser} className="mr-2" />
                     My Profile
+                  </a>
+                  <a className="navbar-item" href="/#" onClick={() => setActiveModal("changePassword")}>
+                    <FontAwesomeIcon icon={faKey} className="mr-2" />
+                    Change Password
                   </a>
                   <hr className="navbar-divider" />
                   <a
@@ -124,6 +130,7 @@ const Header = () => {
                       setUsername(null);
                       removeCookie("refreshToken");
                       localStorage.removeItem("accessToken");
+                      setActivePage("home");
                     }}
                   >
                     <FontAwesomeIcon icon={faSignOutAlt} className="mr-2" />
@@ -144,6 +151,8 @@ const Header = () => {
       <Register />
       <About />
       <BugReport />
+      <MyProfile />
+      <ChangePassword />
     </header>
   );
 };
