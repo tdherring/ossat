@@ -15,7 +15,6 @@ const MemoryModule = () => {
           <MemoryControls />
           <hr className="is-divider mt-2" />
           <MemoryJobQueue />
-          <hr className="is-divider mt-2" />
           <MemoryLayout />
         </div>
       </div>

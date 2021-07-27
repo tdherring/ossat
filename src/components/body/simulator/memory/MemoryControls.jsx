@@ -56,7 +56,7 @@ const MemoryControls = () => {
       <span className="control">
         <div className="dropdown is-hoverable">
           <div className="dropdown-trigger">
-            <button className="button" aria-haspopup="true" aria-controls="dropdown-menu" style={{ width: "10rem" }}>
+            <button className="button" aria-haspopup="true" aria-controls="dropdown-menu" style={{ width: "7rem" }}>
               <span>{activeManagerName}</span>
               <FontAwesomeIcon icon={faAngleDown} className="ml-2" />
             </button>
@@ -90,22 +90,27 @@ const MemoryControls = () => {
           </div>
         </div>
       </span>
-      <span className="control mb-2">
-        <input
-          className="input"
-          style={{ width: "4.5rem" }}
-          type="number"
-          defaultValue="1"
-          min="0.1"
-          max="10"
-          step="0.1"
-          onChange={(event) => {
-            setSimulationSpeed(event.target.valueAsNumber);
-          }}
-        />
-
-        <FontAwesomeIcon className="ml-2 my-3" icon={faTimes} />
-      </span>
+      <div className="field has-addons mr-3">
+        <span className="control">
+          <input
+            className="input"
+            style={{ width: "4.5rem" }}
+            type="number"
+            defaultValue="1"
+            min="0.1"
+            max="10"
+            step="0.1"
+            onChange={(event) => {
+              setSimulationSpeed(event.target.valueAsNumber);
+            }}
+          />
+        </span>
+        <span className="control">
+          <a className="button is-static">
+            <FontAwesomeIcon icon={faTimes} />
+          </a>
+        </span>
+      </div>
       <span className="control buttons is-grouped has-addons">
         <button
           className="button is-primary mb-0"
@@ -178,12 +183,8 @@ const MemoryControls = () => {
           <FontAwesomeIcon icon={faFastForward} />
         </button>
       </span>
-      <span className="control buttons is-grouped has-addons">
-        <button className="button is-primary mb-0" href="/#" onClick={() => setActiveModal("addMemoryBlock")} disabled={allocated.length > 0 ? true : false}>
-          <FontAwesomeIcon icon={faPlus} className="mr-2" />
-          Add Block
-        </button>
-        <button className="button is-primary mb-0" href="/#" onClick={() => setActiveModal("addMemoryProcess")} disabled={allocated.length > 0 ? true : false}>
+      <span className="control">
+        <button className="button is-primary mb-0" href="/#" onClick={() => setActiveModal("addMemoryProcess")} disabled={Object.keys(allocated).length > 0 ? true : false}>
           <FontAwesomeIcon icon={faPlus} className="mr-2" />
           Add Process
         </button>

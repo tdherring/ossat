@@ -125,6 +125,9 @@ const LogIn = () => {
                 ) : null
               }
             </div>
+            <a href="/#" onClick={() => setActiveModal("requestPasswordReset")}>
+              Forgot Password?
+            </a>
           </section>
           <footer className="modal-card-foot">
             <button className="button is-primary" type="submit">

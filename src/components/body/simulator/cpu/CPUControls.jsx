@@ -114,22 +114,27 @@ const CPUControls = () => {
           />
         </span>
       )}
-      <span className="control mb-2">
-        <input
-          className="input"
-          style={{ width: "4.5rem" }}
-          type="number"
-          defaultValue="1"
-          min="0.1"
-          max="10"
-          step="0.1"
-          onChange={(event) => {
-            setSimulationSpeed(event.target.valueAsNumber);
-          }}
-        />
-
-        <FontAwesomeIcon className="ml-2 my-3" icon={faTimes} />
-      </span>
+      <div className="field has-addons mr-3">
+        <span className="control">
+          <input
+            className="input"
+            style={{ width: "4.5rem" }}
+            type="number"
+            defaultValue="1"
+            min="0.1"
+            max="10"
+            step="0.1"
+            onChange={(event) => {
+              setSimulationSpeed(event.target.valueAsNumber);
+            }}
+          />
+        </span>
+        <span className="control">
+          <a className="button is-static">
+            <FontAwesomeIcon icon={faTimes} />
+          </a>
+        </span>
+      </div>
       <span className="control buttons is-grouped has-addons">
         <button
           className="button is-primary mb-0"

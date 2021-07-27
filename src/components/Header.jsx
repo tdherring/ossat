@@ -7,6 +7,7 @@ import smallLogo from "../assets/images/small-logo.svg";
 import fullLogo from "../assets/images/full-logo.svg";
 import Register from "./modals/Register";
 import LogIn from "./modals/LogIn";
+import RequestPasswordReset from "./modals/RequestPasswordReset";
 import About from "./modals/About";
 import BugReport from "./modals/BugReport";
 import MyProfile from "./modals/MyProfile";
@@ -153,6 +154,7 @@ const Header = () => {
       <BugReport />
       <MyProfile />
       <ChangePassword />
+      <RequestPasswordReset />
     </header>
   );
 };
