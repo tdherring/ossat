@@ -19,6 +19,7 @@ export const UserProvider = (props) => {
       refreshToken(refreshToken: $token) {
         token
         refreshToken
+        payload
       }
     }
   `);
@@ -65,8 +66,6 @@ export const UserProvider = (props) => {
       if (cookies.refreshToken) {
         console.log("Refreshing access token!");
         refreshToken({ variables: { token: cookies.refreshToken } }).then((result) => {
-          console.log(result);
-
           if (result.data.refreshToken.token) {
             // Valid query? Update the access token.
             localStorage.setItem("accessToken", result.data.refreshToken.token);
@@ -80,12 +79,15 @@ export const UserProvider = (props) => {
           if (result.data.refreshToken.refreshToken) {
             // Valid query? Update the refresh token.
             setCookie("refreshToken", result.data.refreshToken.refreshToken, { path: "/" }); //! SET secure : true in production
+
             validate();
           } else {
             // Invalid or malicious query? Drop the refresh token.
             removeCookie("refreshToken");
             invalidate();
           }
+
+          result.data.refreshToken.payload && setUsername(result.data.refreshToken.payload.username);
         });
       } else {
         invalidate();

@@ -60,7 +60,7 @@ const ActivateAccount = ({ token }) => {
             let error = activateResultErrors[key];
             if (error[0].code === "invalid_token")
               return (
-                <>
+                <span key={`activate-err-${error[0].code}`}>
                   <p className="has-text-danger">{error[0].message}</p>
                   <div className="field has-addons mr-3 pt-3">
                     <span className="control">
@@ -79,7 +79,6 @@ const ActivateAccount = ({ token }) => {
                         onClick={() => {
                           setResendLoading(true);
                           resendActivationEmail({ variables: { email: resendEmail } }).then((result) => {
-                            console.log(result);
                             setResendLoading(false);
                             setResendResult(result);
                             if (!result.data.resendActivationEmail.errors) {
@@ -97,12 +96,16 @@ const ActivateAccount = ({ token }) => {
                   {resendResultErrors ? (
                     Object.keys(resendResultErrors).map((key) => {
                       let error = resendResultErrors[key];
-                      return <p className="help is-danger">{error[0].message}</p>;
+                      return (
+                        <p key={`resend-err-${error[0].code}`} className="help is-danger">
+                          {error[0].message}
+                        </p>
+                      );
                     })
                   ) : resendResult && resendResult.data.resendActivationEmail.success ? (
                     <p className="help is-success">If an account with the email provided exists, a new activation email was sent. Please check your inbox.</p>
                   ) : null}
-                </>
+                </span>
               );
             return <p className="has-text-danger">{error[0].message}</p>;
           })

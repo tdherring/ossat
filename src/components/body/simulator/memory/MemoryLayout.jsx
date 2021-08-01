@@ -21,7 +21,6 @@ const MemoryLayout = () => {
 
     let processIndex = Object.keys(allocated).indexOf(processName);
 
-    console.log(timeDelta, processIndex);
     if (processIndex !== -1 && timeDelta > processIndex)
       return (
         processName && (

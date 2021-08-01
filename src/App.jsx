@@ -5,6 +5,7 @@ import { ModalProvider } from "./contexts/ModalContext";
 import { ResizeProvider } from "./contexts/ResizeContext";
 import { PageProvider } from "./contexts/PageContext";
 import { UserProvider } from "./contexts/UserContext";
+import { QuizProvider } from "./contexts/QuizContext";
 import Body from "./components/Body";
 import fullLogo from "./assets/images/full-logo.svg";
 import { useCookies } from "react-cookie";
@@ -39,10 +40,12 @@ function App() {
       <ResizeProvider>
         <UserProvider>
           <PageProvider>
-            <ModalProvider>
-              <Header />
-              <Body />
-            </ModalProvider>
+            <QuizProvider>
+              <ModalProvider>
+                <Header />
+                <Body />
+              </ModalProvider>
+            </QuizProvider>
           </PageProvider>
         </UserProvider>
       </ResizeProvider>
