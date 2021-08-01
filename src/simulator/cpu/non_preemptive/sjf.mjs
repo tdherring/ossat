@@ -24,13 +24,12 @@ class SJF extends NonPreemptiveScheduler {
       // If the ready queue has no processes, we need to wait until one becomes available.
       if (this.getAvailableProcesses(timeDelta).length === 0) {
         if (verbose) console.log("[" + timeDelta + "] CPU Idle...");
-        this.schedule.push({ processName: "IDLE", timeDelta: timeDelta, arrivalTime: null, burstTime: 0, remainingTime: this.readyQueue[i].getRemainingTime() - timeDelta });
+        this.schedule.push({ processName: "IDLE", timeDelta: timeDelta, arrivalTime: null, burstTime: 0, remainingTime: null });
         while (true) {
           this.updateReadyQueue(timeDelta, remainingTime);
           if (this.getAvailableProcesses(timeDelta).length > 0) break;
           // Don't increment the burst time / time delta if the ready queue now has something in it.
           this.schedule[this.schedule.length - 1].burstTime += 1;
-          this.schedule[this.schedule.length - 1].remainingTime -= 1;
           timeDelta++;
           this.allReadyQueues.push(JSON.parse(JSON.stringify(this.readyQueue)));
           this.allJobQueues.push(JSON.parse(JSON.stringify(this.jobQueue)));
@@ -88,7 +87,10 @@ class SJF extends NonPreemptiveScheduler {
     let availableProcesses = this.getAvailableProcesses(timeDelta, true);
 
     for (let j = 0; j < availableProcesses.length; j++) {
-      if (!this.readyQueue.some((process) => process.getName() === availableProcesses[j].getName()) && (!remainingTime || remainingTime === 1)) this.readyQueue.push(availableProcesses[j]);
+      if (!this.readyQueue.some((process) => process.getName() === availableProcesses[j].getName()) && (!remainingTime || remainingTime === 1)) {
+        this.readyQueue.push(availableProcesses[j]);
+        break;
+      }
     }
   }
 }
@@ -100,7 +102,7 @@ class SJF extends NonPreemptiveScheduler {
 // test_sjf.createProcess("p1", 2, 1);
 // test_sjf.createProcess("p2", 1, 5);
 // test_sjf.createProcess("p3", 4, 1);
-// test_sjf.createProcess("p4", 0, 6);
+// test_sjf.createProcess("p4", 1, 6);
 // test_sjf.createProcess("p5", 2, 3);
 
 // test_sjf.dispatchProcesses(true);

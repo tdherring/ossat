@@ -15,9 +15,13 @@ class Priority extends NonPreemptiveScheduler {
 
     // Keep scheduling until all processes have no remaining execution time.
     while (this.jobQueue.filter((x) => x.getRemainingTime() !== 0).length > 0) {
-      // Sort the processes by burst time, then arrival time, and then priority, so if two processes have the same priority, take the one with the lower arrival time first.
-      // If two process have the same priority and arrival time, take the one with the lower burst time first.
-      this.readyQueue = this.sortProcessesByPriority(this.getAvailableProcesses(timeDelta, true));
+      for (let process of this.sortProcessesByPriority(this.getAvailableProcesses(timeDelta, true))) {
+        if (!this.readyQueue.some((sortedProcess) => sortedProcess === process)) {
+          this.readyQueue.push(process);
+        }
+      }
+      let sortedNew = this.sortProcessesByPriority(this.readyQueue.slice(i));
+      this.readyQueue = this.readyQueue.slice(0, i).concat(sortedNew);
       // Clone the process so it is not affected by changes to the true process object.
       this.allReadyQueues.push(JSON.parse(JSON.stringify(this.readyQueue)));
       this.allJobQueues.push(JSON.parse(JSON.stringify(this.jobQueue)));
@@ -27,8 +31,13 @@ class Priority extends NonPreemptiveScheduler {
         if (verbose) console.log("[" + timeDelta + "] CPU Idle...");
         this.schedule.push({ processName: "IDLE", timeDelta: timeDelta, arrivalTime: null, burstTime: 0, remainingTime: null });
         while (true) {
-          this.readyQueue = this.sortProcessesByPriority(this.getAvailableProcesses(timeDelta, true));
-
+          for (let process of this.sortProcessesByPriority(this.getAvailableProcesses(timeDelta, true))) {
+            if (!this.readyQueue.some((sortedProcess) => sortedProcess === process)) {
+              this.readyQueue.push(process);
+            }
+          }
+          let sortedNew = this.sortProcessesByPriority(this.readyQueue.slice(i));
+          this.readyQueue = this.readyQueue.slice(0, i).concat(sortedNew);
           if (this.getAvailableProcesses(timeDelta).length > 0) break;
           // Don't increment the burst time / time delta if the ready queue now has something in it.
           this.schedule[this.schedule.length - 1]["burstTime"] += 1;

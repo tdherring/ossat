@@ -47,7 +47,7 @@ class FCFS extends NonPreemptiveScheduler {
         // Inform the user of the newly spawned process.
         if (verbose) console.log("[" + timeDelta + "] Spawned Process", name);
         // Add it to the schedule.
-        this.schedule.push({ processName: name, timeDelta: timeDelta, arrivalTime: arrivalTime, burstTime: 0 });
+        this.schedule.push({ processName: name, timeDelta: timeDelta, arrivalTime: arrivalTime, burstTime: 0, remainingTime: remainingTime });
       }
 
       // Continue to increment the burst time of this process as long as it has execution time remaining.
