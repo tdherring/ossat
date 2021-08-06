@@ -6,9 +6,9 @@ import WorstFit from "../simulator/memory/contiguous/worst_fit.mjs";
 export const MemoryManagerContext = createContext();
 
 export const MemoryManagerProvider = (props) => {
-  const Manager = { FF: new FirstFit(), BF: new BestFit(), WF: new WorstFit() };
+  const Manager = { "First Fit": new FirstFit(), "Best Fit": new BestFit(), "Worst Fit": new WorstFit() };
 
-  const [activeManager, setActiveManager] = useState(Manager["FF"]);
+  const [activeManager, setActiveManager] = useState(Manager["First Fit"]);
   const [activeManagerName, setActiveManagerName] = useState("First Fit");
   const [timeDelta, setTimeDelta] = useState(0);
   const [simulationSpeed, setSimulationSpeed] = useState(1);

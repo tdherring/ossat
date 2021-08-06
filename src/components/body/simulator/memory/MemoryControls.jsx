@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlay, faStepBackward, faStepForward, faFastBackward, faFastForward, faPlus, faAngleDown, faTimes, faPause, faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
+import { faPlay, faStepBackward, faStepForward, faFastBackward, faFastForward, faPlus, faTimes, faPause, faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 import { ResizeContext } from "../../../../contexts/ResizeContext";
 import { ModalContext } from "../../../../contexts/ModalContext";
 import { MemoryManagerContext } from "../../../../contexts/MemoryManagerContext";
@@ -16,25 +16,12 @@ const MemoryControls = () => {
   const [simulationSpeed, setSimulationSpeed] = useContext(MemoryManagerContext).speed;
   const [jobQueue] = useContext(MemoryManagerContext).jQueue;
   const [activeManager, setActiveManager] = useContext(MemoryManagerContext).active;
-  const [activeManagerName, setActiveManagerName] = useContext(MemoryManagerContext).activeName;
+  const [, setActiveManagerName] = useContext(MemoryManagerContext).activeName;
   const [blocks] = useContext(MemoryManagerContext).blocks;
   const [allocated, setAllocated] = useContext(MemoryManagerContext).allocated;
   const Manager = useContext(MemoryManagerContext).manager;
 
-  const dropdownOptions = [
-    {
-      label: "First Fit",
-      value: "FF",
-    },
-    {
-      label: "Best Fit",
-      value: "BF",
-    },
-    {
-      label: "Worst Fit",
-      value: "WF",
-    },
-  ];
+  const dropdownOptions = ["First Fit", "Best Fit", "Worst Fit"];
 
   const [autoAllocating, setAutoAllocating] = useState(false);
   const [intervalVal, setIntervalVal] = useState(null);
@@ -54,39 +41,28 @@ const MemoryControls = () => {
   return (
     <div className={`field is-grouped is-grouped-multiline ${widthValue < 2953 && "is-grouped-centered"}`}>
       <span className="control">
-        <div className="dropdown is-hoverable">
-          <div className="dropdown-trigger">
-            <button className="button" aria-haspopup="true" aria-controls="dropdown-menu" style={{ width: "7rem" }}>
-              <span>{activeManagerName}</span>
-              <FontAwesomeIcon icon={faAngleDown} className="ml-2" />
-            </button>
-          </div>
+        <div className="control is-expanded">
+          <div className="select is-fullwidth">
+            <select
+              onChange={(event) => {
+                setAutoAllocating(false);
 
-          <div className="dropdown-menu" id="dropdown-menu" role="menu">
-            <div className="dropdown-content" value="FCFS">
+                if (blocks.length > 0 || jobQueue.length > 0) {
+                  setPossibleNewManagerName(event.target.value);
+                  setPossibleNewManager(event.target.value);
+                  setActiveModal("confirmSwitchMemory");
+                } else {
+                  setActiveManagerName(event.target.value);
+                  setActiveManager(Manager[event.target.value]);
+                }
+              }}
+            >
               {dropdownOptions.map((option) => (
-                <a
-                  key={option.value}
-                  href="/#"
-                  className="dropdown-item"
-                  value={option.value}
-                  onClick={() => {
-                    setAutoAllocating(false);
-
-                    if (blocks.length > 0 || jobQueue.length > 0) {
-                      setPossibleNewManagerName(option.label);
-                      setPossibleNewManager(option.value);
-                      setActiveModal("confirmSwitchMemory");
-                    } else {
-                      setActiveManagerName(option.label);
-                      setActiveManager(Manager[option.value]);
-                    }
-                  }}
-                >
-                  {option.label}
-                </a>
+                <option key={option} href="/#" className="dropdown-item" value={option}>
+                  {option}
+                </option>
               ))}
-            </div>
+            </select>
           </div>
         </div>
       </span>
@@ -106,7 +82,7 @@ const MemoryControls = () => {
           />
         </span>
         <span className="control">
-          <a className="button is-static">
+          <a href="/#" className="button is-static">
             <FontAwesomeIcon icon={faTimes} />
           </a>
         </span>
@@ -186,7 +162,7 @@ const MemoryControls = () => {
       <span className="control">
         <button className="button is-primary mb-0" href="/#" onClick={() => setActiveModal("addMemoryProcess")} disabled={Object.keys(allocated).length > 0 ? true : false}>
           <FontAwesomeIcon icon={faPlus} className="mr-2" />
-          Add Process
+          Process
         </button>
       </span>
       {jobQueue.length > 0 || blocks.length > 0 ? (

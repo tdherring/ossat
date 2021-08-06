@@ -10,6 +10,7 @@ const LogIn = () => {
   const [, setLastName] = useContext(UserContext).lastName;
   const [, setUsername] = useContext(UserContext).username;
   const [, setLoggedIn] = useContext(UserContext).loggedIn;
+  const [, setEmail] = useContext(UserContext).email;
 
   const [, setCookie] = useCookies(["refreshToken"]);
 
@@ -30,6 +31,7 @@ const LogIn = () => {
           username
           firstName
           lastName
+          email
         }
       }
     }
@@ -68,9 +70,10 @@ const LogIn = () => {
       setFirstName(logInResult.data.tokenAuth.user.firstName);
       setLastName(logInResult.data.tokenAuth.user.lastName);
       setUsername(logInResult.data.tokenAuth.user.username);
+      setEmail(logInResult.data.tokenAuth.user.email);
       setActiveModal(null);
     }
-  }, [logInResult]);
+  }, [logInResult, setFirstName, setLastName, setUsername, setEmail, setLoggedIn, setActiveModal]);
 
   return (
     <div className={`modal p-3 ${activeModal === "logIn" ? "is-active" : ""}`}>

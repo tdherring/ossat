@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleDown, faPlay, faStepBackward, faStepForward, faFastBackward, faFastForward, faPlus, faPause, faTimes, faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
+import { faPlay, faStepBackward, faStepForward, faFastBackward, faFastForward, faPlus, faPause, faTimes, faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 import { CPUSimulatorContext } from "../../../../contexts/CPUSimulatorContext";
 import { ResizeContext } from "../../../../contexts/ResizeContext";
 import { ModalContext } from "../../../../contexts/ModalContext";
@@ -19,28 +19,7 @@ const CPUControls = () => {
   const [jobQueue, setJobQueue] = useContext(CPUSimulatorContext).jQueue;
   const Scheduler = useContext(CPUSimulatorContext).scheduler;
 
-  const dropdownOptions = [
-    {
-      label: "First Come First Served (FCFS)",
-      value: "FCFS",
-    },
-    {
-      label: "Shortest Job First (SJF)",
-      value: "SJF",
-    },
-    {
-      label: "Priority",
-      value: "Priority",
-    },
-    {
-      label: "Round Robin (RR)",
-      value: "RR",
-    },
-    {
-      label: "Shortest Remaining Time First (SRTF)",
-      value: "SRTF",
-    },
-  ];
+  const dropdownOptions = ["FCFS", "SJF", "Priority", "RR", "SRTF"];
 
   const [autoScheduling, setAutoScheduling] = useState(false);
   const [intervalVal, setIntervalVal] = useState(null);
@@ -62,44 +41,33 @@ const CPUControls = () => {
   return (
     <div className={`field is-grouped is-grouped-multiline ${widthValue < 1382 && "is-grouped-centered"}`}>
       <span className="control">
-        <div className="dropdown is-hoverable">
-          <div className="dropdown-trigger">
-            <button className="button" aria-haspopup="true" aria-controls="dropdown-menu" style={{ width: "20rem" }}>
-              <span>{activeSchedulerName}</span>
-              <FontAwesomeIcon icon={faAngleDown} className="ml-2" />
-            </button>
-          </div>
+        <div className="control is-expanded">
+          <div className="select is-fullwidth">
+            <select
+              onChange={(event) => {
+                setAutoScheduling(false);
 
-          <div className="dropdown-menu" id="dropdown-menu" role="menu">
-            <div className="dropdown-content" value="FCFS">
+                if (jobQueue.length > 0) {
+                  setPossibleNewSchedulerName(event.target.value);
+                  setPossibleNewScheduler(event.target.value);
+                  setActiveModal("confirmSwitchCPU");
+                } else {
+                  setActiveSchedulerName(event.target.value);
+                  setActiveCPUScheduler(Scheduler[event.target.value]);
+                  setJobQueue([]);
+                }
+              }}
+            >
               {dropdownOptions.map((option) => (
-                <a
-                  key={option.value}
-                  href="/#"
-                  className="dropdown-item"
-                  value={option.value}
-                  onClick={() => {
-                    setAutoScheduling(false);
-
-                    if (jobQueue.length > 0) {
-                      setPossibleNewSchedulerName(option.label);
-                      setPossibleNewScheduler(option.value);
-                      setActiveModal("confirmSwitchCPU");
-                    } else {
-                      setActiveSchedulerName(option.label);
-                      setActiveCPUScheduler(Scheduler[option.value]);
-                      setJobQueue([]);
-                    }
-                  }}
-                >
-                  {option.label}
-                </a>
+                <option key={option} href="/#" className="dropdown-item" value={option}>
+                  {option}
+                </option>
               ))}
-            </div>
+            </select>
           </div>
         </div>
       </span>
-      {activeSchedulerName === "Round Robin (RR)" && (
+      {activeSchedulerName === "RR" && (
         <span className="control mb-0">
           {" "}
           <input
@@ -130,7 +98,7 @@ const CPUControls = () => {
           />
         </span>
         <span className="control">
-          <a className="button is-static">
+          <a href="/#" className="button is-static">
             <FontAwesomeIcon icon={faTimes} />
           </a>
         </span>
@@ -213,7 +181,7 @@ const CPUControls = () => {
         <span className="field">
           <button className="button is-primary mb-0" href="/#" onClick={() => setActiveModal("addCPUProcess")} disabled={activeCPUScheduler.getAllReadyQueues().length > 0 ? true : false}>
             <FontAwesomeIcon icon={faPlus} className="mr-2" />
-            Add Process
+            Process
           </button>
         </span>
       </span>

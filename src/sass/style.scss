@@ -56,5 +56,10 @@ th > h6 {
   height: 10rem !important;
 }
 
+.select:not(.is-multiple):not(.is-loading)::after,
+.navbar-link:not(.is-arrowless)::after {
+  border-color: #000000 !important;
+}
+
 // Import Bulma SASS files.
 @import "./node_modules/bulma/bulma.sass";

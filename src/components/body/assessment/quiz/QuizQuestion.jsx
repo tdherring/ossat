@@ -1,10 +1,8 @@
-import React, { useContext, useState } from "react";
-import { QuizContext } from "../../../../contexts/QuizContext";
+import React, { useContext } from "react";
 import { UserContext } from "../../../../contexts/UserContext";
 import { useMutation, gql } from "@apollo/client";
 
 const QuizQuestion = ({ questionNum, questionText, answers, processes, blocks, id, selectedAnswer, submitted, correctAnswer }) => {
-  const [quizAnswers, setQuizAnswers] = useContext(QuizContext).answers;
   const [username] = useContext(UserContext).username;
 
   const [setQuestionAnswer] = useMutation(gql`
@@ -30,7 +28,7 @@ const QuizQuestion = ({ questionNum, questionText, answers, processes, blocks, i
           <tr>
             <td></td>
             <td>
-              <table className="table is-bordered is-striped is-narrow mr-3" style={{ float: "left" }}>
+              <table className="table is-bordered is-striped is-narrow mr-3 mb-4" style={{ float: "left" }}>
                 <caption className="has-text-left pb-1">
                   <em>Processes</em>
                 </caption>
@@ -82,7 +80,7 @@ const QuizQuestion = ({ questionNum, questionText, answers, processes, blocks, i
 
               {blocks && (
                 <>
-                  <table className="table is-bordered is-striped is-narrow" style={{ float: "left" }}>
+                  <table className="table is-bordered is-striped is-narrow mb-4" style={{ float: "left" }}>
                     <caption className="has-text-left pb-1">
                       <em>Blocks</em>
                     </caption>
@@ -98,7 +96,6 @@ const QuizQuestion = ({ questionNum, questionText, answers, processes, blocks, i
                     </thead>
                     <tbody>
                       {blocks.map((block) => {
-                        console.log(block);
                         return (
                           <tr key={`${questionNum}-${block.name}`}>
                             <td>{block.name}</td>
@@ -117,7 +114,7 @@ const QuizQuestion = ({ questionNum, questionText, answers, processes, blocks, i
           <tr>
             <td></td>
             <td>
-              <form className={!blocks && "mt-4"}>
+              <form>
                 <div className="field">
                   <div className="control">
                     {answers &&
@@ -130,9 +127,6 @@ const QuizQuestion = ({ questionNum, questionText, answers, processes, blocks, i
                               className={submitted ? "disabled" : ""}
                               defaultChecked={selectedAnswer && answer.name === selectedAnswer.name ? true : false}
                               onClick={() => {
-                                setQuizAnswers((quizAnswers) => {
-                                  return [...quizAnswers.slice(0, questionNum - 1), JSON.stringify(answer), ...quizAnswers.slice(questionNum, questionNum.length)];
-                                });
                                 setQuestionAnswer({ variables: { id: id, answer: JSON.stringify(answer), username: username, token: localStorage.getItem("accessToken") } });
                               }}
                               disabled={submitted ? true : false}
@@ -160,7 +154,7 @@ const QuizQuestion = ({ questionNum, questionText, answers, processes, blocks, i
                       ) : (
                         <article className="message is-danger my-4">
                           <div className="message-body p-3">
-                            Incorrect. The correct answer is <b>{correctAnswer.name}</b>
+                            Incorrect. The correct answer is <b>{correctAnswer.name}</b>.
                           </div>
                         </article>
                       ))}

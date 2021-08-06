@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useMutation, gql } from "@apollo/client";
 import { ModalContext } from "../../../contexts/ModalContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 
 const ActivateAccount = ({ token }) => {
   const [, setActiveModal] = useContext(ModalContext);
@@ -41,7 +43,7 @@ const ActivateAccount = ({ token }) => {
         setActivateResultErrors(result.data.verifyAccount.errors);
       }
     });
-  }, []);
+  }, [activateAccount, token]);
 
   return (
     <div className="tile is-vertical is-parent is-12 container">
@@ -58,13 +60,14 @@ const ActivateAccount = ({ token }) => {
           // Map all of the error messages from activation and display.
           Object.keys(activateResultErrors).map((key) => {
             let error = activateResultErrors[key];
-            if (error[0].code === "invalid_token")
+            if (error[0].code === "invalid_token" || error[0].code === "expired_token")
               return (
                 <span key={`activate-err-${error[0].code}`}>
                   <p className="has-text-danger">{error[0].message}</p>
                   <div className="field has-addons mr-3 pt-3">
                     <span className="control">
                       <input
+                        placeholder="Email Address"
                         className="input"
                         type="email"
                         onChange={(event) => {
@@ -74,13 +77,15 @@ const ActivateAccount = ({ token }) => {
                     </span>
                     <span className="control">
                       <a
-                        placeholder="Email Address"
                         className={`button is-primary ${resendLoading && "is-loading"}`}
-                        onClick={() => {
+                        href="/#"
+                        onClick={(event) => {
+                          event.preventDefault();
                           setResendLoading(true);
                           resendActivationEmail({ variables: { email: resendEmail } }).then((result) => {
                             setResendLoading(false);
                             setResendResult(result);
+                            console.log(result);
                             if (!result.data.resendActivationEmail.errors) {
                               setResendResultErrors(null);
                             } else {
@@ -89,6 +94,7 @@ const ActivateAccount = ({ token }) => {
                           });
                         }}
                       >
+                        <FontAwesomeIcon icon={faEnvelope} className="mr-2" />
                         Resend Activation Email
                       </a>
                     </span>
@@ -111,7 +117,17 @@ const ActivateAccount = ({ token }) => {
           })
         ) : activateResult && activateResult.data.verifyAccount.success ? (
           <p className="has-text-success">
-            Account successfully activated! Click <a onClick={() => setActiveModal("logIn")}>here</a> to login.
+            Account successfully activated! Click{" "}
+            <a
+              href="/#"
+              onClick={(event) => {
+                event.preventDefault();
+                setActiveModal("logIn");
+              }}
+            >
+              here
+            </a>{" "}
+            to login.
           </p>
         ) : null}
       </div>

@@ -9,7 +9,6 @@ const MemoryLayout = () => {
   const [timeDelta] = useContext(MemoryManagerContext).time;
   const [blocks] = useContext(MemoryManagerContext).blocks;
   const [allocated] = useContext(MemoryManagerContext).allocated;
-  const [jobQueue] = useContext(MemoryManagerContext).jQueue;
   const [, setActiveModal] = useContext(ModalContext);
 
   let blockCounter = 0;

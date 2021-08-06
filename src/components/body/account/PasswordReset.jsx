@@ -1,6 +1,8 @@
 import React, { useState, useContext } from "react";
 import { useMutation, gql } from "@apollo/client";
 import { ModalContext } from "../../../contexts/ModalContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faKey } from "@fortawesome/free-solid-svg-icons";
 
 const PasswordReset = ({ token }) => {
   const [, setActiveModal] = useContext(ModalContext);
@@ -79,12 +81,17 @@ const PasswordReset = ({ token }) => {
                 })
               ) : passwordResetResult && passwordResetResult.data.passwordReset.success ? (
                 <p className="help is-success">
-                  Password successfully changed! Click <a onClick={() => setActiveModal("logIn")}>here</a> to login.
+                  Password successfully changed! Click{" "}
+                  <a href="/#" onClick={() => setActiveModal("logIn")}>
+                    here
+                  </a>{" "}
+                  to login.
                 </p>
               ) : null
             }
           </div>
           <button className="button is-primary" type="submit">
+            <FontAwesomeIcon icon={faKey} className="mr-2" />
             Change Password
           </button>
         </form>

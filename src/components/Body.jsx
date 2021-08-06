@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import CPUModule from "./body/simulator/cpu/CPUModule";
 import MemoryModule from "./body/simulator/memory/MemoryModule";
 import AssessmentLandingPage from "./body/assessment/landing/AssessmentLandingPage";
+import OrganisationLandingPage from "./body/organisation/landing/OrganisationLandingPage";
 import QuizModule from "./body/assessment/quiz/QuizModule";
 import { PageContext } from "../contexts/PageContext";
 import { BrowserRouter as Router, Route } from "react-router-dom";
@@ -24,6 +25,7 @@ const Body = () => {
           </>
         )}
         {activePage === "assessmentLanding" && <AssessmentLandingPage />}
+        {activePage === "organisationLanding" && <OrganisationLandingPage />}
         {activePage === "quiz" && <QuizModule />}
         {activePage === "activate" && <ActivateAccount token={window.location.pathname.split("/").pop()} />}
         {activePage === "passwordReset" && <PasswordReset token={window.location.pathname.split("/").pop()} />}

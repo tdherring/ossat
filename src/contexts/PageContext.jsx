@@ -9,7 +9,7 @@ export const PageProvider = (props) => {
 
   useEffect(() => {
     setCookie("lastPage", activePage, { path: "/" });
-  }, [activePage]);
+  }, [activePage, setCookie]);
 
   return <PageContext.Provider value={[activePage, setActivePage]}>{props.children}</PageContext.Provider>;
 };

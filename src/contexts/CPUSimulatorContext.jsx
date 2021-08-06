@@ -11,7 +11,7 @@ export const CPUSimulatorProvider = (props) => {
   const Scheduler = { FCFS: new FCFS(), SJF: new SJF(), Priority: new Priority(), RR: new RR(2), SRTF: new SRTF() };
 
   const [activeCPUScheduler, setActiveCPUScheduler] = useState(Scheduler["FCFS"]);
-  const [activeSchedulerName, setActiveSchedulerName] = useState("First Come First Served (FCFS)");
+  const [activeSchedulerName, setActiveSchedulerName] = useState("FCFS");
   const [simulationSpeed, setSimulationSpeed] = useState(1);
   const [jobQueue, setJobQueue] = useState([]);
   const [readyQueue, setReadyQueue] = useState([]);

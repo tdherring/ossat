@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBug, faHome, faBook, faMicroscope, faUser, faSignOutAlt, faKey } from "@fortawesome/free-solid-svg-icons";
+import { faHome, faBook, faMicroscope, faUser, faSignOutAlt, faKey, faBuilding } from "@fortawesome/free-solid-svg-icons";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 
 import smallLogo from "../assets/images/small-logo.svg";
@@ -9,7 +9,6 @@ import Register from "./modals/Register";
 import LogIn from "./modals/LogIn";
 import RequestPasswordReset from "./modals/RequestPasswordReset";
 import About from "./modals/About";
-import BugReport from "./modals/BugReport";
 import MyProfile from "./modals/MyProfile";
 import ChangePassword from "./modals/ChangePassword";
 import { ModalContext } from "../contexts/ModalContext";
@@ -21,11 +20,11 @@ const Header = () => {
   const [burgerActive, setBurgerActive] = useState(false);
   const [, setActiveModal] = useContext(ModalContext);
   const [activePage, setActivePage] = useContext(PageContext);
-  const [loggedIn, setLoggedIn] = useContext(UserContext).loggedIn;
+  const [, setLoggedIn] = useContext(UserContext).loggedIn;
   const [username, setUsername] = useContext(UserContext).username;
   const [, setFirstName] = useContext(UserContext).firstName;
   const [, setLastName] = useContext(UserContext).lastName;
-  const [, , removeCookie] = useCookies(["refreshToken"]);
+  const [cookies, , removeCookie] = useCookies(["refreshToken"]);
 
   return (
     <header>
@@ -65,17 +64,33 @@ const Header = () => {
               <FontAwesomeIcon icon={faHome} className="mr-2" />
               {activePage === "home" ? <strong>Home</strong> : <>Home</>}
             </a>
-            <a
-              className="navbar-item"
-              href="/#"
-              onClick={(event) => {
-                setActivePage("assessmentLanding");
-                event.target.blur();
-              }}
-            >
-              <FontAwesomeIcon icon={faBook} className="mr-2" />
-              {activePage === "assessmentLanding" ? <strong>Assessment</strong> : <>Assessment</>}
-            </a>
+            {cookies["refreshToken"] && (
+              <>
+                <a
+                  className="navbar-item"
+                  href="/#"
+                  onClick={(event) => {
+                    setActivePage("assessmentLanding");
+                    event.target.blur();
+                  }}
+                >
+                  <FontAwesomeIcon icon={faBook} className="mr-2" />
+                  {activePage === "assessmentLanding" ? <strong>Assessment</strong> : <>Assessment</>}
+                </a>
+
+                <a
+                  className="navbar-item"
+                  href="/#"
+                  onClick={(event) => {
+                    setActivePage("organisationLanding");
+                    event.target.blur();
+                  }}
+                >
+                  <FontAwesomeIcon icon={faBuilding} className="mr-2" />
+                  {activePage === "organisationLanding" ? <strong>Organisations</strong> : <>Organisations</>}
+                </a>
+              </>
+            )}
             <div className="navbar-item has-dropdown is-hoverable">
               <a className="navbar-link" href="/#">
                 More
@@ -85,16 +100,12 @@ const Header = () => {
                   <FontAwesomeIcon icon={faMicroscope} className="mr-2" />
                   About
                 </a>
-                <a className="navbar-item" href="/#" onClick={() => setActiveModal("bugReport")}>
-                  <FontAwesomeIcon icon={faBug} className="mr-2" />
-                  Bug Report
-                </a>
               </div>
             </div>
           </div>
 
           <div className="navbar-end">
-            {!loggedIn ? (
+            {!cookies["refreshToken"] ? (
               <div className="navbar-item">
                 <div className="buttons">
                   <a className="button is-primary" href="/#" onClick={() => setActiveModal("register")}>
@@ -151,7 +162,6 @@ const Header = () => {
       <LogIn />
       <Register />
       <About />
-      <BugReport />
       <MyProfile />
       <ChangePassword />
       <RequestPasswordReset />
