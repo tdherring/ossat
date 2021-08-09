@@ -119,9 +119,11 @@ const Header = () => {
               </div>
             ) : (
               <div className="navbar-item has-dropdown is-hoverable">
-                <a className="navbar-link" href="/#">
-                  Welcome, {username}
-                </a>
+                {username && (
+                  <a className="navbar-link" id="welcome-dropdown" href="/#">
+                    Welcome, {username}
+                  </a>
+                )}
                 <div className="navbar-dropdown">
                   <a className="navbar-item" href="/#" onClick={() => setActiveModal("myProfile")}>
                     <FontAwesomeIcon icon={faUser} className="mr-2" />

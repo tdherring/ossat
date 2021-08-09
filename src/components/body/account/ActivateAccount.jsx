@@ -48,7 +48,9 @@ const ActivateAccount = ({ token }) => {
   return (
     <div className="tile is-vertical is-parent is-12 container">
       <div className="tile is-child box">
-        <h5 className="is-size-5">Account Activation</h5>
+        <h5 className="is-size-5">
+          <strong>Account Activation</strong>
+        </h5>
         <hr className="is-divider mt-2" />
         {activateResult === null ? (
           <span className="has-text-vcentered">

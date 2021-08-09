@@ -28,34 +28,41 @@ const CPUSchedule = () => {
   useEffect(() => setCurrentProcess(process));
 
   return (
-    <div>
-      <h5 className="is-size-5">Schedule</h5>
-      <div className="table-container px-3 py-4">
-        <table className="table is-bordered is-striped">
-          <tbody>
-            <tr>
-              {timeLabels.map((label) => (
-                <th className="px-0" key={"ptd-" + label}>
-                  <h6 className="is-size-6">{generatedSchedule.some((burst) => burst.timeDelta === label) && label}</h6>
-                </th>
-              ))}
-              {activeCPUScheduler.getReadyQueue().length > 0 && (
-                <th className="px-0" key={"ptd-" + timeLabels.length}>
-                  <h6 className="is-size-6">{timeLabels.length}</h6>
-                </th>
-              )}
-            </tr>
-            <tr>
-              {generatedSchedule.map((burst) => (
-                <td colSpan={burst.burstTime} className="has-text-centered" key={burst.timeDelta + "-" + burst.processName}>
-                  <h5 className="is-size-5">{burst.processName}</h5>
-                </td>
-              ))}
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+    generatedSchedule.length > 0 && (
+      <>
+        <hr className="is-divider" />
+        <div>
+          <h5 className="is-size-5">
+            <strong>Schedule</strong>
+          </h5>
+          <div className="table-container px-3 py-4">
+            <table className="table is-bordered is-striped">
+              <tbody>
+                <tr>
+                  {timeLabels.map((label) => (
+                    <th className="px-0" key={"ptd-" + label}>
+                      <h6 className="is-size-6">{generatedSchedule.some((burst) => burst.timeDelta === label) && label}</h6>
+                    </th>
+                  ))}
+                  {activeCPUScheduler.getReadyQueue().length > 0 && (
+                    <th className="px-0" key={"ptd-" + timeLabels.length}>
+                      <h6 className="is-size-6">{timeLabels.length}</h6>
+                    </th>
+                  )}
+                </tr>
+                <tr>
+                  {generatedSchedule.map((burst) => (
+                    <td colSpan={burst.burstTime} className="has-text-centered" key={burst.timeDelta + "-" + burst.processName}>
+                      <h5 className="is-size-5">{burst.processName}</h5>
+                    </td>
+                  ))}
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </>
+    )
   );
 };
 

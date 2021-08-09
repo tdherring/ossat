@@ -124,7 +124,9 @@ const OrganisationLandingPage = () => {
     (isOrgManager ? (
       <div className="tile is-vertical is-parent is-12 container">
         <div className="tile is-child box">
-          <h5 className="is-size-5">Organisation Management</h5>
+          <h5 className="is-size-5">
+            <strong>Organisation Management</strong>
+          </h5>
           <hr className="is-divider mt-2" />
           <p>Congratulations! You have been granted permission to create and manage organisations. If you have any organisations, you can see them below. If not, you can create a new one.</p>
           <br />
@@ -133,7 +135,9 @@ const OrganisationLandingPage = () => {
           </p>
         </div>
         <div className="tile is-child box">
-          <h5 className="is-size-5">My Organisations</h5>
+          <h5 className="is-size-5">
+            <strong>My Organisations</strong>
+          </h5>
           <hr className="is-divider mt-2" />
           <form
             className="pb-3"
@@ -255,7 +259,9 @@ const OrganisationLandingPage = () => {
     ) : memberOrganisation ? (
       <div className="tile is-vertical is-parent is-12 container">
         <div className="tile is-child box">
-          <h5 className="is-size-5">My Organisation - {memberOrganisation.name}</h5>
+          <h5 className="is-size-5">
+            <strong>My Organisation - {memberOrganisation.name}</strong>
+          </h5>
           <hr className="is-divider mt-2" />
           <div className="content">
             <p>
@@ -285,7 +291,9 @@ const OrganisationLandingPage = () => {
     ) : (
       <div className="tile is-vertical is-parent is-12 container">
         <div className="tile is-child box">
-          <h5 className="is-size-5">Join an Organisation</h5>
+          <h5 className="is-size-5">
+            <strong>Join an Organisation</strong>
+          </h5>
           <hr className="is-divider mt-2" />
           <p>You can join an organisation here. These may be created by class teachers or other collaborators who have been granted permission to do so by the OSSAT administration team.</p>
           <br />

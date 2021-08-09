@@ -42,7 +42,9 @@ const MemoryLayout = () => {
 
   return (
     <div>
-      <h5 className="is-size-5">Memory Layout</h5>
+      <h5 className="is-size-5">
+        <strong>Memory Layout</strong>
+      </h5>
       <div className="table-container px-2 pb-3 my-4">
         <table className="table is-bordered" width="100%">
           <tbody>

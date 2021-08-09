@@ -26,9 +26,7 @@ function App() {
       <div className="hero-body">
         <div className="container has-text-centered p-5" style={{ width: "600px", maxWidth: "600px" }}>
           <img src={fullLogo} alt="OSSAT Logo" style={{ width: "100%", maxWidth: "100%" }}></img>
-          <progress className="progress is-primary is-centered mt-5" max="100">
-            30%
-          </progress>
+          <progress className="progress is-primary is-centered mt-5" max="100"></progress>
         </div>
       </div>
     </section>

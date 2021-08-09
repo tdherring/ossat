@@ -9,7 +9,10 @@ const CPUReadyQueue = () => {
 
   return (
     <div>
-      <h5 className="is-size-5">Ready Queue</h5>
+      <hr className="is-divider" />
+      <h5 className="is-size-5">
+        <strong>Ready Queue</strong>
+      </h5>
       {!readyQueue ? (
         <article className="message is-dark mx-2 my-4">
           <div className="message-body">Waiting to run...</div>

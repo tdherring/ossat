@@ -15,20 +15,6 @@ const CPUProcess = ({ name, arrivalTime, burstTime, remainingTime, priority, sta
             {status === "EXECUTING" && <span className="tag is-success">Executing</span>}
             {status === "FINISHED" && <span className="tag is-danger">Finished</span>}
             {status === "WAITING" && <span className="tag is-info">Waiting</span>}
-            {jobQueueProcess && (
-              <a
-                href="/#"
-                className="ml-2 tag is-delete has-background-grey-lighter"
-                onClick={() => {
-                  // Remove the process from the job queue.
-                  activeCPUScheduler.removeProcess(name);
-                  // Flip this hook var to cause a rerender of the job and ready queues.
-                  setRunning(!running);
-                }}
-              >
-                {" "}
-              </a>
-            )}
           </span>
           <strong>{name}</strong>
         </h6>

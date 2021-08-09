@@ -75,11 +75,16 @@ const QuizModule = () => {
         <p className="title mb-0">
           <span>{variant}</span>
           {isSubmitted && (
-            <span className="is-pulled-right">
+            <span className="is-pulled-right is-hidden-touch is-hidden-mobile">
               Score: {score}/{questions.length}
             </span>
           )}
         </p>
+        {isSubmitted && (
+          <p className="subtitle is-hidden-desktop mt-1">
+            Score: {score}/{questions.length}
+          </p>
+        )}
         <hr className="is-divider"></hr>
         {questions.map((question) => {
           question_num++;

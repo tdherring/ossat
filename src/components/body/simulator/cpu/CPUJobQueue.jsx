@@ -9,7 +9,9 @@ const CPUJobQueue = () => {
 
   return (
     <div>
-      <h5 className="is-size-5">Job Queue</h5>
+      <h5 className="is-size-5">
+        <strong>Job Queue</strong>
+      </h5>
       {jobQueue.length === 0 ? (
         <article className="message is-dark mx-2 my-4">
           <div className="message-body">Waiting for processes...</div>

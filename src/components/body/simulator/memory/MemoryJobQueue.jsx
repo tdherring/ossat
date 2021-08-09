@@ -7,7 +7,9 @@ const MemoryJobQueue = () => {
 
   return (
     <div>
-      <h5 className="is-size-5">Job Queue</h5>
+      <h5 className="is-size-5">
+        <strong>Ready Queue</strong>
+      </h5>
       {jobQueue.length === 0 ? (
         <article className="message is-dark mx-2 my-4">
           <div className="message-body">Waiting for processes...</div>
@@ -15,7 +17,7 @@ const MemoryJobQueue = () => {
       ) : (
         <div className="columns is-multiline px-2 py-4 is-vcentered">
           {jobQueue.map((process) => (
-            <MemoryProcess key={process.name} name={process.name} size={process.size} />
+            <MemoryProcess key={process.name} process={process} />
           ))}
         </div>
       )}

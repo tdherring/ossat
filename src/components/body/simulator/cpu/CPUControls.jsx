@@ -39,7 +39,7 @@ const CPUControls = () => {
   }, [timeDelta, intervalVal]);
 
   return (
-    <div className={`field is-grouped is-grouped-multiline ${widthValue < 1382 && "is-grouped-centered"}`}>
+    <div className="field is-grouped is-grouped-multiline is-grouped-centered">
       <span className="control">
         <div className="control is-expanded">
           <div className="select is-fullwidth">
@@ -188,7 +188,14 @@ const CPUControls = () => {
       {jobQueue.length > 0 && (
         <span className="control">
           <span className="field">
-            <button className="button is-danger mb-0" href="/#" onClick={() => setActiveModal("resetCPU")}>
+            <button
+              className="button is-danger mb-0"
+              href="/#"
+              onClick={() => {
+                setActiveModal("resetCPU");
+                setAutoScheduling(false);
+              }}
+            >
               <FontAwesomeIcon icon={faExclamationTriangle} className="mr-2" />
               Reset
             </button>

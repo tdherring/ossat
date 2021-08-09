@@ -39,11 +39,12 @@ const MemoryControls = () => {
   }, [timeDelta, intervalVal]);
 
   return (
-    <div className={`field is-grouped is-grouped-multiline ${widthValue < 2953 && "is-grouped-centered"}`}>
+    <div className="field is-grouped is-flex is-grouped-multiline is-grouped-centered">
       <span className="control">
         <div className="control is-expanded">
           <div className="select is-fullwidth">
             <select
+              className="is-small"
               onChange={(event) => {
                 setAutoAllocating(false);
 
@@ -168,7 +169,14 @@ const MemoryControls = () => {
       {jobQueue.length > 0 || blocks.length > 0 ? (
         <span className="control">
           <span className="field">
-            <button className="button is-danger mb-0" href="/#" onClick={() => setActiveModal("resetMemory")}>
+            <button
+              className="button is-danger mb-0"
+              href="/#"
+              onClick={() => {
+                setActiveModal("resetMemory");
+                setAutoAllocating(false);
+              }}
+            >
               <FontAwesomeIcon icon={faExclamationTriangle} className="mr-2" />
               Reset
             </button>

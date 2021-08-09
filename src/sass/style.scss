@@ -12,6 +12,37 @@ $button-focus-border-color: black;
 $input-focus-box-shadow-size: 0;
 $input-focus-border-color: black;
 
+//Import animate.css
+@import "~animate.css/animate.min.css";
+
+.modal,
+.tile,
+#welcome-dropdown {
+  animation: fadeIn;
+  animation-duration: 200ms;
+}
+
+.navbar-menu {
+  animation: fadeIn;
+  animation-duration: 300ms;
+}
+
+.active-mem-process {
+  animation: flash-active 1s infinite;
+}
+
+@keyframes flash-active {
+  0% {
+    box-shadow: 0 0 10px #fafafa;
+  }
+  50% {
+    box-shadow: 0 0 10px rgb(0, 141, 54);
+  }
+  100% {
+    box-shadow: 0 0 10px #fafafa;
+  }
+}
+
 // Globally hide the scrollbar.
 html {
   overflow: auto !important;
@@ -56,9 +87,41 @@ th > h6 {
   height: 10rem !important;
 }
 
+// Change selector arrow to be black.
+
 .select:not(.is-multiple):not(.is-loading)::after,
 .navbar-link:not(.is-arrowless)::after {
   border-color: #000000 !important;
+}
+
+// Setup custom scrollbar.
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(90, 90, 90, 0.35);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(90, 90, 90, 0.5);
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+// Animations
+
+@keyframes fade-in {
+  0% {
+    background-color: transparent;
+  }
+  100% {
+    background-color: #ff4136;
+  }
 }
 
 // Import Bulma SASS files.

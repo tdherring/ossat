@@ -8,6 +8,8 @@ import { PageContext } from "../contexts/PageContext";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import ActivateAccount from "./body/account/ActivateAccount";
 import PasswordReset from "./body/account/PasswordReset";
+import { MemoryManagerProvider } from "../contexts/MemoryManagerContext";
+import { CPUSimulatorProvider } from "../contexts/CPUSimulatorContext";
 
 const Body = () => {
   const [activePage, setActivePage] = useContext(PageContext);
@@ -21,7 +23,12 @@ const Body = () => {
       <div className="tile is-ancestor">
         {activePage === "home" && (
           <>
-            <MemoryModule /> <CPUModule />
+            <MemoryManagerProvider>
+              <MemoryModule />
+            </MemoryManagerProvider>
+            <CPUSimulatorProvider>
+              <CPUModule />
+            </CPUSimulatorProvider>
           </>
         )}
         {activePage === "assessmentLanding" && <AssessmentLandingPage />}
