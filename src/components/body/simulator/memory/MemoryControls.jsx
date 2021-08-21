@@ -71,7 +71,7 @@ const MemoryControls = () => {
         <span className="control">
           <input
             className="input"
-            style={{ width: "4.5rem" }}
+            style={{ width: "4rem" }}
             type="number"
             defaultValue="1"
             min="0.1"
@@ -83,14 +83,15 @@ const MemoryControls = () => {
           />
         </span>
         <span className="control">
-          <a href="/#" className="button is-static">
+          <a href="/#" className="button is-static px-3">
             <FontAwesomeIcon icon={faTimes} />
           </a>
         </span>
       </div>
       <span className="control buttons is-grouped has-addons">
         <button
-          className="button is-primary mb-0"
+          className="button is-primary mb-0 px-3 has-tooltip-arrow has-tooltip-bottom"
+          data-tooltip="Jump to Start"
           href="/#"
           onClick={() => {
             setTimeDelta(0);
@@ -100,7 +101,8 @@ const MemoryControls = () => {
           <FontAwesomeIcon icon={faFastBackward} />
         </button>
         <button
-          className="button is-primary mb-0"
+          className="button is-primary mb-0 px-3 has-tooltip-arrow has-tooltip-bottom"
+          data-tooltip="Step Backward"
           href="/#"
           onClick={() => {
             if (timeDelta > 0) {
@@ -112,7 +114,8 @@ const MemoryControls = () => {
           <FontAwesomeIcon icon={faStepBackward} />
         </button>
         <button
-          className="button is-primary mb-0"
+          className="button is-primary mb-0 px-3 has-tooltip-arrow has-tooltip-bottom"
+          data-tooltip={autoAllocating ? "Pause" : "Play"}
           href="/#"
           onClick={() => {
             if (jobQueue.length > 0 && blocks.length > 0) {
@@ -138,7 +141,8 @@ const MemoryControls = () => {
           <FontAwesomeIcon icon={autoAllocating ? faPause : faPlay} />
         </button>
         <button
-          className="button is-primary mb-0"
+          className="button is-primary mb-0 px-3 has-tooltip-arrow has-tooltip-bottom"
+          data-tooltip="Step Forward"
           href="/#"
           onClick={() => {
             if (timeDelta < Object.keys(allocated).length) {
@@ -150,7 +154,8 @@ const MemoryControls = () => {
           <FontAwesomeIcon icon={faStepForward} />
         </button>
         <button
-          className="button is-primary mb-0"
+          className="button is-primary mb-0 px-3 has-tooltip-arrow has-tooltip-bottom"
+          data-tooltip="Jump to End"
           href="/#"
           onClick={() => {
             setTimeDelta(Object.keys(allocated).length);
@@ -160,17 +165,11 @@ const MemoryControls = () => {
           <FontAwesomeIcon icon={faFastForward} />
         </button>
       </span>
-      <span className="control">
-        <button className="button is-primary mb-0" href="/#" onClick={() => setActiveModal("addMemoryProcess")} disabled={Object.keys(allocated).length > 0 ? true : false}>
-          <FontAwesomeIcon icon={faPlus} className="mr-2" />
-          Process
-        </button>
-      </span>
       {jobQueue.length > 0 || blocks.length > 0 ? (
         <span className="control">
           <span className="field">
             <button
-              className="button is-danger mb-0"
+              className="button is-danger mb-0 px-3"
               href="/#"
               onClick={() => {
                 setActiveModal("resetMemory");

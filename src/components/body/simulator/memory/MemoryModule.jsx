@@ -10,14 +10,14 @@ const MemoryModule = () => {
   const [timeDelta] = useContext(MemoryManagerContext).time;
 
   return (
-    <div className={`tile is-vertical is-parent pr-0 ${widthValue > 1375 ? "is-4" : widthValue > 855 ? "is-5" : "is-6"}`}>
+    <div className={`tile is-vertical is-parent ${widthValue > 1375 ? "is-4" : widthValue > 855 ? "is-5" : "is-6"}`}>
       <div className="tile is-child box">
-        <p class="title has-text-centered">Memory Manager</p>
-        <p className="subtitle has-text-centered">Time Delta: {timeDelta}</p>
+        <p class="title is-4 has-text-centered">Memory Manager</p>
+        <p className="subtitle has-text-centered mb-3">Time Delta: {timeDelta}</p>
         <MemoryControls />
         <hr className="is-divider mt-2" />
         <MemoryJobQueue />
-        <hr className="is-divider" />
+        <hr className="is-divider mt-2" />
         <MemoryLayout />
       </div>
     </div>

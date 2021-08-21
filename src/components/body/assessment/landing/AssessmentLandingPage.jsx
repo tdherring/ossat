@@ -68,9 +68,7 @@ const AssessmentLandingPage = () => {
     (Object.keys(assessments).length === 0 ? (
       <div className="tile is-vertical is-parent is-12 container">
         <div className="tile is-child box">
-          <h5 className="is-size-5">
-            <strong>Account Activation Required</strong>
-          </h5>
+          <p className="title is-size-4">Account Activation Required</p>
           <hr className="is-divider mt-2" />
           <p>To gain access to the assessments section, you must first activate your account. Please check your inbox.</p>
         </div>
@@ -79,9 +77,7 @@ const AssessmentLandingPage = () => {
       <div className="tile is-vertical is-parent is-12 container">
         {generatedAssessmentID ? (
           <div className="tile is-child box">
-            <h5 className="is-size-5">
-              <strong>Generated Assessment</strong>
-            </h5>
+            <p className="title is-size-4">Generated Assessment</p>
             <hr className="is-divider mt-2" />
             <p>
               Now that you have completed the <strong>initial quiz</strong>, your <strong>generated quiz</strong> is now available! Click the button below to begin.
@@ -101,9 +97,7 @@ const AssessmentLandingPage = () => {
           </div>
         ) : (
           <div className="tile is-child box">
-            <h5 className="is-size-5">
-              <strong>Initial Assessment</strong>
-            </h5>
+            <p className="title is-size-4">Initial Assessment</p>
             <hr className="is-divider mt-2" />
             <p>
               Before we can generate assessments which are best suited to you, you have to complete the <strong>initial quiz</strong>. Click the button below to begin.
@@ -125,9 +119,7 @@ const AssessmentLandingPage = () => {
         <div className="tile is-child box">
           <div className="columns is-vcentered">
             <div className="column is-3">
-              <h5 className="is-size-5">
-                <strong>General Quizzes</strong>
-              </h5>
+              <p className="title is-size-4">General Quizzes</p>
             </div>
             <div className="column is-9 ">
               <progress

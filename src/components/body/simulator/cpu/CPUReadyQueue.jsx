@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import CPUProcess from "./CPUProcess";
 import { CPUSimulatorContext } from "../../../../contexts/CPUSimulatorContext";
 
@@ -6,10 +6,11 @@ const CPUReadyQueue = () => {
   const [readyQueue] = useContext(CPUSimulatorContext).rQueue;
   const [activeCPUScheduler] = useContext(CPUSimulatorContext).active;
   const [currentProcess] = useContext(CPUSimulatorContext).current;
+  const [timeDelta] = useContext(CPUSimulatorContext).time;
 
   return (
     <div>
-      <hr className="is-divider" />
+      <hr className="is-divider mt-2" />
       <h5 className="is-size-5">
         <strong>Ready Queue</strong>
       </h5>

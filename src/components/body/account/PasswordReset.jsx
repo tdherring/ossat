@@ -44,9 +44,7 @@ const PasswordReset = ({ token }) => {
   return (
     <div className="tile is-vertical is-parent is-12 container">
       <div className="tile is-child box">
-        <h5 className="is-size-5">
-          <strong>Password Reset</strong>
-        </h5>
+        <p className="title is-size-4">Password Reset</p>
         <hr className="is-divider mt-2" />
         <form onSubmit={handleSubmit}>
           <div className="content">

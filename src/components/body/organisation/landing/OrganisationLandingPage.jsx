@@ -4,6 +4,7 @@ import { faTrash, faUsers, faUserShield, faBuilding } from "@fortawesome/free-so
 import { gql, useApolloClient, useMutation } from "@apollo/client";
 import { ModalContext } from "../../../../contexts/ModalContext";
 import OrgMembersManagers from "../../../modals/OrgMembersManagers";
+import PerformanceData from "../PerformanceData";
 
 const OrganisationLandingPage = () => {
   const [activeModal, setActiveModal] = useContext(ModalContext);
@@ -124,9 +125,7 @@ const OrganisationLandingPage = () => {
     (isOrgManager ? (
       <div className="tile is-vertical is-parent is-12 container">
         <div className="tile is-child box">
-          <h5 className="is-size-5">
-            <strong>Organisation Management</strong>
-          </h5>
+          <p className="title is-size-4">Organisation Management</p>
           <hr className="is-divider mt-2" />
           <p>Congratulations! You have been granted permission to create and manage organisations. If you have any organisations, you can see them below. If not, you can create a new one.</p>
           <br />
@@ -135,9 +134,7 @@ const OrganisationLandingPage = () => {
           </p>
         </div>
         <div className="tile is-child box">
-          <h5 className="is-size-5">
-            <strong>My Organisations</strong>
-          </h5>
+          <p className="title is-size-4">My Organisations</p>
           <hr className="is-divider mt-2" />
           <form
             className="pb-3"
@@ -255,13 +252,12 @@ const OrganisationLandingPage = () => {
           )}
         </div>
         <OrgMembersManagers managers={managersPressed} org={managingOrg} />
+        <PerformanceData organisations={organisations} />
       </div>
     ) : memberOrganisation ? (
       <div className="tile is-vertical is-parent is-12 container">
         <div className="tile is-child box">
-          <h5 className="is-size-5">
-            <strong>My Organisation - {memberOrganisation.name}</strong>
-          </h5>
+          <p className="title is-size-4">My Organisation - {memberOrganisation.name}</p>
           <hr className="is-divider mt-2" />
           <div className="content">
             <p>
@@ -291,9 +287,9 @@ const OrganisationLandingPage = () => {
     ) : (
       <div className="tile is-vertical is-parent is-12 container">
         <div className="tile is-child box">
-          <h5 className="is-size-5">
+          <p className="title is-size-4">
             <strong>Join an Organisation</strong>
-          </h5>
+          </p>
           <hr className="is-divider mt-2" />
           <p>You can join an organisation here. These may be created by class teachers or other collaborators who have been granted permission to do so by the OSSAT administration team.</p>
           <br />

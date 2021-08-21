@@ -85,7 +85,7 @@ const QuizModule = () => {
             Score: {score}/{questions.length}
           </p>
         )}
-        <hr className="is-divider"></hr>
+        <hr className="is-divider mt-2"></hr>
         {questions.map((question) => {
           question_num++;
           return (

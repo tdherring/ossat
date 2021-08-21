@@ -15,6 +15,9 @@ $input-focus-border-color: black;
 //Import animate.css
 @import "~animate.css/animate.min.css";
 
+//Import bulma-tooltip
+@import "~@creativebulma/bulma-tooltip/dist/bulma-tooltip.min.css";
+
 .modal,
 .tile,
 #welcome-dropdown {
@@ -27,7 +30,7 @@ $input-focus-border-color: black;
   animation-duration: 300ms;
 }
 
-.active-mem-process {
+.active-process {
   animation: flash-active 1s infinite;
 }
 

@@ -30,7 +30,7 @@ const CPUSchedule = () => {
   return (
     generatedSchedule.length > 0 && (
       <>
-        <hr className="is-divider" />
+        <hr className="is-divider mt-2" />
         <div>
           <h5 className="is-size-5">
             <strong>Schedule</strong>

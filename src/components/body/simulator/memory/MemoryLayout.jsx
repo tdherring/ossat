@@ -44,7 +44,21 @@ const MemoryLayout = () => {
     <div>
       <h5 className="is-size-5">
         <strong>Memory Layout</strong>
+        <a
+          className="has-text-primary has-tooltip-arrow has-tooltip-right pl-3"
+          data-tooltip="Add Block"
+          href="/#"
+          onClick={() => setActiveModal("addMemoryBlock")}
+          disabled={Object.keys(allocated).length > 0 ? true : false}
+        >
+          <FontAwesomeIcon icon={faPlus} className="mr-2" />
+        </a>
       </h5>
+      {Object.keys(blocks).length === 0 && (
+        <article className="message is-dark mx-2 my-4">
+          <div className="message-body">Waiting for blocks...</div>
+        </article>
+      )}
       <div className="table-container px-2 pb-3 my-4">
         <table className="table is-bordered" width="100%">
           <tbody>
@@ -67,22 +81,6 @@ const MemoryLayout = () => {
                 </td>
               </tr>
             ))}
-            {Object.keys(allocated).length === 0 && (
-              <tr height="100">
-                <td className="p-0" style={{ border: "0" }}>
-                  <a className="add-memory-block-btn" href="/#" onClick={() => setActiveModal("addMemoryBlock")} style={{ width: "100%", height: "100%" }}>
-                    <div
-                      className="box is-shadowless has-dark-hover has-background-primary has-text-centered has-text-white is-primary"
-                      style={blocks.length > 0 ? { borderTopLeftRadius: "0", borderTopRightRadius: "0" } : null}
-                    >
-                      <FontAwesomeIcon icon={faPlus} size="2x" />
-                      <br />
-                      Add Block
-                    </div>
-                  </a>
-                </td>
-              </tr>
-            )}
           </tbody>
         </table>
       </div>

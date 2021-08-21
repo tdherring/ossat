@@ -86,7 +86,7 @@ const CPUControls = () => {
         <span className="control">
           <input
             className="input"
-            style={{ width: "4.5rem" }}
+            style={{ width: "4rem" }}
             type="number"
             defaultValue="1"
             min="0.1"
@@ -98,14 +98,15 @@ const CPUControls = () => {
           />
         </span>
         <span className="control">
-          <a href="/#" className="button is-static">
+          <a href="/#" className="button is-static px-3">
             <FontAwesomeIcon icon={faTimes} />
           </a>
         </span>
       </div>
       <span className="control buttons is-grouped has-addons">
         <button
-          className="button is-primary mb-0"
+          className="button is-primary mb-0 px-3 has-tooltip-arrow has-tooltip-bottom"
+          data-tooltip="Jump to Start"
           href="/#"
           onClick={() => {
             setTimeDelta(0);
@@ -115,7 +116,8 @@ const CPUControls = () => {
           <FontAwesomeIcon icon={faFastBackward} />
         </button>
         <button
-          className="button is-primary mb-0"
+          className="button is-primary mb-0 px-3 has-tooltip-arrow has-tooltip-bottom"
+          data-tooltip="Step Backward"
           href="/#"
           onClick={() => {
             if (timeDelta > 0) {
@@ -127,7 +129,8 @@ const CPUControls = () => {
           <FontAwesomeIcon icon={faStepBackward} />
         </button>
         <button
-          className="button is-primary mb-0"
+          className="button is-primary mb-0 px-3 has-tooltip-arrow has-tooltip-bottom"
+          data-tooltip={autoScheduling ? "Pause" : "Play"}
           href="/#"
           onClick={() => {
             if (jobQueue.length > 0) {
@@ -153,7 +156,8 @@ const CPUControls = () => {
           <FontAwesomeIcon icon={autoScheduling ? faPause : faPlay} />
         </button>
         <button
-          className="button is-primary mb-0"
+          className="button is-primary mb-0 px-3 has-tooltip-arrow has-tooltip-bottom"
+          data-tooltip="Step Forward"
           href="/#"
           onClick={() => {
             if (schedule.length > 0 && timeDelta < schedule[schedule.length - 1].timeDelta + schedule[schedule.length - 1].burstTime) {
@@ -165,7 +169,8 @@ const CPUControls = () => {
           <FontAwesomeIcon icon={faStepForward} />
         </button>
         <button
-          className="button is-primary mb-0"
+          className="button is-primary mb-0 px-3 has-tooltip-arrow has-tooltip-bottom"
+          data-tooltip="Jump to End"
           href="/#"
           onClick={() => {
             if (schedule.length > 0 && timeDelta < schedule[schedule.length - 1].timeDelta + schedule[schedule.length - 1].burstTime) {
@@ -176,14 +181,6 @@ const CPUControls = () => {
         >
           <FontAwesomeIcon icon={faFastForward} />
         </button>
-      </span>
-      <span className="control">
-        <span className="field">
-          <button className="button is-primary mb-0" href="/#" onClick={() => setActiveModal("addCPUProcess")} disabled={activeCPUScheduler.getAllReadyQueues().length > 0 ? true : false}>
-            <FontAwesomeIcon icon={faPlus} className="mr-2" />
-            Process
-          </button>
-        </span>
       </span>
       {jobQueue.length > 0 && (
         <span className="control">
