@@ -1,6 +1,5 @@
-import PreemptiveScheduler from "./preemptive_scheduler.mjs";
-
-class RR extends PreemptiveScheduler {
+import CPUScheduler from "../cpu_scheduler.mjs";
+class RR extends CPUScheduler {
   constructor(timeQuantum = 2) {
     super();
     this.timeQuantum = timeQuantum;

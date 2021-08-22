@@ -1,6 +1,5 @@
-import PreemptiveScheduler from "./preemptive_scheduler.mjs";
-
-class SRTF extends PreemptiveScheduler {
+import CPUScheduler from "../cpu_scheduler.mjs";
+class SRTF extends CPUScheduler {
   /**
    * Generates a SRTF schedule for a set of input processes.
    *

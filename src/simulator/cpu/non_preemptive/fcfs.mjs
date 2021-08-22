@@ -1,6 +1,6 @@
-import NonPreemptiveScheduler from "./non_preemptive_scheduler.mjs";
+import CPUScheduler from "../cpu_scheduler.mjs";
 
-class FCFS extends NonPreemptiveScheduler {
+class FCFS extends CPUScheduler {
   /**
    * Generates a FCFS schedule for a set of input processes.
    *
