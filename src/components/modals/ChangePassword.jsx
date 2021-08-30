@@ -42,7 +42,7 @@ const ChangePassword = () => {
         if (!result.data.passwordChange.errors) {
           setChangePasswordResultErrors(null);
           if (result.data.passwordChange.token) localStorage.setItem("accessToken", result.data.passwordChange.token);
-          if (result.data.passwordChange.refreshToken) setCookie("refreshToken", result.data.passwordChange.refreshToken, { path: "/" }); //! SET secure : true in production
+          if (result.data.passwordChange.refreshToken) setCookie("refreshToken", result.data.passwordChange.refreshToken, { path: "/", secure: true }); //! SET secure : true in production
         } else {
           setChangePasswordResultErrors(result.data.passwordChange.errors);
         }

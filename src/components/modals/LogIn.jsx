@@ -52,7 +52,7 @@ const LogIn = () => {
         if (!result.data.tokenAuth.errors) {
           setLogInResultErrors({});
           localStorage.setItem("accessToken", result.data.tokenAuth.token);
-          setCookie("refreshToken", result.data.tokenAuth.refreshToken, { path: "/" }); //! SET secure : true in production
+          setCookie("refreshToken", result.data.tokenAuth.refreshToken, { path: "/", secure: true }); //! SET secure : true in production
           event.target.reset();
           _setUsername("");
           setPassword("");

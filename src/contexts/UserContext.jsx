@@ -78,7 +78,7 @@ export const UserProvider = (props) => {
 
           if (result.data.refreshToken.refreshToken) {
             // Valid query? Update the refresh token.
-            setCookie("refreshToken", result.data.refreshToken.refreshToken, { path: "/" }); //! SET secure : true in production
+            setCookie("refreshToken", result.data.refreshToken.refreshToken, { path: "/", secure: true  }); //! SET secure : true in production
 
             validate();
           } else {
