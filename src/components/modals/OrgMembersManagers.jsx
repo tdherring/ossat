@@ -80,7 +80,7 @@ const OrgMembersManagers = ({ managers, org }) => {
           <div className="content">
             {managersOrMembers.length === 0 ? (
               <p>
-                There are currently no {managers ? "Managers" : "Members"} of this organisation.{managers ? "" : " Please distribute the Invite Code to users who you wish to join."}
+                There are currently no {managers ? "Managers" : "Members"} of this organisation.{managers ? "" : " Please distribute the Invitation Code to users who you wish to join."}
               </p>
             ) : (
               <>

@@ -54,6 +54,8 @@ const LogIn = () => {
           localStorage.setItem("accessToken", result.data.tokenAuth.token);
           setCookie("refreshToken", result.data.tokenAuth.refreshToken, { path: "/" }); //! SET secure : true in production
           event.target.reset();
+          _setUsername("");
+          setPassword("");
         } else {
           setLogInResultErrors(result.data.tokenAuth.errors);
         }
@@ -82,7 +84,7 @@ const LogIn = () => {
         <form onSubmit={handleSubmit}>
           <header className="modal-card-head">
             <p className="modal-card-title">Log In</p>
-            <button
+            <a
               className="delete"
               onClick={(event) => {
                 event.preventDefault();
@@ -123,7 +125,11 @@ const LogIn = () => {
                   // Map all of the error messages from log in and display at bottom of form.
                   Object.keys(logInResultErrors).map((key) => {
                     let error = logInResultErrors[key];
-                    return <p className="help is-danger">{error[0].message}</p>;
+                    return (
+                      <p key={`login-err-${error[0].code}`} className="help is-danger">
+                        {error[0].message}
+                      </p>
+                    );
                   })
                 ) : null
               }

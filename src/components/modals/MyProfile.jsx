@@ -46,7 +46,7 @@ const MyProfile = () => {
         <form onSubmit={handleSubmit}>
           <header className="modal-card-head">
             <p className="modal-card-title">My Profile</p>
-            <button
+            <a
               className="delete"
               onClick={(event) => {
                 event.preventDefault();
@@ -91,7 +91,11 @@ const MyProfile = () => {
               // Map all of the error messages from profile update and display at bottom of form.
               Object.keys(updateResultErrors).map((key) => {
                 let error = updateResultErrors[key];
-                return <p className="help is-danger">{error[0].message}</p>;
+                return (
+                  <p key={`update-result-err-${error[0].code}`} className="help is-danger">
+                    {error[0].message}
+                  </p>
+                );
               })
             ) : updateResult && updateResult.data.updateAccount.success ? (
               <p className="help is-success">Profile successfully updated!</p>

@@ -32,6 +32,8 @@ const PasswordReset = ({ token }) => {
         if (!result.data.passwordReset.errors) {
           setPasswordResetErrors({});
           event.target.reset();
+          setPassword("");
+          setConfirmPassword("");
         } else {
           setPasswordResetErrors(result.data.passwordReset.errors);
         }
@@ -77,7 +79,11 @@ const PasswordReset = ({ token }) => {
                 // Map all of the error messages from log in and display at bottom of form.
                 Object.keys(passwordResetErrors).map((key) => {
                   let error = passwordResetErrors[key];
-                  return <p className="help is-danger">{error[0].message}</p>;
+                  return (
+                    <p key={`password-reset-err-${error[0].code}`} className="help is-danger">
+                      {error[0].message}
+                    </p>
+                  );
                 })
               ) : passwordResetResult && passwordResetResult.data.passwordReset.success ? (
                 <p className="help is-success">

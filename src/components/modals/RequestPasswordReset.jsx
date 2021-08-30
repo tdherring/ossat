@@ -30,6 +30,7 @@ const RequestPasswordReset = () => {
         if (!result.data.sendPasswordResetEmail.errors) {
           setSendEmailResultErrors({});
           event.target.reset();
+          setEmail("");
         } else {
           setSendEmailResultErrors(result.data.sendPasswordResetEmail.errors);
         }
@@ -46,7 +47,7 @@ const RequestPasswordReset = () => {
         <form onSubmit={handleSubmit}>
           <header className="modal-card-head">
             <p className="modal-card-title">Request Password Reset</p>
-            <button
+            <a
               className="delete"
               onClick={(event) => {
                 event.preventDefault();
@@ -78,7 +79,11 @@ const RequestPasswordReset = () => {
                   // Map all of the error messages from attempting to send email and display at bottom of form.
                   Object.keys(sendEmailResultErrors).map((key) => {
                     let error = sendEmailResultErrors[key];
-                    return <p className="help is-danger">{error[0].message}</p>;
+                    return (
+                      <p key={`pwd-email-err-${error[0].code}`} className="help is-danger">
+                        {error[0].message}
+                      </p>
+                    );
                   })
                 ) : (
                   sendEmailResult &&

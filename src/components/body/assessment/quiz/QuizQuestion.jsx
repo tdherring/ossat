@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { UserContext } from "../../../../contexts/UserContext";
+import { QuizContext } from "../../../../contexts/QuizContext";
 import { useMutation, gql } from "@apollo/client";
 
 const QuizQuestion = ({ questionNum, questionText, answers, processes, blocks, id, selectedAnswer, submitted, correctAnswer }) => {
@@ -124,12 +125,12 @@ const QuizQuestion = ({ questionNum, questionText, answers, processes, blocks, i
                             <input
                               type="radio"
                               name={`radiogroup${questionNum}`}
-                              className={submitted ? "disabled" : ""}
+                              className={submitted || localStorage.getItem("readOnlyQuiz") === "true" ? "disabled" : ""}
                               defaultChecked={selectedAnswer && answer.name === selectedAnswer.name ? true : false}
                               onClick={() => {
                                 setQuestionAnswer({ variables: { id: id, answer: JSON.stringify(answer), username: username, token: localStorage.getItem("accessToken") } });
                               }}
-                              disabled={submitted ? true : false}
+                              disabled={submitted || localStorage.getItem("readOnlyQuiz") === "true" ? true : false}
                             />
                             &nbsp;
                             {

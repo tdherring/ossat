@@ -52,7 +52,8 @@ const AssessmentLandingPage = () => {
                 setLoading(false);
               }
             }
-          });
+          })
+          .catch((errors) => window.location.reload());
     },
     [client, username]
   );
@@ -61,6 +62,7 @@ const AssessmentLandingPage = () => {
     getAssessments("Initial Assessment");
     getAssessments("Generated Assessment");
     getAssessments();
+    localStorage.setItem("readOnlyQuiz", false);
   }, [username, getAssessments]);
 
   return (

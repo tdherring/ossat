@@ -28,6 +28,8 @@ const AddMemoryProcess = () => {
       setProcessName("");
       setSize(100);
       event.target.reset();
+      setProcessName("");
+      setSize("");
     } else {
       setSubmissionAttempt(true);
     }
@@ -40,7 +42,7 @@ const AddMemoryProcess = () => {
         <form onSubmit={handleSubmit}>
           <header className="modal-card-head">
             <p className="modal-card-title">Add Memory Process</p>
-            <button
+            <a
               className="delete"
               onClick={(event) => {
                 event.preventDefault();

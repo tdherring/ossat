@@ -50,7 +50,7 @@ const AddCPUProcess = ({ isPriorityProcess }) => {
         <form onSubmit={handleSubmit}>
           <header className="modal-card-head">
             <p className="modal-card-title">Add CPU Process</p>
-            <button
+            <a
               className="delete"
               onClick={(event) => {
                 event.preventDefault();

@@ -37,6 +37,10 @@ const Register = () => {
         if (!result.data.register.errors) {
           setRegisterResultErrors({});
           event.target.reset();
+          setEmail("");
+          setUsername("");
+          setPassword("");
+          setConfirmPassword("");
         } else {
           setRegisterResultErrors(result.data.register.errors);
         }
@@ -53,7 +57,7 @@ const Register = () => {
         <form onSubmit={handleSubmit}>
           <header className="modal-card-head">
             <p className="modal-card-title">Register</p>
-            <button
+            <a
               className="delete"
               onClick={(event) => {
                 event.preventDefault();
@@ -121,7 +125,11 @@ const Register = () => {
                   // Map all of the error messages from registration and display at bottom of form.
                   Object.keys(registerResultErrors).map((key) => {
                     let error = registerResultErrors[key];
-                    return <p className="help is-danger">{error[0].message}</p>;
+                    return (
+                      <p key={`register-err-${error[0].code}`} className="help is-danger">
+                        {error[0].message}
+                      </p>
+                    );
                   })
                 ) : (
                   //Successfully registered.

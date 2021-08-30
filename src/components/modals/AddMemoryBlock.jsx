@@ -29,7 +29,7 @@ const AddMemoryBlock = () => {
         <form onSubmit={handleSubmit}>
           <header className="modal-card-head">
             <p className="modal-card-title">Add Block</p>
-            <button
+            <a
               className="delete"
               onClick={(event) => {
                 event.preventDefault();

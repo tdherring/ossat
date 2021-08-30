@@ -19,7 +19,10 @@ const CPUJobQueue = () => {
           className="has-text-primary has-tooltip-arrow has-tooltip-right pl-3"
           data-tooltip="Add Process"
           href="/#"
-          onClick={() => setActiveModal("addCPUProcess")}
+          onClick={(event) => {
+            event.preventDefault();
+            setActiveModal("addCPUProcess");
+          }}
           disabled={activeCPUScheduler.getAllReadyQueues().length > 0 ? true : false}
         >
           <FontAwesomeIcon icon={faPlus} className="mr-2" />

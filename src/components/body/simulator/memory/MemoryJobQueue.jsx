@@ -19,7 +19,10 @@ const MemoryJobQueue = () => {
             className="has-text-primary has-tooltip-arrow has-tooltip-right pl-3"
             data-tooltip="Add Process"
             href="/#"
-            onClick={() => setActiveModal("addMemoryProcess")}
+            onClick={(event) => {
+              event.preventDefault();
+              setActiveModal("addMemoryProcess");
+            }}
             disabled={Object.keys(allocated).length > 0 ? true : false}
           >
             <FontAwesomeIcon icon={faPlus} className="mr-2" />

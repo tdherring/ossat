@@ -11,7 +11,7 @@ export const UserProvider = (props) => {
   const [username, setUsername] = useState(null);
   const [email, setEmail] = useState(null);
   const [cookies, setCookie, removeCookie] = useCookies(["refreshToken"]);
-  const REFRESH_INTERVAL = 300000;
+  const REFRESH_INTERVAL = 240000;
 
   // GraphQL mutation to refresh the access token.
   const [refreshToken] = useMutation(gql`

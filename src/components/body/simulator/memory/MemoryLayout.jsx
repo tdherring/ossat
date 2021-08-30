@@ -48,7 +48,10 @@ const MemoryLayout = () => {
           className="has-text-primary has-tooltip-arrow has-tooltip-right pl-3"
           data-tooltip="Add Block"
           href="/#"
-          onClick={() => setActiveModal("addMemoryBlock")}
+          onClick={(event) => {
+            event.preventDefault();
+            setActiveModal("addMemoryBlock");
+          }}
           disabled={Object.keys(allocated).length > 0 ? true : false}
         >
           <FontAwesomeIcon icon={faPlus} className="mr-2" />
@@ -72,7 +75,7 @@ const MemoryLayout = () => {
             )}
 
             {blocks.map((block) => (
-              <tr height={block.getSize()}>
+              <tr key={`block-${Object.keys(blocks).indexOf(block)}`} height={block.getSize()}>
                 <td width="100%" className="p-0">
                   {findProcessFill(block)}
                 </td>

@@ -103,7 +103,7 @@ const QuizModule = () => {
             />
           );
         })}
-        {!isSubmitted && (
+        {!isSubmitted && localStorage.getItem("readOnlyQuiz") === "false" ? (
           <a
             className={`button is-primary`}
             href="/#"
@@ -115,7 +115,7 @@ const QuizModule = () => {
           >
             Submit
           </a>
-        )}
+        ) : null}
         {successfulSubmit === true ? (
           <p className="has-text-success pt-4">Quiz successfully submitted and graded! Please scroll up to check your results.</p>
         ) : (

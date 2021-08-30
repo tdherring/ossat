@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome, faBook, faMicroscope, faUser, faSignOutAlt, faKey, faBuilding } from "@fortawesome/free-solid-svg-icons";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
@@ -15,6 +15,7 @@ import { ModalContext } from "../contexts/ModalContext";
 import { PageContext } from "../contexts/PageContext";
 import { UserContext } from "../contexts/UserContext";
 import { useCookies } from "react-cookie";
+import { useMutation, gql } from "@apollo/client";
 
 const Header = () => {
   const [burgerActive, setBurgerActive] = useState(false);
@@ -25,6 +26,20 @@ const Header = () => {
   const [, setFirstName] = useContext(UserContext).firstName;
   const [, setLastName] = useContext(UserContext).lastName;
   const [cookies, , removeCookie] = useCookies(["refreshToken"]);
+
+  // GraphQL mutation to revoke token.
+  const [revokeToken] = useMutation(gql`
+    mutation RevokeToken($refreshToken: String!) {
+      revokeToken(refreshToken: $refreshToken) {
+        success
+        errors
+      }
+    }
+  `);
+
+  useEffect(() => {
+    setBurgerActive(false);
+  }, [activePage]);
 
   return (
     <header>
@@ -138,13 +153,20 @@ const Header = () => {
                     className="navbar-item"
                     href="/#"
                     onClick={() => {
-                      setLoggedIn(false);
-                      setFirstName(null);
-                      setLastName(null);
-                      setUsername(null);
-                      removeCookie("refreshToken");
-                      localStorage.removeItem("accessToken");
-                      setActivePage("home");
+                      revokeToken({ variables: { refreshToken: cookies["refreshToken"] } }).then((result) => {
+                        if (!result.data.revokeToken.errors) {
+                          setLoggedIn(false);
+                          setFirstName(null);
+                          setLastName(null);
+                          setUsername(null);
+                          removeCookie("refreshToken");
+                          localStorage.removeItem("accessToken");
+                          setActivePage("home");
+                          console.log("User session successfully closed!");
+                        } else {
+                          console.warn("An error was encountered when attempting to end the user's session!", result.data.revokeToken.errors);
+                        }
+                      });
                     }}
                   >
                     <FontAwesomeIcon icon={faSignOutAlt} className="mr-2" />

@@ -61,7 +61,7 @@ const ChangePassword = () => {
         <form onSubmit={handleSubmit}>
           <header className="modal-card-head">
             <p className="modal-card-title">Change Password</p>
-            <button
+            <a
               className="delete"
               onClick={(event) => {
                 event.preventDefault();
@@ -122,7 +122,11 @@ const ChangePassword = () => {
               // Map all of the error messages from profile update and display at bottom of form.
               Object.keys(changePasswordResultErrors).map((key) => {
                 let error = changePasswordResultErrors[key];
-                return <p className="help is-danger">{error[0].message}</p>;
+                return (
+                  <p key={`change-pwd-err-${error[0].code}`} className="help is-danger">
+                    {error[0].message}
+                  </p>
+                );
               })
             ) : changePasswordResult && changePasswordResult.data && changePasswordResult.data.passwordChange.success ? (
               <p className="help is-success">Password successfully changed!</p>
