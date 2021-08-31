@@ -34,7 +34,7 @@ const PerformanceData = ({ organisations, isOrgCreator }) => {
   ];
 
   const [selectedOrg, setSelectedOrg] = useState(organisations[0]);
-  const [selectedUser, setSelectedUser] = useState(organisations[0].members[0]);
+  const [selectedUser, setSelectedUser] = useState(organisations[0].members[0] ? organisations[0].members[0] : null);
   const [userAssessments, setUserAssessments] = useState({});
   const [averageScores, setAverageScores] = useState([]);
   const [activeViewIndex, setActiveViewIndex] = useState(0);
@@ -90,7 +90,7 @@ const PerformanceData = ({ organisations, isOrgCreator }) => {
   }, [selectedUser]);
 
   useEffect(() => {
-    setSelectedUser(selectedOrg.members[0]);
+    setSelectedUser(selectedOrg.members[0] ? selectedOrg.members[0] : null);
   }, [selectedOrg]);
 
   return (
