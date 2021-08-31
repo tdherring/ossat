@@ -34,7 +34,7 @@ const PerformanceData = ({ organisations, isOrgCreator }) => {
   ];
 
   const [selectedOrg, setSelectedOrg] = useState(organisations[0]);
-  const [selectedUser, setSelectedUser] = useState(organisations[0].members[0] ? organisations[0].members[0] : null);
+  const [selectedUser, setSelectedUser] = useState(organisations[0] ? organisations[0].members[0] : null);
   const [userAssessments, setUserAssessments] = useState({});
   const [averageScores, setAverageScores] = useState([]);
   const [activeViewIndex, setActiveViewIndex] = useState(0);
@@ -90,7 +90,7 @@ const PerformanceData = ({ organisations, isOrgCreator }) => {
   }, [selectedUser]);
 
   useEffect(() => {
-    setSelectedUser(selectedOrg.members[0] ? selectedOrg.members[0] : null);
+    setSelectedUser(selectedOrg ? selectedOrg.members[0] : null);
   }, [selectedOrg]);
 
   return (
@@ -103,19 +103,23 @@ const PerformanceData = ({ organisations, isOrgCreator }) => {
           <div className="field">
             <label className="label">Organisation</label>
             {isOrgCreator ? (
-              <div className="select is-fullwidth">
-                <select
-                  onChange={(event) => {
-                    setSelectedOrg(organisations[event.target.value]);
-                  }}
-                >
-                  {organisations.map((org) => (
-                    <option key={org.name} className="dropdown-item" value={organisations.indexOf(org)}>
-                      {org.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              organisations[0] ? (
+                <div className="select is-fullwidth">
+                  <select
+                    onChange={(event) => {
+                      setSelectedOrg(organisations[event.target.value]);
+                    }}
+                  >
+                    {organisations.map((org) => (
+                      <option key={org.name} className="dropdown-item" value={organisations.indexOf(org)}>
+                        {org.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              ) : (
+                <h6 className="is-size-6 has-text-danger">Please create an Organisation.</h6>
+              )
             ) : (
               <h6 className="is-size-6">{organisations[0].name}</h6>
             )}
