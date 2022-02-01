@@ -119,68 +119,6 @@ const Header = () => {
             </div>
           </div>
 
-          <div className="navbar-end">
-            {!cookies["refreshToken"] ? (
-              <div className="navbar-item">
-                <div className="buttons">
-                  <a className="button is-primary" href="/#" onClick={() => setActiveModal("register")}>
-                    <strong>Register</strong>
-                  </a>
-
-                  <a className="button is-outlined" href="/#" onClick={() => setActiveModal("logIn")}>
-                    Log in
-                  </a>
-                </div>
-              </div>
-            ) : (
-              <div className="navbar-item has-dropdown is-hoverable">
-                {username && (
-                  <a className="navbar-link" id="welcome-dropdown" href="/#">
-                    Welcome, {username}
-                  </a>
-                )}
-                <div className="navbar-dropdown">
-                  <a className="navbar-item" href="/#" onClick={() => setActiveModal("myProfile")}>
-                    <FontAwesomeIcon icon={faUser} className="mr-2" />
-                    My Profile
-                  </a>
-                  <a className="navbar-item" href="/#" onClick={() => setActiveModal("changePassword")}>
-                    <FontAwesomeIcon icon={faKey} className="mr-2" />
-                    Change Password
-                  </a>
-                  <hr className="navbar-divider" />
-                  <a
-                    className="navbar-item"
-                    href="/#"
-                    onClick={() => {
-                      revokeToken({ variables: { refreshToken: cookies["refreshToken"] } }).then((result) => {
-                        if (!result.data.revokeToken.errors) {
-                          setLoggedIn(false);
-                          setFirstName(null);
-                          setLastName(null);
-                          setUsername(null);
-                          removeCookie("refreshToken");
-                          localStorage.removeItem("accessToken");
-                          setActivePage("home");
-                          console.log("User session successfully closed!");
-                        } else {
-                          console.warn("An error was encountered when attempting to end the user's session!", result.data.revokeToken.errors);
-                        }
-                      });
-                    }}
-                  >
-                    <FontAwesomeIcon icon={faSignOutAlt} className="mr-2" />
-                    Logout
-                  </a>
-                </div>
-              </div>
-            )}
-            <div className="navbar-item is-hidden-touch">
-              <a href="https://github.com/tdherring/OSSAT-Frontend">
-                <FontAwesomeIcon icon={faGithub} className="mr-2 is-size-4 has-text-black" />
-              </a>
-            </div>
-          </div>
         </div>
       </nav>
       <LogIn />
