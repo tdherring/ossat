@@ -19,9 +19,12 @@ npm install
 
 ## Usage
 
+If running locally:
+
 ```sh
 npm start
 ```
+*Or deploy to a cloud environment using your provider's instructions.*
 
 ## Author
 
