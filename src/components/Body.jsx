@@ -5,7 +5,7 @@ import AssessmentLandingPage from "./body/assessment/landing/AssessmentLandingPa
 import OrganisationLandingPage from "./body/organisation/landing/OrganisationLandingPage";
 import QuizModule from "./body/assessment/quiz/QuizModule";
 import { PageContext } from "../contexts/PageContext";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as BrowserRouter, Routes, Route } from "react-router-dom";
 import ActivateAccount from "./body/account/ActivateAccount";
 import PasswordReset from "./body/account/PasswordReset";
 import { MemoryManagerProvider } from "../contexts/MemoryManagerContext";
@@ -16,10 +16,12 @@ const Body = () => {
 
   return (
     <div className="section" id="page-body">
-      <Router>
-        <Route path="/activate" render={() => setActivePage("activate")} />
-        <Route path="/password-reset" render={() => setActivePage("passwordReset")} />
-      </Router>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/activate" render={() => setActivePage("activate")} />
+          <Route path="/password-reset" render={() => setActivePage("passwordReset")} />
+        </Routes>
+      </BrowserRouter>
       <div className="tile is-ancestor">
         {activePage === "home" && (
           <>
