@@ -1077,10 +1077,6 @@
   version "6.2.1"
   resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-common-types/-/fontawesome-common-types-6.2.1.tgz#411e02a820744d3f7e0d8d9df9d82b471beaa073"
 
-"@fortawesome/fontawesome-common-types@^0.2.35":
-  version "0.2.35"
-  resolved "https://registry.npmjs.org/@fortawesome/fontawesome-common-types/-/fontawesome-common-types-0.2.35.tgz"
-
 "@fortawesome/fontawesome-free@^6.2.1":
   version "6.2.1"
   resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-free/-/fontawesome-free-6.2.1.tgz#344baf6ff9eaad7a73cff067d8c56bfc11ae5304"
@@ -1091,11 +1087,11 @@
   dependencies:
     "@fortawesome/fontawesome-common-types" "6.2.1"
 
-"@fortawesome/free-brands-svg-icons@^5.15.3":
-  version "5.15.3"
-  resolved "https://registry.npmjs.org/@fortawesome/free-brands-svg-icons/-/free-brands-svg-icons-5.15.3.tgz"
+"@fortawesome/free-brands-svg-icons@^6.2.1":
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/@fortawesome/free-brands-svg-icons/-/free-brands-svg-icons-6.2.1.tgz#04a6d6f7898f7ef392aba7a65030a584d4f4c84f"
   dependencies:
-    "@fortawesome/fontawesome-common-types" "^0.2.35"
+    "@fortawesome/fontawesome-common-types" "6.2.1"
 
 "@fortawesome/free-solid-svg-icons@^6.2.1":
   version "6.2.1"
