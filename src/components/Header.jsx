@@ -149,7 +149,7 @@ const Header = () => {
               </button>
             </div>
             {!cookies["refreshToken"] ? (
-              process.env.DISABLE_LOGIN !== "true" && (
+              process.env.REACT_APP_DISABLE_LOGIN !== "true" && (
                 <div className="navbar-item">
                   <div className="buttons">
                     <a className="button is-primary" href="/#" onClick={() => setActiveModal("register")}>
