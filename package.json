@@ -3,36 +3,37 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@apollo/client": "^3.7.10",
+    "@apollo/client": "^4.1.5",
     "@creativebulma/bulma-tooltip": "^1.2.0",
-    "@fortawesome/fontawesome-free": "^6.3.0",
-    "@fortawesome/fontawesome-svg-core": "^6.2.1",
-    "@fortawesome/free-brands-svg-icons": "^6.3.0",
-    "@fortawesome/free-solid-svg-icons": "^6.2.1",
-    "@fortawesome/react-fontawesome": "^0.2.0",
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^12.1.5",
-    "@testing-library/user-event": "^14.4.3",
+    "@fortawesome/fontawesome-free": "^7.2.0",
+    "@fortawesome/fontawesome-svg-core": "^7.2.0",
+    "@fortawesome/free-brands-svg-icons": "^7.2.0",
+    "@fortawesome/free-solid-svg-icons": "^7.2.0",
+    "@fortawesome/react-fontawesome": "^3.2.0",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
     "animate.css": "^4.1.1",
-    "bulma": "^0.9.4",
-    "chart.js": "^4.1.2",
-    "graphql": "^16.6.0",
-    "node-sass": "^8.0.0",
-    "react": "^17.0.2",
-    "react-chartjs-2": "^5.2.0",
-    "react-cookie": "^4.1.1",
-    "react-dom": "^17.0.2",
-    "react-router-dom": "^6.9.0",
+    "bulma": "^1.0.4",
+    "chart.js": "^4.5.1",
+    "graphql": "^16.12.0",
+    "sass": "^1.97.3",
+    "react": "^19.2.4",
+    "react-chartjs-2": "^5.3.1",
+    "react-cookie": "^8.0.1",
+    "react-dom": "^19.2.4",
+    "react-router-dom": "^7.13.0",
     "react-scripts": "^5.0.1",
-    "web-vitals": "^3.3.0"
+    "web-vitals": "^5.1.0"
   },
   "scripts": {
-    "start": "react-scripts start && npm run css-watch",
+    "start": "react-scripts start && yarn css-watch",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "css-build": "node-sass --omit-source-map-url sass/style.scss css/style.css",
-    "css-watch": "npm run css-build -- --watch"
+    "css-build": "sass --no-source-map src/sass/style.scss public/css/style.css",
+    "css-watch": "yarn css-build --watch"
   },
   "eslintConfig": {
     "extends": [
@@ -53,6 +54,7 @@
     ]
   },
   "devDependencies": {
-    "file-loader": "^6.2.0"
+    "file-loader": "^6.2.0",
+    "rxjs": "^7.8.2"
   }
 }

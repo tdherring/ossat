@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { ModalContext } from "../../contexts/ModalContext";
-import { useMutation, gql } from "@apollo/client";
+import { gql } from "@apollo/client";
+import { useMutation } from "@apollo/client/react";
 
 const Register = () => {
   const [activeModal, setActiveModal] = useContext(ModalContext);
@@ -94,9 +95,8 @@ const Register = () => {
                 <label className="label">Password</label>
                 <div className="control">
                   <input
-                    className={`input ${
-                      (submissionAttempt && password === "") || Object.keys(registerResultErrors).includes("password1") || Object.keys(registerResultErrors).includes("password2") ? "is-danger" : null
-                    }`}
+                    className={`input ${(submissionAttempt && password === "") || Object.keys(registerResultErrors).includes("password1") || Object.keys(registerResultErrors).includes("password2") ? "is-danger" : null
+                      }`}
                     type="password"
                     onInput={(event) => setPassword(event.target.value)}
                   />
@@ -106,11 +106,10 @@ const Register = () => {
                 <label className="label">Confirm Password</label>
                 <div className="control">
                   <input
-                    className={`input ${
-                      (submissionAttempt && confirmPassword === "") || Object.keys(registerResultErrors).includes("password2") || Object.keys(registerResultErrors).includes("password1")
+                    className={`input ${(submissionAttempt && confirmPassword === "") || Object.keys(registerResultErrors).includes("password2") || Object.keys(registerResultErrors).includes("password1")
                         ? "is-danger"
                         : null
-                    }`}
+                      }`}
                     type="password"
                     onInput={(event) => setConfirmPassword(event.target.value)}
                   />
@@ -121,24 +120,24 @@ const Register = () => {
                 submissionAttempt && (email === "" || username === "" || password === "" || confirmPassword === "") ? (
                   <p className="help is-danger">Please complete the highlighted fields before submitting.</p>
                 ) : // Any other errors returned by API?
-                Object.keys(registerResultErrors).length > 0 ? (
-                  // Map all of the error messages from registration and display at bottom of form.
-                  Object.keys(registerResultErrors).map((key) => {
-                    let error = registerResultErrors[key];
-                    return (
-                      <p key={`register-err-${error[0].code}`} className="help is-danger">
-                        {error[0].message}
-                      </p>
-                    );
-                  })
-                ) : (
-                  //Successfully registered.
-                  registerResult && registerResult.data.register.success && <p className="help is-success">User successfully registered! Please check your email to verify your account.</p>
-                )
+                  Object.keys(registerResultErrors).length > 0 ? (
+                    // Map all of the error messages from registration and display at bottom of form.
+                    Object.keys(registerResultErrors).map((key) => {
+                      let error = registerResultErrors[key];
+                      return (
+                        <p key={`register-err-${error[0].code}`} className="help is-danger">
+                          {error[0].message}
+                        </p>
+                      );
+                    })
+                  ) : (
+                    //Successfully registered.
+                    registerResult && registerResult.data.register.success && <p className="help is-success">User successfully registered! Please check your email to verify your account.</p>
+                  )
               }
             </div>
           </section>
-          <footer className="modal-card-foot">
+          <footer className="modal-card-foot" style={{ gap: "10px" }}>
             <button className="button is-primary" type="submit">
               Register
             </button>

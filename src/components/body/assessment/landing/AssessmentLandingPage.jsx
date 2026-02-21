@@ -3,7 +3,8 @@ import GeneralQuizOption from "./GeneralQuizOption";
 import { PageContext } from "../../../../contexts/PageContext";
 import { UserContext } from "../../../../contexts/UserContext";
 import { QuizContext } from "../../../../contexts/QuizContext";
-import { gql, useApolloClient } from "@apollo/client";
+import { gql } from "@apollo/client";
+import { useApolloClient } from "@apollo/client/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBook } from "@fortawesome/free-solid-svg-icons";
 
@@ -68,17 +69,17 @@ const AssessmentLandingPage = () => {
   return (
     !loading &&
     (Object.keys(assessments).length === 0 ? (
-      <div className="tile is-vertical is-parent is-12 container">
-        <div className="tile is-child box">
+      <div className="container">
+        <div className="box">
           <p className="title is-size-4">Account Activation Required</p>
           <hr className="is-divider mt-2" />
           <p>To gain access to the assessments section, you must first activate your account. Please check your inbox.</p>
         </div>
       </div>
     ) : (
-      <div className="tile is-vertical is-parent is-12 container">
+      <div className="container">
         {generatedAssessmentID ? (
-          <div className="tile is-child box">
+          <div className="box">
             <p className="title is-size-4">Generated Assessment</p>
             <hr className="is-divider mt-2" />
             <p>
@@ -98,7 +99,7 @@ const AssessmentLandingPage = () => {
             </button>
           </div>
         ) : (
-          <div className="tile is-child box">
+          <div className="box">
             <p className="title is-size-4">Initial Assessment</p>
             <hr className="is-divider mt-2" />
             <p>
@@ -118,7 +119,7 @@ const AssessmentLandingPage = () => {
             </button>
           </div>
         )}
-        <div className="tile is-child box">
+        <div className="box">
           <div className="columns is-vcentered">
             <div className="column is-3">
               <p className="title is-size-4">General Quizzes</p>

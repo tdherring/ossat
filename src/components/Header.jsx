@@ -1,10 +1,12 @@
 import React, { useState, useContext, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHome, faBook, faMicroscope, faUser, faSignOutAlt, faKey, faBuilding } from "@fortawesome/free-solid-svg-icons";
+import { faHome, faBook, faMicroscope, faUser, faSignOutAlt, faKey, faBuilding, faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 
 import smallLogo from "../assets/images/small-logo.svg";
+import smallLogoDark from "../assets/images/small-logo-dark.svg";
 import fullLogo from "../assets/images/full-logo.svg";
+import fullLogoDark from "../assets/images/full-logo-dark.svg";
 import Register from "./modals/Register";
 import LogIn from "./modals/LogIn";
 import RequestPasswordReset from "./modals/RequestPasswordReset";
@@ -15,7 +17,8 @@ import { ModalContext } from "../contexts/ModalContext";
 import { PageContext } from "../contexts/PageContext";
 import { UserContext } from "../contexts/UserContext";
 import { useCookies } from "react-cookie";
-import { useMutation, gql } from "@apollo/client";
+import { gql } from "@apollo/client";
+import { useMutation } from "@apollo/client/react";
 
 const Header = () => {
   const [burgerActive, setBurgerActive] = useState(false);
@@ -26,6 +29,19 @@ const Header = () => {
   const [, setFirstName] = useContext(UserContext).firstName;
   const [, setLastName] = useContext(UserContext).lastName;
   const [cookies, , removeCookie] = useCookies(["refreshToken"]);
+
+  // ── Dark mode ──────────────────────────────────────────────────────────────
+  const getInitialTheme = () => {
+    const saved = localStorage.getItem("theme");
+    if (saved) return saved;
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  };
+  const [theme, setTheme] = useState(getInitialTheme);
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    localStorage.setItem("theme", theme);
+  }, [theme]);
 
   // GraphQL mutation to revoke token.
   const [revokeToken] = useMutation(gql`
@@ -43,11 +59,11 @@ const Header = () => {
 
   return (
     <header>
-      <nav className="navbar is-light" role="navigation" aria-label="main navigation">
+      <nav className="navbar" role="navigation" aria-label="main navigation">
         <div className="navbar-brand">
           <a className="navbar-item" href="/#">
-            <img className="is-hidden-touch" src={smallLogo} alt="OSSAT Logo" style={{ height: "70px", maxHeight: "70px" }}></img>
-            <img className="is-hidden-desktop" src={fullLogo} alt="OSSAT Logo" style={{ height: "70px", maxHeight: "70px" }}></img>
+            <img className="is-hidden-touch" src={theme === "dark" ? smallLogoDark : smallLogo} alt="OSSAT Logo" style={{ height: "70px", maxHeight: "70px" }}></img>
+            <img className="is-hidden-desktop" src={theme === "dark" ? fullLogoDark : fullLogo} alt="OSSAT Logo" style={{ height: "70px", maxHeight: "70px" }}></img>
           </a>
           {/* Burger menu. Small bit of logic to make active when pressed.*/}
           <a
@@ -63,10 +79,11 @@ const Header = () => {
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
           </a>
         </div>
 
-        <div className={`navbar-menu has-background-white-ter ${burgerActive ? "is-active" : ""}`}>
+        <div className={`navbar-menu ${burgerActive ? "is-active" : ""}`}>
           <div className="navbar-start">
             <a
               className="navbar-item"
@@ -120,6 +137,17 @@ const Header = () => {
           </div>
 
           <div className="navbar-end">
+            <div className="navbar-item">
+              <button
+                id="theme-toggle"
+                className={`button is-ghost px-1 ${theme === "dark" ? "has-text-white" : "has-text-dark"}`}
+                aria-label="Toggle dark mode"
+                title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+                onClick={() => setTheme(t => t === "dark" ? "light" : "dark")}
+              >
+                <FontAwesomeIcon icon={theme === "dark" ? faSun : faMoon} />
+              </button>
+            </div>
             {!cookies["refreshToken"] ? (
               <div className="navbar-item">
                 <div className="buttons">
@@ -127,7 +155,7 @@ const Header = () => {
                     <strong>Register</strong>
                   </a>
 
-                  <a className="button is-outlined" href="/#" onClick={() => setActiveModal("logIn")}>
+                  <a className="button" href="/#" onClick={() => setActiveModal("logIn")}>
                     Log in
                   </a>
                 </div>
@@ -175,11 +203,6 @@ const Header = () => {
                 </div>
               </div>
             )}
-            <div className="navbar-item is-hidden-touch">
-              <a href="https://github.com/tdherring/OSSAT-Frontend">
-                <FontAwesomeIcon icon={faGithub} className="mr-2 is-size-4 has-text-black" />
-              </a>
-            </div>
           </div>
         </div>
       </nav>

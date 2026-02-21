@@ -1,30 +1,46 @@
-import React, { useContext, useEffect } from "react";
-import { ResizeContext } from "../../../../contexts/ResizeContext";
+import React, { useContext, useEffect, useState } from "react";
 import { CPUSimulatorContext } from "../../../../contexts/CPUSimulatorContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronDown, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 
-const CPUProcess = ({ name, arrivalTime, burstTime, remainingTime, priority, status, jobQueueProcess }) => {
+const CPUProcess = ({ name, arrivalTime, burstTime, remainingTime, priority, status }) => {
   const [activeCPUScheduler] = useContext(CPUSimulatorContext).active;
   const [running, setRunning] = useContext(CPUSimulatorContext).running;
-  const [widthValue] = useContext(ResizeContext).width;
   const [currentProcess] = useContext(CPUSimulatorContext).current;
   const [timeDelta] = useContext(CPUSimulatorContext).time;
+  const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <div className={`column ${widthValue > 2400 ? "is-2" : widthValue > 1680 ? "is-3" : widthValue > 1250 ? "is-4" : widthValue > 930 ? "is-6" : "is-12"} `}>
-      <div className={`box has-background-white-bis ${jobQueueProcess && status === "EXECUTING" && "active-process"}`}>
-        <h6 className="is-size-6">
-          <span className="is-pulled-right field is-grouped">
+    <div className="mb-3">
+      <div className={`card ${status === "EXECUTING" ? "active-process" : ""}`}>
+        <header
+          className="card-header"
+          onClick={() => setIsExpanded(!isExpanded)}
+          style={{ cursor: "pointer", display: "flex", alignItems: "center", padding: "0.5rem 1rem" }}
+        >
+          <span className="icon mr-2">
+            <FontAwesomeIcon icon={isExpanded ? faChevronDown : faChevronRight} />
+          </span>
+          <p className="card-header-title is-marginless" style={{ padding: 0 }}>
+            {name}
+          </p>
+          <div className="is-pulled-right ml-auto">
             {status === "EXECUTING" && <span className="tag is-success">Executing</span>}
             {status === "FINISHED" && <span className="tag is-danger">Finished</span>}
             {status === "WAITING" && <span className="tag is-info">Waiting</span>}
-          </span>
-          <strong>{name}</strong>
-        </h6>
-        <hr className="is-divider mt-2 my-3" />
-        <h6 className="is-size-6">Arrival Time: {arrivalTime}</h6>
-        <h6 className="is-size-6">Burst Time: {burstTime}</h6>
-        <h6 className="is-size-6">Remaining Time: {remainingTime}</h6>
-        {priority !== undefined && <h6 className="is-size-6">Priority: {priority}</h6>}
+          </div>
+        </header>
+
+        {isExpanded && (
+          <div className="card-content" style={{ paddingTop: 0, paddingBottom: "1rem" }}>
+            <div className="content">
+              <p className="m-0"><strong>Arrival Time:</strong> {arrivalTime}</p>
+              <p className="m-0"><strong>Burst Time:</strong> {burstTime}</p>
+              <p className="m-0"><strong>Remaining Time:</strong> {remainingTime}</p>
+              {priority !== undefined && <p className="m-0"><strong>Priority:</strong> {priority}</p>}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

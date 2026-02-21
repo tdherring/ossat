@@ -29,7 +29,7 @@ const ConfirmSwitchMemory = ({ label, value }) => {
         <section className="modal-card-body">
           <div className="content">Are you sure you want to switch memory management algorithms? The job queue and memory allocation will be cleared.</div>
         </section>
-        <footer className="modal-card-foot">
+        <footer className="modal-card-foot" style={{ gap: "10px" }}>
           <a
             className="button is-primary"
             href="/#"

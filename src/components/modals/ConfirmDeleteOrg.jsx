@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { ModalContext } from "../../contexts/ModalContext";
-import { gql, useMutation } from "@apollo/client";
+import { gql } from "@apollo/client";
+import { useMutation } from "@apollo/client/react";
 
 const ConfirmDeleteOrg = ({ name }) => {
   const [activeModal, setActiveModal] = useContext(ModalContext);
@@ -31,7 +32,7 @@ const ConfirmDeleteOrg = ({ name }) => {
         <section className="modal-card-body">
           <div className="content">Are you sure you want to delete this Organisation? All managers and members will be removed, and access to their performance data lost.</div>
         </section>
-        <footer className="modal-card-foot">
+        <footer className="modal-card-foot" style={{ gap: "10px" }}>
           <a
             className="button is-primary"
             href="/#"

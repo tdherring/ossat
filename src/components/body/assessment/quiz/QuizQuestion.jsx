@@ -1,7 +1,8 @@
 import React, { useContext } from "react";
 import { UserContext } from "../../../../contexts/UserContext";
 import { QuizContext } from "../../../../contexts/QuizContext";
-import { useMutation, gql } from "@apollo/client";
+import { gql } from "@apollo/client";
+import { useMutation } from "@apollo/client/react";
 
 const QuizQuestion = ({ questionNum, questionText, answers, processes, blocks, id, selectedAnswer, submitted, correctAnswer }) => {
   const [username] = useContext(UserContext).username;
@@ -17,7 +18,7 @@ const QuizQuestion = ({ questionNum, questionText, answers, processes, blocks, i
   `);
 
   return (
-    <div className="tile is-child box">
+    <div className="box">
       <table border="0">
         <tbody>
           <tr>
@@ -138,9 +139,8 @@ const QuizQuestion = ({ questionNum, questionText, answers, processes, blocks, i
                                 <b>{answer.name}</b> -{" "}
                                 {blocks
                                   ? `\tSize: ${answer.size}`
-                                  : `\tArrival Time: ${answer.arrival_time === null ? "N/A" : answer.arrival_time}, Burst Time: ${answer.burst_time}${
-                                      answer.priority === null ? "" : ", Priority:" + answer.priority
-                                    }`}
+                                  : `\tArrival Time: ${answer.arrival_time === null ? "N/A" : answer.arrival_time}, Burst Time: ${answer.burst_time}${answer.priority === null ? "" : ", Priority:" + answer.priority
+                                  }`}
                               </>
                             }
                           </label>

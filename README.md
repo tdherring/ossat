@@ -14,7 +14,7 @@
 ## Install
 
 ```sh
-npm install
+yarn install
 ```
 
 ## Usage
@@ -22,7 +22,7 @@ npm install
 If running locally:
 
 ```sh
-npm start
+yarn start
 ```
 *Or deploy to a cloud environment using your provider's instructions.*
 

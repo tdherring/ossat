@@ -27,7 +27,7 @@ const ResetCPU = () => {
         <section className="modal-card-body">
           <div className="content">Are you sure you want to reset? The job queue, ready queue, and schedule will be cleared.</div>
         </section>
-        <footer className="modal-card-foot">
+        <footer className="modal-card-foot" style={{ gap: "10px" }}>
           <a
             className="button is-primary"
             href="/#"

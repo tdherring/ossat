@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useMutation, gql } from "@apollo/client";
+import { gql } from "@apollo/client";
+import { useMutation } from "@apollo/client/react";
 import { ModalContext } from "../../../contexts/ModalContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
@@ -46,8 +47,8 @@ const ActivateAccount = ({ token }) => {
   }, [activateAccount, token]);
 
   return (
-    <div className="tile is-vertical is-parent is-12 container">
-      <div className="tile is-child box">
+    <div className="container">
+      <div className="box">
         <p className="title is-size-4">Account Activation</p>
         <hr className="is-divider mt-2" />
         {activateResult === null ? (

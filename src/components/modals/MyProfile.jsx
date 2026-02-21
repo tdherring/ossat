@@ -1,7 +1,8 @@
 import React, { useContext, useState } from "react";
 import { ModalContext } from "../../contexts/ModalContext";
 import { UserContext } from "../../contexts/UserContext";
-import { useMutation, gql } from "@apollo/client";
+import { gql } from "@apollo/client";
+import { useMutation } from "@apollo/client/react";
 
 const MyProfile = () => {
   const [activeModal, setActiveModal] = useContext(ModalContext);
@@ -101,7 +102,7 @@ const MyProfile = () => {
               <p className="help is-success">Profile successfully updated!</p>
             ) : null}
           </section>
-          <footer className="modal-card-foot">
+          <footer className="modal-card-foot" style={{ gap: "10px" }}>
             <button className="button is-primary" type="submit">
               Update
             </button>

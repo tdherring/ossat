@@ -1,23 +1,77 @@
 @charset "utf-8";
 
-$primary: rgb(0, 141, 54);
+// ── Bulma 1.0 CSS-custom-property overrides (must come before the @import) ──
 
-// Set the global font.
-@import "../assets/fonts/OpenSans-Regular.ttf";
-$family-serif: "OpenSans", sans-serif;
-$family-primary: $family-serif;
-// Globally remove the focus highlight.
-$button-focus-box-shadow-size: 0;
-$button-focus-border-color: black;
-$input-focus-box-shadow-size: 0;
-$input-focus-border-color: black;
+// Set our brand green as the primary colour in all themes.
+:root {
+  --bulma-primary-h: 141;
+  --bulma-primary-s: 100%;
+  --bulma-primary-l: 27.6%;
+}
 
-//Import animate.css
+// ── Typography ────────────────────────────────────────────────────────────────
+@font-face {
+  font-family: "OpenSans";
+  src: url("../assets/fonts/OpenSans-Regular.ttf") format("truetype");
+}
+
+// ── External CSS libraries (imported before Bulma so Bulma can override) ─────
 @import "~animate.css/animate.min.css";
-
-//Import bulma-tooltip
 @import "~@creativebulma/bulma-tooltip/dist/bulma-tooltip.min.css";
 
+// ── Bulma ─────────────────────────────────────────────────────────────────────
+@import "~bulma/bulma";
+
+// ── Layout ────────────────────────────────────────────────────────────────────
+
+// Use the full viewport and keep the footer pinned to the bottom.
+#root {
+  position: relative;
+  min-height: 100vh;
+  font-family: "OpenSans", sans-serif;
+}
+
+#page-body {
+  padding-bottom: 13rem;
+}
+
+#page-footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 5rem !important;
+}
+
+// Cap the simulator columns container width and centre it.
+.columns {
+  max-width: 1600px;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+// ── Global scrollbar ──────────────────────────────────────────────────────────
+html {
+  overflow: auto !important;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(90, 90, 90, 0.35);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(90, 90, 90, 0.5);
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+// ── Animations ────────────────────────────────────────────────────────────────
 .modal,
 .tile,
 canvas,
@@ -40,26 +94,36 @@ canvas,
   0% {
     box-shadow: 0 0 10px #fafafa;
   }
+
   50% {
-    box-shadow: 0 0 10px rgb(0, 141, 54);
+    box-shadow: 0 0 10px hsl(141, 100%, 27.6%);
   }
+
   100% {
     box-shadow: 0 0 10px #fafafa;
   }
 }
 
-// Globally hide the scrollbar.
-html {
-  overflow: auto !important;
+// ── Dark-mode fixes ───────────────────────────────────────────────────────────
+// Bulma 1.0 automatically applies its dark theme via
+// `prefers-color-scheme: dark`. The overrides below fix the handful of places
+// where the JSX uses hardcoded "light" modifier classes that by-pass the
+// automatic theming.
+
+// Make the navbar selector arrow colour follow the theme.
+.select:not(.is-multiple):not(.is-loading)::after,
+.navbar-link:not(.is-arrowless)::after {
+  border-color: var(--bulma-text) !important;
 }
 
+// ── Simulator schedule table ──────────────────────────────────────────────────
 // Alignment of time markers above the schedule.
 th {
   border: 0 !important;
   min-width: 50px !important;
 }
 
-th > h6 {
+th>h6 {
   display: inline-block !important;
   transform: translateX(-50%) !important;
 }
@@ -67,67 +131,13 @@ th > h6 {
 .block-counter {
   border: 0 !important;
   vertical-align: bottom !important;
+
   h6 {
     transform: translateY(+80%) !important;
   }
 }
 
+// ── Utility overrides ─────────────────────────────────────────────────────────
 .has-dark-hover:hover {
-  background-color: #008031 !important;
+  background-color: hsl(141, 100%, 25%) !important;
 }
-
-#root {
-  position: relative;
-  min-height: 100vh;
-}
-
-#page-body {
-  padding-bottom: 13rem;
-}
-
-#page-footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 10rem !important;
-}
-
-// Change selector arrow to be black.
-
-.select:not(.is-multiple):not(.is-loading)::after,
-.navbar-link:not(.is-arrowless)::after {
-  border-color: #000000 !important;
-}
-
-// Setup custom scrollbar.
-
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(90, 90, 90, 0.35);
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(90, 90, 90, 0.5);
-}
-
-::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.2);
-}
-
-// Animations
-
-@keyframes fade-in {
-  0% {
-    background-color: transparent;
-  }
-  100% {
-    background-color: #ff4136;
-  }
-}
-
-// Import Bulma SASS files.
-@import "./node_modules/bulma/bulma.sass";

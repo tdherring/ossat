@@ -15,11 +15,11 @@ const CPUReadyQueue = () => {
         <strong>Ready Queue</strong>
       </h5>
       {!readyQueue ? (
-        <article className="message is-dark mx-2 my-4">
+        <article className="message is-primary my-4">
           <div className="message-body">Waiting to run...</div>
         </article>
       ) : (
-        <div className="columns is-multiline px-2 py-4 is-vcentered">
+        <div className="py-4">
           {readyQueue.map((process) => (
             <CPUProcess
               key={process.name}

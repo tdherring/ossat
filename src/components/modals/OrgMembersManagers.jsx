@@ -2,7 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import { ModalContext } from "../../contexts/ModalContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserSlash, faAngleDoubleUp, faAngleDoubleDown } from "@fortawesome/free-solid-svg-icons";
-import { gql, useMutation } from "@apollo/client";
+import { gql } from "@apollo/client";
+import { useMutation } from "@apollo/client/react";
 
 const OrgMembersManagers = ({ managers, org }) => {
   const [activeModal, setActiveModal] = useContext(ModalContext);
@@ -114,17 +115,17 @@ const OrgMembersManagers = ({ managers, org }) => {
                                         event.preventDefault();
                                         managers
                                           ? demoteOrganisationManager({ variables: { orgName: org.name, username: user.username, token: localStorage.getItem("accessToken") } }).then((result) => {
-                                              if (result.data.demoteOrganisationManager.success) {
-                                                org = result.data.demoteOrganisationManager.organisation;
-                                                setManagersOrMembers(result.data.demoteOrganisationManager.organisation.managers);
-                                              }
-                                            })
+                                            if (result.data.demoteOrganisationManager.success) {
+                                              org = result.data.demoteOrganisationManager.organisation;
+                                              setManagersOrMembers(result.data.demoteOrganisationManager.organisation.managers);
+                                            }
+                                          })
                                           : promoteOrganisationMember({ variables: { orgName: org.name, username: user.username, token: localStorage.getItem("accessToken") } }).then((result) => {
-                                              if (result.data.promoteOrganisationMember.success) {
-                                                org = result.data.promoteOrganisationMember.organisation;
-                                                setManagersOrMembers(result.data.promoteOrganisationMember.organisation.members);
-                                              }
-                                            });
+                                            if (result.data.promoteOrganisationMember.success) {
+                                              org = result.data.promoteOrganisationMember.organisation;
+                                              setManagersOrMembers(result.data.promoteOrganisationMember.organisation.members);
+                                            }
+                                          });
                                       }}
                                     >
                                       <FontAwesomeIcon icon={managers ? faAngleDoubleDown : faAngleDoubleUp} />
@@ -230,7 +231,7 @@ const OrgMembersManagers = ({ managers, org }) => {
             )}
           </div>
         </section>
-        <footer className="modal-card-foot">
+        <footer className="modal-card-foot" style={{ gap: "10px" }}>
           <a
             className="button"
             href="/#"

@@ -22,7 +22,7 @@ const Body = () => {
           <Route path="/password-reset" render={() => setActivePage("passwordReset")} />
         </Routes>
       </BrowserRouter>
-      <div className="tile is-ancestor">
+      <div className="columns is-desktop">
         {activePage === "home" && (
           <>
             <MemoryManagerProvider>

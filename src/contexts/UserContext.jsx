@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from "react";
-import { useMutation, gql, useApolloClient } from "@apollo/client";
+import { gql } from "@apollo/client";
+import { useMutation, useApolloClient } from "@apollo/client/react";
 import { useCookies } from "react-cookie";
 
 export const UserContext = createContext();

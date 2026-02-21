@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faUsers, faUserShield, faCheck } from "@fortawesome/free-solid-svg-icons";
-import { gql, useApolloClient, useMutation } from "@apollo/client";
+import { gql } from "@apollo/client";
+import { useApolloClient, useMutation } from "@apollo/client/react";
 import { ModalContext } from "../../../../contexts/ModalContext";
 import ConfirmDeleteOrg from "../../../modals/ConfirmDeleteOrg";
 import OrgMembersManagers from "../../../modals/OrgMembersManagers";
@@ -124,9 +125,9 @@ const OrganisationLandingPage = () => {
     (isOrgCreator || managerOrganisations.length > 0 ? (
       <div className="container">
         {isOrgCreator ? (
-          <div className="tile">
-            <div className="tile is-parent">
-              <div className="tile is-child box">
+          <div className="columns">
+            <div className="column">
+              <div className="box">
                 <p className="title is-size-4">Organisation Creation</p>
                 <hr className="is-divider mt-2" />
                 <p>Congratulations! You have been granted permission to create and manage organisations. If you have any organisations, you can see them below. If not, you can create a new one.</p>
@@ -136,8 +137,8 @@ const OrganisationLandingPage = () => {
                 </p>
               </div>
             </div>
-            <div className="tile is-parent">
-              <div className="tile is-child box">
+            <div className="column">
+              <div className="box">
                 <p className="title is-size-4">My Organisations</p>
                 <hr className="is-divider mt-2" />
                 <form
@@ -168,13 +169,13 @@ const OrganisationLandingPage = () => {
                   </div>
                   {Object.keys(createOrganisationErrors).length > 0
                     ? Object.keys(createOrganisationErrors).map((key) => {
-                        let error = createOrganisationErrors[key];
-                        return (
-                          <p key={`create-org-err-${error[0].key}`} className="help is-danger">
-                            {error[0].message}
-                          </p>
-                        );
-                      })
+                      let error = createOrganisationErrors[key];
+                      return (
+                        <p key={`create-org-err-${error[0].key}`} className="help is-danger">
+                          {error[0].message}
+                        </p>
+                      );
+                    })
                     : createOrganisationResult && <p className="help is-success">Successfully created Organisation!</p>}
                 </form>
 
@@ -264,9 +265,9 @@ const OrganisationLandingPage = () => {
             <OrgMembersManagers managers={managersPressed} org={managingOrg} />
           </div>
         ) : (
-          <div className="tile">
-            <div className="tile is-parent">
-              <div className="tile is-child box">
+          <div className="columns">
+            <div className="column">
+              <div className="box">
                 <p className="title is-size-4">Organisation Management</p>
                 <hr className="is-divider mt-2" />
                 <p>
@@ -277,15 +278,15 @@ const OrganisationLandingPage = () => {
             </div>
           </div>
         )}
-        <div className="tile">
-          <div className="tile is-parent">
+        <div className="columns">
+          <div className="column">
             <PerformanceData organisations={organisations} isOrgCreator={isOrgCreator} />
           </div>
         </div>
       </div>
     ) : memberOrganisation ? (
-      <div className="tile is-vertical is-parent is-12 container">
-        <div className="tile is-child box">
+      <div className="container">
+        <div className="box">
           <p className="title is-size-4">My Organisation - {memberOrganisation.name}</p>
           <hr className="is-divider mt-2" />
           <div className="content">
@@ -314,8 +315,8 @@ const OrganisationLandingPage = () => {
         </div>
       </div>
     ) : (
-      <div className="tile is-vertical is-parent is-12 container">
-        <div className="tile is-child box">
+      <div className="container">
+        <div className="box">
           <p className="title is-size-4">
             <strong>Join an Organisation</strong>
           </p>
@@ -360,15 +361,15 @@ const OrganisationLandingPage = () => {
           </div>
           {Object.keys(joinOrganisationResultErrors).length > 0
             ? Object.keys(joinOrganisationResultErrors).map((key) => {
-                let error = joinOrganisationResultErrors[key];
-                return (
-                  <p key={`join-org-err=${error[0].code}`} className="help is-danger">
-                    {error[0].message}
-                  </p>
-                );
-              })
+              let error = joinOrganisationResultErrors[key];
+              return (
+                <p key={`join-org-err=${error[0].code}`} className="help is-danger">
+                  {error[0].message}
+                </p>
+              );
+            })
             : joinOrganisationResult &&
-              joinOrganisationResult.data.joinOrganisation.success && <p className="help is-success">Welcome to the {joinOrganisationResult.data.joinOrganisation.organisation.name} Organisation!</p>}
+            joinOrganisationResult.data.joinOrganisation.success && <p className="help is-success">Welcome to the {joinOrganisationResult.data.joinOrganisation.organisation.name} Organisation!</p>}
         </div>
       </div>
     ))

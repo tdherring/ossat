@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { ModalContext } from "../../contexts/ModalContext";
 import fullLogo from "../../assets/images/full-logo.svg";
+import fullLogoDark from "../../assets/images/full-logo-dark.svg";
 
 const About = () => {
   const [activeModal, setActiveModal] = useContext(ModalContext);
@@ -22,7 +23,7 @@ const About = () => {
         <section className="modal-card-body">
           <div className="content">
             <div className="container">
-              <img className="p-3" src={fullLogo} alt="OSSAT Logo" style={{ maxHeight: "250px" }}></img>
+              <img className="p-3" src={document.documentElement.dataset.theme === "dark" ? fullLogoDark : fullLogo} alt="OSSAT Logo" style={{ maxHeight: "250px" }}></img>
               <p className="has-text-centered pt-5">
                 A Final Year MSc Project by Tom Herring. Developed for <a href="https://kcl.ac.uk/">Kings College London</a> in 2021.
                 <br />
@@ -32,7 +33,7 @@ const About = () => {
             </div>
           </div>
         </section>
-        <footer className="modal-card-foot">
+        <footer className="modal-card-foot" style={{ gap: "10px" }}>
           <a
             className="button"
             href="/#"

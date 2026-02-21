@@ -1,7 +1,8 @@
 import React, { useContext, useState, useEffect } from "react";
 import { ModalContext } from "../../contexts/ModalContext";
 import { UserContext } from "../../contexts/UserContext";
-import { useMutation, gql } from "@apollo/client";
+import { gql } from "@apollo/client";
+import { useMutation } from "@apollo/client/react";
 import { useCookies } from "react-cookie";
 
 const LogIn = () => {
@@ -121,24 +122,24 @@ const LogIn = () => {
                 submissionAttempt && (_username === "" || password === "") ? (
                   <p className="help is-danger">Please complete the highlighted fields before submitting.</p>
                 ) : // Any other errors returned by API?
-                Object.keys(logInResultErrors).length > 0 ? (
-                  // Map all of the error messages from log in and display at bottom of form.
-                  Object.keys(logInResultErrors).map((key) => {
-                    let error = logInResultErrors[key];
-                    return (
-                      <p key={`login-err-${error[0].code}`} className="help is-danger">
-                        {error[0].message}
-                      </p>
-                    );
-                  })
-                ) : null
+                  Object.keys(logInResultErrors).length > 0 ? (
+                    // Map all of the error messages from log in and display at bottom of form.
+                    Object.keys(logInResultErrors).map((key) => {
+                      let error = logInResultErrors[key];
+                      return (
+                        <p key={`login-err-${error[0].code}`} className="help is-danger">
+                          {error[0].message}
+                        </p>
+                      );
+                    })
+                  ) : null
               }
             </div>
             <a href="/#" onClick={() => setActiveModal("requestPasswordReset")}>
               Forgot Password?
             </a>
           </section>
-          <footer className="modal-card-foot">
+          <footer className="modal-card-foot" style={{ gap: "10px" }}>
             <button className="button is-primary" type="submit">
               Login
             </button>

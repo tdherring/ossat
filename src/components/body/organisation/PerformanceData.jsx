@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useContext } from "react";
-import { gql, useApolloClient } from "@apollo/client";
+import { gql } from "@apollo/client";
+import { useApolloClient } from "@apollo/client/react";
 import GeneralQuizOption from "../assessment/landing/GeneralQuizOption";
 import { Bar } from "react-chartjs-2";
 import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ResizeContext } from "../../../contexts/ResizeContext";
 
 const PerformanceData = ({ organisations, isOrgCreator }) => {
   const VIEWS = ["User Average Variant Performance", "User Quiz Data"];
@@ -39,8 +39,6 @@ const PerformanceData = ({ organisations, isOrgCreator }) => {
   const [averageScores, setAverageScores] = useState([]);
   const [activeViewIndex, setActiveViewIndex] = useState(0);
   const [variants, setVariants] = useState([]);
-  const [width] = useContext(ResizeContext).width;
-
   const client = useApolloClient();
 
   const getAssessments = (username) => {
@@ -94,7 +92,7 @@ const PerformanceData = ({ organisations, isOrgCreator }) => {
   }, [selectedOrg]);
 
   return (
-    <div className="tile is-child box">
+    <div className="box">
       <p className="title is-size-4">Performance Statistics</p>
 
       <hr className="is-divider mt-2 mb-4" />
@@ -195,7 +193,6 @@ const PerformanceData = ({ organisations, isOrgCreator }) => {
             options={{
               animation: { duration: 0 },
             }}
-            style={width > 1408 ? { minWidth: "500px" } : width > 1216 ? { maxWidth: "1088px" } : width > 1023 ? { maxWidth: "896px" } : { maxWidth: width - 100 }}
             data={{
               labels: variants,
               datasets: [

@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { ModalContext } from "../../contexts/ModalContext";
-import { useMutation, gql } from "@apollo/client";
+import { gql } from "@apollo/client";
+import { useMutation } from "@apollo/client/react";
 import { useCookies } from "react-cookie";
 
 const ChangePassword = () => {
@@ -77,9 +78,8 @@ const ChangePassword = () => {
                 <label className="label">Old Password</label>
                 <div className="control">
                   <input
-                    className={`input ${
-                      (submissionAttempt && oldPassword === "") || (changePasswordResultErrors && Object.keys(changePasswordResultErrors).includes("oldPassword")) ? "is-danger" : null
-                    }`}
+                    className={`input ${(submissionAttempt && oldPassword === "") || (changePasswordResultErrors && Object.keys(changePasswordResultErrors).includes("oldPassword")) ? "is-danger" : null
+                      }`}
                     type="password"
                     onInput={(event) => setOldPassword(event.target.value)}
                   />
@@ -89,12 +89,11 @@ const ChangePassword = () => {
                 <label className="label">New Password</label>
                 <div className="control">
                   <input
-                    className={`input ${
-                      (submissionAttempt && newPassword === "") ||
-                      (changePasswordResultErrors && (Object.keys(changePasswordResultErrors).includes("newPassword1") || Object.keys(changePasswordResultErrors).includes("newPassword2")))
+                    className={`input ${(submissionAttempt && newPassword === "") ||
+                        (changePasswordResultErrors && (Object.keys(changePasswordResultErrors).includes("newPassword1") || Object.keys(changePasswordResultErrors).includes("newPassword2")))
                         ? "is-danger"
                         : null
-                    }`}
+                      }`}
                     type="password"
                     onInput={(event) => setNewPassword(event.target.value)}
                   />
@@ -104,12 +103,11 @@ const ChangePassword = () => {
                 <label className="label">Confirm New Password</label>
                 <div className="control">
                   <input
-                    className={`input ${
-                      (submissionAttempt && confirmNewPassword === "") ||
-                      (changePasswordResultErrors && (Object.keys(changePasswordResultErrors).includes("newPassword1") || Object.keys(changePasswordResultErrors).includes("newPassword2")))
+                    className={`input ${(submissionAttempt && confirmNewPassword === "") ||
+                        (changePasswordResultErrors && (Object.keys(changePasswordResultErrors).includes("newPassword1") || Object.keys(changePasswordResultErrors).includes("newPassword2")))
                         ? "is-danger"
                         : null
-                    }`}
+                      }`}
                     type="password"
                     onInput={(event) => setConfirmNewPassword(event.target.value)}
                   />
@@ -132,7 +130,7 @@ const ChangePassword = () => {
               <p className="help is-success">Password successfully changed!</p>
             ) : null}
           </section>
-          <footer className="modal-card-foot">
+          <footer className="modal-card-foot" style={{ gap: "10px" }}>
             <button className={`button is-primary ${loading && "is-loading"}`} type="submit">
               Change
             </button>

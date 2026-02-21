@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
-import { useMutation, gql } from "@apollo/client";
+import { gql } from "@apollo/client";
+import { useMutation } from "@apollo/client/react";
 import { ModalContext } from "../../../contexts/ModalContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faKey } from "@fortawesome/free-solid-svg-icons";
@@ -44,8 +45,8 @@ const PasswordReset = ({ token }) => {
   };
 
   return (
-    <div className="tile is-vertical is-parent is-12 container">
-      <div className="tile is-child box">
+    <div className="container">
+      <div className="box">
         <p className="title is-size-4">Password Reset</p>
         <hr className="is-divider mt-2" />
         <form onSubmit={handleSubmit}>
@@ -75,25 +76,25 @@ const PasswordReset = ({ token }) => {
               submissionAttempt && (password === "" || confirmPassword === "") ? (
                 <p className="help is-danger">Please complete the highlighted fields before submitting.</p>
               ) : // Any other errors returned by API?
-              passwordResetErrors && Object.keys(passwordResetErrors).length > 0 ? (
-                // Map all of the error messages from log in and display at bottom of form.
-                Object.keys(passwordResetErrors).map((key) => {
-                  let error = passwordResetErrors[key];
-                  return (
-                    <p key={`password-reset-err-${error[0].code}`} className="help is-danger">
-                      {error[0].message}
-                    </p>
-                  );
-                })
-              ) : passwordResetResult && passwordResetResult.data.passwordReset.success ? (
-                <p className="help is-success">
-                  Password successfully changed! Click{" "}
-                  <a href="/#" onClick={() => setActiveModal("logIn")}>
-                    here
-                  </a>{" "}
-                  to login.
-                </p>
-              ) : null
+                passwordResetErrors && Object.keys(passwordResetErrors).length > 0 ? (
+                  // Map all of the error messages from log in and display at bottom of form.
+                  Object.keys(passwordResetErrors).map((key) => {
+                    let error = passwordResetErrors[key];
+                    return (
+                      <p key={`password-reset-err-${error[0].code}`} className="help is-danger">
+                        {error[0].message}
+                      </p>
+                    );
+                  })
+                ) : passwordResetResult && passwordResetResult.data.passwordReset.success ? (
+                  <p className="help is-success">
+                    Password successfully changed! Click{" "}
+                    <a href="/#" onClick={() => setActiveModal("logIn")}>
+                      here
+                    </a>{" "}
+                    to login.
+                  </p>
+                ) : null
             }
           </div>
           <button className="button is-primary" type="submit">

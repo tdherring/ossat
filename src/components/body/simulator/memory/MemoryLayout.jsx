@@ -24,11 +24,10 @@ const MemoryLayout = () => {
       return (
         processName && (
           <div
-            className="has-text-centered"
+            className="has-text-centered has-background-primary"
             style={{
               height: height,
               lineHeight: height,
-              backgroundColor: "lightsteelblue",
               width: "100%",
             }}
           >
@@ -58,11 +57,11 @@ const MemoryLayout = () => {
         </a>
       </h5>
       {Object.keys(blocks).length === 0 && (
-        <article className="message is-dark mx-2 my-4">
+        <article className="message is-primary my-4">
           <div className="message-body">Waiting for blocks...</div>
         </article>
       )}
-      <div className="table-container px-2 pb-3 my-4">
+      <div className="table-container pb-3 my-4">
         <table className="table is-bordered" width="100%">
           <tbody>
             {blocks.length > 0 && (

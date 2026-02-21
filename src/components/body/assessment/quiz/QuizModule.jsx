@@ -2,7 +2,8 @@ import React, { useContext, useState, useEffect, useCallback } from "react";
 import QuizQuestion from "./QuizQuestion";
 import { QuizContext } from "../../../../contexts/QuizContext";
 import { UserContext } from "../../../../contexts/UserContext";
-import { gql, useApolloClient, useMutation } from "@apollo/client";
+import { gql } from "@apollo/client";
+import { useApolloClient, useMutation } from "@apollo/client/react";
 
 const QuizModule = () => {
   const [activeQuizID] = useContext(QuizContext).active;
@@ -71,7 +72,7 @@ const QuizModule = () => {
 
   return (
     !loading && (
-      <div className="tile is-parent is-vertical is-12 container">
+      <div className="container">
         <p className="title mb-0">
           <span>{variant}</span>
           {isSubmitted && (

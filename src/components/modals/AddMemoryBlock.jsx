@@ -47,7 +47,7 @@ const AddMemoryBlock = () => {
               </div>
             </div>
           </section>
-          <footer className="modal-card-foot">
+          <footer className="modal-card-foot" style={{ gap: "10px" }}>
             <button type="submit" className="button is-primary">
               <FontAwesomeIcon icon={faPlus} className="mr-2" />
               Add
