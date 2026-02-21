@@ -149,17 +149,19 @@ const Header = () => {
               </button>
             </div>
             {!cookies["refreshToken"] ? (
-              <div className="navbar-item">
-                <div className="buttons">
-                  <a className="button is-primary" href="/#" onClick={() => setActiveModal("register")}>
-                    <strong>Register</strong>
-                  </a>
+              process.env.DISABLE_LOGIN !== "true" && (
+                <div className="navbar-item">
+                  <div className="buttons">
+                    <a className="button is-primary" href="/#" onClick={() => setActiveModal("register")}>
+                      <strong>Register</strong>
+                    </a>
 
-                  <a className="button" href="/#" onClick={() => setActiveModal("logIn")}>
-                    Log in
-                  </a>
+                    <a className="button" href="/#" onClick={() => setActiveModal("logIn")}>
+                      Log in
+                    </a>
+                  </div>
                 </div>
-              </div>
+              )
             ) : (
               <div className="navbar-item has-dropdown is-hoverable">
                 {username && (
