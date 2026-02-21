@@ -5,7 +5,7 @@ import AssessmentLandingPage from "./body/assessment/landing/AssessmentLandingPa
 import OrganisationLandingPage from "./body/organisation/landing/OrganisationLandingPage";
 import QuizModule from "./body/assessment/quiz/QuizModule";
 import { PageContext } from "../contexts/PageContext";
-import { BrowserRouter as BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ActivateAccount from "./body/account/ActivateAccount";
 import PasswordReset from "./body/account/PasswordReset";
 import { MemoryManagerProvider } from "../contexts/MemoryManagerContext";

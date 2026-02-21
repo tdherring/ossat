@@ -62,8 +62,9 @@ const ChangePassword = () => {
         <form onSubmit={handleSubmit}>
           <header className="modal-card-head">
             <p className="modal-card-title">Change Password</p>
-            <a
+            <button
               className="delete"
+              type="button"
               onClick={(event) => {
                 event.preventDefault();
                 setActiveModal(null);
@@ -90,9 +91,9 @@ const ChangePassword = () => {
                 <div className="control">
                   <input
                     className={`input ${(submissionAttempt && newPassword === "") ||
-                        (changePasswordResultErrors && (Object.keys(changePasswordResultErrors).includes("newPassword1") || Object.keys(changePasswordResultErrors).includes("newPassword2")))
-                        ? "is-danger"
-                        : null
+                      (changePasswordResultErrors && (Object.keys(changePasswordResultErrors).includes("newPassword1") || Object.keys(changePasswordResultErrors).includes("newPassword2")))
+                      ? "is-danger"
+                      : null
                       }`}
                     type="password"
                     onInput={(event) => setNewPassword(event.target.value)}
@@ -104,9 +105,9 @@ const ChangePassword = () => {
                 <div className="control">
                   <input
                     className={`input ${(submissionAttempt && confirmNewPassword === "") ||
-                        (changePasswordResultErrors && (Object.keys(changePasswordResultErrors).includes("newPassword1") || Object.keys(changePasswordResultErrors).includes("newPassword2")))
-                        ? "is-danger"
-                        : null
+                      (changePasswordResultErrors && (Object.keys(changePasswordResultErrors).includes("newPassword1") || Object.keys(changePasswordResultErrors).includes("newPassword2")))
+                      ? "is-danger"
+                      : null
                       }`}
                     type="password"
                     onInput={(event) => setConfirmNewPassword(event.target.value)}
@@ -134,9 +135,9 @@ const ChangePassword = () => {
             <button className={`button is-primary ${loading && "is-loading"}`} type="submit">
               Change
             </button>
-            <a
+            <button
+              type="button"
               className="button"
-              href="/#"
               onClick={(event) => {
                 event.preventDefault();
                 setActiveModal(null);
@@ -145,7 +146,7 @@ const ChangePassword = () => {
               }}
             >
               Close
-            </a>
+            </button>
           </footer>
         </form>
       </div>

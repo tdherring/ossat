@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome, faBook, faMicroscope, faUser, faSignOutAlt, faKey, faBuilding, faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
-import { faGithub } from "@fortawesome/free-brands-svg-icons";
+
 
 import smallLogo from "../assets/images/small-logo.svg";
 import smallLogoDark from "../assets/images/small-logo-dark.svg";

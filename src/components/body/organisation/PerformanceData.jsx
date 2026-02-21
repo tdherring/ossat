@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { gql } from "@apollo/client";
 import { useApolloClient } from "@apollo/client/react";
 import GeneralQuizOption from "../assessment/landing/GeneralQuizOption";
@@ -85,6 +85,7 @@ const PerformanceData = ({ organisations, isOrgCreator }) => {
   useEffect(() => {
     selectedUser && getAssessments(selectedUser.username);
     localStorage.setItem("readOnlyQuiz", true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedUser]);
 
   useEffect(() => {

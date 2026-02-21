@@ -56,7 +56,7 @@ const AssessmentLandingPage = () => {
           })
           .catch((errors) => window.location.reload());
     },
-    [client, username]
+    [client, username, setActiveQuizID]
   );
 
   useEffect(() => {

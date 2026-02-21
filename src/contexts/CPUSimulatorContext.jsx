@@ -26,15 +26,16 @@ export const CPUSimulatorProvider = (props) => {
     timeDelta === 0 && activeCPUScheduler.getSchedule().length === 0
       ? setJobQueue(activeCPUScheduler.getJobQueue())
       : activeCPUScheduler.getJobQueue(timeDelta) &&
-        setJobQueue(
-          activeCPUScheduler.getJobQueue(timeDelta).sort((a, b) => {
-            if (a.timeAdded >= b.timeAdded) return 1;
-            return -1;
-          })
-        );
+      setJobQueue(
+        activeCPUScheduler.getJobQueue(timeDelta).sort((a, b) => {
+          if (a.timeAdded >= b.timeAdded) return 1;
+          return -1;
+        })
+      );
 
     setReadyQueue(activeCPUScheduler.getReadyQueue(timeDelta));
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [timeDelta, activeCPUScheduler]);
 
   return (
     <CPUSimulatorContext.Provider

@@ -5,13 +5,13 @@ import { faChevronDown, faChevronRight } from "@fortawesome/free-solid-svg-icons
 
 const MemoryProcess = ({ process }) => {
   const [timeDelta] = useContext(MemoryManagerContext).time;
-  const [jobQueue] = useContext(MemoryManagerContext).jQueue;
-  const [blocks] = useContext(MemoryManagerContext).blocks;
+
   const [allocated] = useContext(MemoryManagerContext).allocated;
   const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
     console.log(process.name);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeDelta]);
 
   let tag = null;

@@ -61,6 +61,7 @@ const OrgMembersManagers = ({ managers, org }) => {
   useEffect(() => {
     org && (managers ? setManagersOrMembers(org.managers) : setManagersOrMembers(org.members));
     setPage(1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeModal]);
 
   return (

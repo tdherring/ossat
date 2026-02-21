@@ -85,7 +85,8 @@ const LogIn = () => {
         <form onSubmit={handleSubmit}>
           <header className="modal-card-head">
             <p className="modal-card-title">Log In</p>
-            <a
+            <button
+              type="button"
               className="delete"
               onClick={(event) => {
                 event.preventDefault();
@@ -135,17 +136,17 @@ const LogIn = () => {
                   ) : null
               }
             </div>
-            <a href="/#" onClick={() => setActiveModal("requestPasswordReset")}>
+            <button type="button" className="button is-ghost" onClick={() => setActiveModal("requestPasswordReset")}>
               Forgot Password?
-            </a>
+            </button>
           </section>
           <footer className="modal-card-foot" style={{ gap: "10px" }}>
             <button className="button is-primary" type="submit">
               Login
             </button>
-            <a
+            <button
+              type="button"
               className="button"
-              href="/#"
               onClick={(event) => {
                 event.preventDefault();
                 setActiveModal(null);
@@ -154,7 +155,7 @@ const LogIn = () => {
               }}
             >
               Cancel
-            </a>
+            </button>
           </footer>
         </form>
       </div>

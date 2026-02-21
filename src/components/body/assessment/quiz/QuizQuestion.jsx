@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { UserContext } from "../../../../contexts/UserContext";
-import { QuizContext } from "../../../../contexts/QuizContext";
+
 import { gql } from "@apollo/client";
 import { useMutation } from "@apollo/client/react";
 

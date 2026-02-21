@@ -48,7 +48,8 @@ const RequestPasswordReset = () => {
         <form onSubmit={handleSubmit}>
           <header className="modal-card-head">
             <p className="modal-card-title">Request Password Reset</p>
-            <a
+            <button
+              type="button"
               className="delete"
               onClick={(event) => {
                 event.preventDefault();
@@ -99,9 +100,9 @@ const RequestPasswordReset = () => {
             <button className="button is-primary" type="submit">
               Send Email
             </button>
-            <a
+            <button
+              type="button"
               className="button"
-              href="/#"
               onClick={(event) => {
                 event.preventDefault();
                 setActiveModal(null);
@@ -110,7 +111,7 @@ const RequestPasswordReset = () => {
               }}
             >
               Cancel
-            </a>
+            </button>
           </footer>
         </form>
       </div>

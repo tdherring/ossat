@@ -22,7 +22,8 @@ export const MemoryManagerProvider = (props) => {
   useEffect(() => {
     setJobQueue(activeManager.getJobQueue());
     setBlocks(activeManager.getBlocks());
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeManager]);
 
   return (
     <MemoryManagerContext.Provider

@@ -118,6 +118,7 @@ const OrganisationLandingPage = () => {
   useEffect(() => {
     checkPermissions();
     getOrganisations();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeModal]);
 
   return (

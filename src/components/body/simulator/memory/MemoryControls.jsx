@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlay, faStepBackward, faStepForward, faFastBackward, faFastForward, faPlus, faTimes, faPause, faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
+import { faPlay, faStepBackward, faStepForward, faFastBackward, faFastForward, faTimes, faPause, faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 import { ModalContext } from "../../../../contexts/ModalContext";
 import { MemoryManagerContext } from "../../../../contexts/MemoryManagerContext";
 import AddMemoryBlock from "../../../modals/AddMemoryBlock";
@@ -34,6 +34,7 @@ const MemoryControls = () => {
       clearInterval(intervalVal);
     }
     if (!autoAllocating) clearInterval(intervalVal);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeDelta, intervalVal]);
 
   return (

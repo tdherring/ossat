@@ -1,13 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
-import { CPUSimulatorContext } from "../../../../contexts/CPUSimulatorContext";
+import React, { useState } from "react";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 
 const CPUProcess = ({ name, arrivalTime, burstTime, remainingTime, priority, status }) => {
-  const [activeCPUScheduler] = useContext(CPUSimulatorContext).active;
-  const [running, setRunning] = useContext(CPUSimulatorContext).running;
-  const [currentProcess] = useContext(CPUSimulatorContext).current;
-  const [timeDelta] = useContext(CPUSimulatorContext).time;
+
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (

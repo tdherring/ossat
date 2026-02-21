@@ -40,7 +40,8 @@ const AddMemoryProcess = () => {
         <form onSubmit={handleSubmit}>
           <header className="modal-card-head">
             <p className="modal-card-title">Add Memory Process</p>
-            <a
+            <button
+              type="button"
               className="delete"
               onClick={(event) => {
                 event.preventDefault();
@@ -75,16 +76,16 @@ const AddMemoryProcess = () => {
               <FontAwesomeIcon icon={faPlus} className="mr-2" />
               Add
             </button>
-            <a
+            <button
+              type="button"
               className="button"
-              href="/#"
               onClick={(event) => {
                 event.preventDefault();
                 setActiveModal(null);
               }}
             >
               Close
-            </a>
+            </button>
           </footer>
         </form>
       </div>

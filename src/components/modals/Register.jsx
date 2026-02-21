@@ -58,7 +58,8 @@ const Register = () => {
         <form onSubmit={handleSubmit}>
           <header className="modal-card-head">
             <p className="modal-card-title">Register</p>
-            <a
+            <button
+              type="button"
               className="delete"
               onClick={(event) => {
                 event.preventDefault();
@@ -107,8 +108,8 @@ const Register = () => {
                 <div className="control">
                   <input
                     className={`input ${(submissionAttempt && confirmPassword === "") || Object.keys(registerResultErrors).includes("password2") || Object.keys(registerResultErrors).includes("password1")
-                        ? "is-danger"
-                        : null
+                      ? "is-danger"
+                      : null
                       }`}
                     type="password"
                     onInput={(event) => setConfirmPassword(event.target.value)}
@@ -141,9 +142,9 @@ const Register = () => {
             <button className="button is-primary" type="submit">
               Register
             </button>
-            <a
+            <button
+              type="button"
               className="button"
-              href="/#"
               onClick={(event) => {
                 event.preventDefault();
                 setActiveModal(null);
@@ -152,7 +153,7 @@ const Register = () => {
               }}
             >
               Cancel
-            </a>
+            </button>
           </footer>
         </form>
       </div>

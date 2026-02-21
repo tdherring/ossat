@@ -47,7 +47,8 @@ const MyProfile = () => {
         <form onSubmit={handleSubmit}>
           <header className="modal-card-head">
             <p className="modal-card-title">My Profile</p>
-            <a
+            <button
+              type="button"
               className="delete"
               onClick={(event) => {
                 event.preventDefault();
@@ -106,9 +107,9 @@ const MyProfile = () => {
             <button className="button is-primary" type="submit">
               Update
             </button>
-            <a
+            <button
+              type="button"
               className="button"
-              href="/#"
               onClick={(event) => {
                 event.preventDefault();
                 setActiveModal(null);
@@ -117,7 +118,7 @@ const MyProfile = () => {
               }}
             >
               Close
-            </a>
+            </button>
           </footer>
         </form>
       </div>

@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlay, faStepBackward, faStepForward, faFastBackward, faFastForward, faPlus, faPause, faTimes, faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
+import { faPlay, faStepBackward, faStepForward, faFastBackward, faFastForward, faPause, faTimes, faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 import { CPUSimulatorContext } from "../../../../contexts/CPUSimulatorContext";
 import { ModalContext } from "../../../../contexts/ModalContext";
 import AddCPUProcess from "../../../modals/AddCPUProcess";
@@ -34,6 +34,7 @@ const CPUControls = () => {
       clearInterval(intervalVal);
     }
     if (!autoScheduling) clearInterval(intervalVal);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeDelta, intervalVal]);
 
   return (

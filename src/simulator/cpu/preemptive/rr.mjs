@@ -88,6 +88,7 @@ class RR extends CPUScheduler {
       }
 
       // Find all processes which are available at this timestep (diff the arrays).
+      // eslint-disable-next-line no-loop-func
       let newlyAvailable = this.getAvailableProcesses(timeDelta).filter((x) => this.getAvailableProcesses(timeDelta - deltaIncrement).indexOf(x) === -1);
 
       // If after this quantum there are new processes available, add the the front of the ready queue.
