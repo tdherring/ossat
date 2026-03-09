@@ -18,7 +18,7 @@
     "animate.css": "^4.1.1",
     "bulma": "^1.0.4",
     "chart.js": "^4.5.1",
-    "graphql": "^16.13.0",
+    "graphql": "^16.13.1",
     "sass": "^1.97.3",
     "react": "^19.2.4",
     "react-chartjs-2": "^5.3.1",
