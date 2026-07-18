@@ -12,7 +12,7 @@
       "matchUpdateTypes": ["digest", "patch", "minor", "pin"],
       "automerge": true,
       "automergeType": "pr",
-      "platformAutomerge": false
+      "platformAutomerge": true
     }
   ]
 }
