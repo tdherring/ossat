@@ -1,0 +1,18 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "dependencyDashboard": true,
+  "prCreation": "immediate",
+  "prConcurrentLimit": 10,
+  "branchConcurrentLimit": 10,
+  "prHourlyLimit": 0,
+  "packageRules": [
+    {
+      "description": "Automatically merge routine dependency updates after required checks pass.",
+      "matchUpdateTypes": ["digest", "patch", "minor", "pin"],
+      "automerge": true,
+      "automergeType": "pr",
+      "platformAutomerge": true
+    }
+  ]
+}
