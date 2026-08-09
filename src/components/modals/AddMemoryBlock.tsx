@@ -14,6 +14,7 @@ const AddMemoryBlock = () => {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault(); // Stop the page from refreshing upon submission.
 
+    if (!Number.isFinite(size)) return;
     activeManager.createBlock(size);
     setRunning(!running);
     setActiveModal(null);
@@ -47,7 +48,11 @@ const AddMemoryBlock = () => {
                     type="number"
                     defaultValue="100"
                     min="10"
-                    onInput={(event) => setSize(parseInt(event.currentTarget.value))}
+                    required
+                    onInput={(event) => {
+                      const nextSize = event.currentTarget.valueAsNumber;
+                      if (Number.isFinite(nextSize)) setSize(nextSize);
+                    }}
                   />
                 </div>
               </div>

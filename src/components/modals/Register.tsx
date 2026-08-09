@@ -47,6 +47,16 @@ const Register = () => {
 
   // Track whether user has attempted to submit the registration form.
   const [submissionAttempt, setSubmissionAttempt] = useState(false);
+  const closeModal = () => {
+    setEmail("");
+    setUsername("");
+    setPassword("");
+    setConfirmPassword("");
+    setSubmissionAttempt(false);
+    setRegisterResult(null);
+    setRegisterResultErrors({});
+    setActiveModal(null);
+  };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault(); // Stop the page from refreshing upon submission.
@@ -83,12 +93,8 @@ const Register = () => {
             <button
               type="button"
               className="delete"
-              onClick={(event) => {
-                event.preventDefault();
-                setActiveModal(null);
-                setRegisterResult(null);
-                setRegisterResultErrors({});
-              }}
+              aria-label="Close registration dialog"
+              onClick={closeModal}
             />
           </header>
           <section className="modal-card-body">
@@ -99,7 +105,8 @@ const Register = () => {
                   <input
                     className={`input ${(submissionAttempt && email === "") || Object.keys(registerResultErrors).includes("email") ? "is-danger" : null}`}
                     type="email"
-                    onInput={(event) => setEmail(event.currentTarget.value)}
+                    value={email}
+                    onChange={(event) => setEmail(event.currentTarget.value)}
                   />
                 </div>
               </div>
@@ -109,7 +116,8 @@ const Register = () => {
                   <input
                     className={`input ${(submissionAttempt && username === "") || Object.keys(registerResultErrors).includes("username") ? "is-danger" : null}`}
                     type="text"
-                    onInput={(event) => setUsername(event.currentTarget.value)}
+                    value={username}
+                    onChange={(event) => setUsername(event.currentTarget.value)}
                   />
                 </div>
               </div>
@@ -126,7 +134,8 @@ const Register = () => {
                         : null
                     }`}
                     type="password"
-                    onInput={(event) => setPassword(event.currentTarget.value)}
+                    value={password}
+                    onChange={(event) => setPassword(event.currentTarget.value)}
                   />
                 </div>
               </div>
@@ -142,7 +151,8 @@ const Register = () => {
                         : null
                     }`}
                     type="password"
-                    onInput={(event) => setConfirmPassword(event.currentTarget.value)}
+                    value={confirmPassword}
+                    onChange={(event) => setConfirmPassword(event.currentTarget.value)}
                   />
                 </div>
               </div>
@@ -179,16 +189,7 @@ const Register = () => {
             <button className="button is-primary" type="submit">
               Register
             </button>
-            <button
-              type="button"
-              className="button"
-              onClick={(event) => {
-                event.preventDefault();
-                setActiveModal(null);
-                setRegisterResult(null);
-                setRegisterResultErrors({});
-              }}
-            >
+            <button type="button" className="button" onClick={closeModal}>
               Cancel
             </button>
           </footer>

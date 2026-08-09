@@ -2,6 +2,7 @@ import {
   createContext,
   useState,
   useEffect,
+  useRef,
   type Dispatch,
   type ReactNode,
   type SetStateAction,
@@ -15,6 +16,8 @@ import { isApiMode, isDemoMode } from "../lib/demoMode";
 type StatePair<T> = [T, Dispatch<SetStateAction<T>>];
 type UserContextValue = {
   loggedIn: StatePair<boolean>;
+  sessionStatus: "pending" | "authenticated" | "anonymous";
+  isActive: StatePair<boolean | null>;
   firstName: StatePair<string | null>;
   lastName: StatePair<string | null>;
   username: StatePair<string | null>;
@@ -22,7 +25,14 @@ type UserContextValue = {
 };
 
 type UserInfo = {
-  me: { id: string; username: string; firstName: string; lastName: string; email: string } | null;
+  me: {
+    id: string;
+    username: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    isActive: boolean;
+  } | null;
 };
 
 type RefreshTokenData = {
@@ -37,11 +47,16 @@ export const UserContext = createContext<UserContextValue>(null!);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [loggedIn, setLoggedIn] = useState(isDemoMode);
+  const [sessionStatus, setSessionStatus] = useState<"pending" | "authenticated" | "anonymous">(
+    isDemoMode ? "authenticated" : isApiMode ? "pending" : "anonymous",
+  );
+  const [isActive, setIsActive] = useState<boolean | null>(isDemoMode ? true : null);
   const [firstName, setFirstName] = useState<string | null>(isDemoMode ? demoUser.firstName : null);
   const [lastName, setLastName] = useState<string | null>(isDemoMode ? demoUser.lastName : null);
   const [username, setUsername] = useState<string | null>(isDemoMode ? demoUser.username : null);
   const [email, setEmail] = useState<string | null>(isDemoMode ? demoUser.email : null);
   const [cookies, setCookie, removeCookie] = useCookies(["refreshToken"]);
+  const refreshTokenRef = useRef(cookies.refreshToken);
   const REFRESH_INTERVAL = 240000;
 
   // GraphQL mutation to refresh the access token.
@@ -59,6 +74,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
   const validate = () => {
     setLoggedIn(true);
+    setSessionStatus("authenticated");
     // GraphQL Query for user information.
     client
       .query<UserInfo>({
@@ -70,6 +86,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
               firstName
               lastName
               email
+              isActive
             }
           }
         `,
@@ -80,17 +97,24 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
           setLastName(result.data.me.lastName);
           setUsername(result.data.me.username);
           setEmail(result.data.me.email);
+          setIsActive(result.data.me.isActive);
         }
       });
   };
 
   const invalidate = () => {
     setLoggedIn(false);
+    setSessionStatus("anonymous");
     setFirstName(null);
     setLastName(null);
     setUsername(null);
     setEmail(null);
+    setIsActive(null);
   };
+
+  useEffect(() => {
+    refreshTokenRef.current = cookies.refreshToken;
+  }, [cookies.refreshToken]);
 
   useEffect(() => {
     if (isDemoMode) {
@@ -99,6 +123,8 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       setLastName(demoUser.lastName);
       setUsername(demoUser.username);
       setEmail(demoUser.email);
+      setIsActive(true);
+      setSessionStatus("authenticated");
       return undefined;
     }
 
@@ -108,37 +134,34 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     }
 
     const attemptTokenRefresh = () => {
-      if (cookies.refreshToken) {
+      const currentRefreshToken = refreshTokenRef.current;
+      if (currentRefreshToken) {
         console.debug("Refreshing access token!");
-        refreshToken({ variables: { token: cookies.refreshToken } }).then((result) => {
-          const refreshed = result.data?.refreshToken;
-          if (!refreshed) {
-            invalidate();
-            return;
-          }
-          if (refreshed.token) {
-            // Valid query? Update the access token.
+        refreshToken({ variables: { token: currentRefreshToken } })
+          .then((result) => {
+            const refreshed = result.data?.refreshToken;
+            if (!refreshed?.token || !refreshed.refreshToken) {
+              localStorage.removeItem("accessToken");
+              removeCookie("refreshToken");
+              invalidate();
+              return;
+            }
+
             localStorage.setItem("accessToken", refreshed.token);
+            setCookie("refreshToken", refreshed.refreshToken, {
+              path: "/",
+              sameSite: "strict",
+              secure: import.meta.env.PROD,
+            });
+            refreshTokenRef.current = refreshed.refreshToken;
+            if (refreshed.payload) setUsername(refreshed.payload.username);
             validate();
-          } else {
-            // Invalid or malicious query? Drop the session.
+          })
+          .catch(() => {
             localStorage.removeItem("accessToken");
-            invalidate();
-          }
-
-          if (refreshed.refreshToken) {
-            // Valid query? Update the refresh token.
-            setCookie("refreshToken", refreshed.refreshToken, { path: "/" }); //! SET secure : true in production
-
-            validate();
-          } else {
-            // Invalid or malicious query? Drop the refresh token.
             removeCookie("refreshToken");
             invalidate();
-          }
-
-          if (refreshed.payload) setUsername(refreshed.payload.username);
-        });
+          });
       } else {
         invalidate();
       }
@@ -160,6 +183,8 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     <UserContext.Provider
       value={{
         loggedIn: [loggedIn, setLoggedIn],
+        sessionStatus,
+        isActive: [isActive, setIsActive],
         firstName: [firstName, setFirstName],
         lastName: [lastName, setLastName],
         username: [username, setUsername],

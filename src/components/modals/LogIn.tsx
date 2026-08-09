@@ -51,27 +51,52 @@ const LogIn = () => {
 
   // Track whether user has attempted to submit the login form.
   const [submissionAttempt, setSubmissionAttempt] = useState(false);
+  const closeModal = () => {
+    _setUsername("");
+    setPassword("");
+    setSubmissionAttempt(false);
+    setLogInResult(null);
+    setLogInResultErrors({});
+    setActiveModal(null);
+  };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault(); // Stop the page from refreshing upon submission.
-    const form = event.currentTarget;
     if (!(_username === "" || password === "")) {
       setSubmissionAttempt(false);
-      logIn({ variables: { username: _username, password } }).then((result) => {
-        const payload = result.data?.tokenAuth;
-        if (!payload) return;
-        setLogInResult(payload);
-        if (!payload.errors) {
-          setLogInResultErrors({});
-          localStorage.setItem("accessToken", payload.token);
-          setCookie("refreshToken", payload.refreshToken, { path: "/" }); //! SET secure : true in production
-          form.reset();
-          _setUsername("");
-          setPassword("");
-        } else {
-          setLogInResultErrors(payload.errors);
-        }
-      });
+      logIn({ variables: { username: _username, password } })
+        .then((result) => {
+          const payload = result.data?.tokenAuth;
+          if (!payload) {
+            setLogInResultErrors({
+              nonFieldErrors: [
+                { code: "request_failed", message: "Login failed. Please try again." },
+              ],
+            });
+            return;
+          }
+          setLogInResult(payload);
+          if (!payload.errors) {
+            setLogInResultErrors({});
+            localStorage.setItem("accessToken", payload.token);
+            setCookie("refreshToken", payload.refreshToken, {
+              path: "/",
+              sameSite: "strict",
+              secure: import.meta.env.PROD,
+            });
+            _setUsername("");
+            setPassword("");
+          } else {
+            setLogInResultErrors(payload.errors);
+          }
+        })
+        .catch(() =>
+          setLogInResultErrors({
+            nonFieldErrors: [
+              { code: "request_failed", message: "Login failed. Please try again." },
+            ],
+          }),
+        );
     } else {
       setSubmissionAttempt(true);
     }
@@ -99,12 +124,8 @@ const LogIn = () => {
             <button
               type="button"
               className="delete"
-              onClick={(event) => {
-                event.preventDefault();
-                setActiveModal(null);
-                setLogInResult(null);
-                setLogInResultErrors({});
-              }}
+              aria-label="Close login dialog"
+              onClick={closeModal}
             />
           </header>
           <section className="modal-card-body">
@@ -115,7 +136,8 @@ const LogIn = () => {
                   <input
                     className={`input ${(submissionAttempt && _username === "") || Object.keys(logInResultErrors).includes("username") ? "is-danger" : null}`}
                     type="text"
-                    onInput={(event) => _setUsername(event.currentTarget.value)}
+                    value={_username}
+                    onChange={(event) => _setUsername(event.currentTarget.value)}
                   />
                 </div>
               </div>
@@ -125,7 +147,8 @@ const LogIn = () => {
                   <input
                     className={`input ${(submissionAttempt && password === "") || Object.keys(logInResultErrors).includes("password") ? "is-danger" : null}`}
                     type="password"
-                    onInput={(event) => setPassword(event.currentTarget.value)}
+                    value={password}
+                    onChange={(event) => setPassword(event.currentTarget.value)}
                   />
                 </div>
               </div>
@@ -161,16 +184,7 @@ const LogIn = () => {
             <button className="button is-primary" type="submit">
               Login
             </button>
-            <button
-              type="button"
-              className="button"
-              onClick={(event) => {
-                event.preventDefault();
-                setActiveModal(null);
-                setLogInResult(null);
-                setLogInResultErrors({});
-              }}
-            >
+            <button type="button" className="button" onClick={closeModal}>
               Cancel
             </button>
           </footer>

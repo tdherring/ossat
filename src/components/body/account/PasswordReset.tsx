@@ -61,7 +61,7 @@ const PasswordReset = ({ token = "" }: { token?: string }) => {
               <label className="label">New Password</label>
               <div className="control">
                 <input
-                  className={`input ${(submissionAttempt && password === "") || (passwordResetErrors && Object.keys(passwordResetErrors).includes("password")) ? "is-danger" : null}`}
+                  className={`input ${(submissionAttempt && confirmPassword === "") || (passwordResetErrors && Object.keys(passwordResetErrors).includes("password")) ? "is-danger" : null}`}
                   type="password"
                   onInput={(event) => setPassword(event.currentTarget.value)}
                 />
@@ -88,16 +88,24 @@ const PasswordReset = ({ token = "" }: { token?: string }) => {
                 // Map all of the error messages from log in and display at bottom of form.
                 Object.keys(passwordResetErrors).map((key) => {
                   const error = passwordResetErrors[key];
+                  const firstError = error[0];
+                  if (!firstError) return null;
                   return (
-                    <p key={`password-reset-err-${error[0].code}`} className="help is-danger">
-                      {error[0].message}
+                    <p key={`password-reset-err-${firstError.code}`} className="help is-danger">
+                      {firstError.message}
                     </p>
                   );
                 })
               ) : passwordResetResult?.success ? (
                 <p className="help is-success">
                   Password successfully changed! Click{" "}
-                  <a href="/#" onClick={() => setActiveModal("logIn")}>
+                  <a
+                    href="/#"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      setActiveModal("logIn");
+                    }}
+                  >
                     here
                   </a>{" "}
                   to login.

@@ -56,6 +56,7 @@ const PerformanceData = ({
       return;
     }
 
+    let cancelled = false;
     client
       .query<{ getAssessments: Assessment[] }>({
         fetchPolicy: "network-only",
@@ -78,12 +79,14 @@ const PerformanceData = ({
         },
       })
       .then((result) => {
+        if (cancelled) return;
         const assessments = result.data?.getAssessments ?? [];
         const variantScores: Record<string, number[]> = {};
         setUserAssessments(assessments);
 
         assessments.forEach((item) => {
           if (
+            !item.submitted ||
             item.score === null ||
             ["Initial Assessment", "Generated Assessment"].includes(item.variant)
           )
@@ -99,7 +102,17 @@ const PerformanceData = ({
             (scores) => scores.reduce((sum, score) => sum + score, 0) / scores.length,
           ),
         );
+      })
+      .catch((error) => {
+        if (cancelled) return;
+        console.error("Could not load assessment performance.", error);
+        setUserAssessments([]);
+        setVariants([]);
+        setAverageScores([]);
       });
+    return () => {
+      cancelled = true;
+    };
   }, [client, selectedUser]);
 
   const generalAssessments = userAssessments.filter(

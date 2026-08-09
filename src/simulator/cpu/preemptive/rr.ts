@@ -81,9 +81,6 @@ class RR extends CPUScheduler {
           }
         }
 
-        // Increment the queue head pointer.
-        i++;
-
         this.schedule.push({
           processName: name!,
           timeDelta: timeDelta,
@@ -94,6 +91,9 @@ class RR extends CPUScheduler {
         timeDelta += deltaIncrement;
         console.debug("[" + timeDelta + "] Process", name, "finished executing!");
       }
+
+      // Always advance, including past zero-length processes.
+      i++;
 
       // Find all processes which are available at this timestep (diff the arrays).
       const previouslyAvailable = this.getAvailableProcesses(timeDelta - deltaIncrement);

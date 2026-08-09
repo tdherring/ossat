@@ -48,9 +48,9 @@ export const MemoryManagerProvider = ({ children }: { children: ReactNode }) => 
   const [running, setRunning] = useState(false);
 
   useEffect(() => {
-    setJobQueue(activeManager.getJobQueue());
-    setBlocks(activeManager.getBlocks());
-  }, [activeManager]);
+    setJobQueue([...activeManager.getJobQueue()]);
+    setBlocks([...activeManager.getBlocks()]);
+  }, [activeManager, running]);
 
   return (
     <MemoryManagerContext.Provider

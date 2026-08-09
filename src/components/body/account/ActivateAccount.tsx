@@ -39,16 +39,38 @@ const ActivateAccount = ({ token = "" }: { token?: string }) => {
   const [resendResultErrors, setResendResultErrors] = useState<ApiErrors | null>(null);
 
   useEffect(() => {
-    activateAccount({ variables: { token } }).then((result) => {
-      const payload = result.data?.verifyAccount;
-      if (!payload) return;
-      setActivateResult(payload);
-      if (!payload.errors) {
-        setActivateResultErrors(null);
-      } else {
+    let current = true;
+    if (!token) {
+      const errors = {
+        token: [{ code: "missing_token", message: "An activation token is required." }],
+      };
+      setActivateResult({ success: false, errors });
+      setActivateResultErrors(errors);
+      return () => {
+        current = false;
+      };
+    }
+    activateAccount({ variables: { token } })
+      .then((result) => {
+        const payload = result.data?.verifyAccount;
+        if (!payload) throw new Error("Missing activation response");
+        if (!current) return;
+        setActivateResult(payload);
         setActivateResultErrors(payload.errors);
-      }
-    });
+      })
+      .catch(() => {
+        if (!current) return;
+        const errors = {
+          nonFieldErrors: [
+            { code: "request_failed", message: "Account activation failed. Please try again." },
+          ],
+        };
+        setActivateResult({ success: false, errors });
+        setActivateResultErrors(errors);
+      });
+    return () => {
+      current = false;
+    };
   }, [activateAccount, token]);
 
   return (
@@ -66,10 +88,12 @@ const ActivateAccount = ({ token = "" }: { token?: string }) => {
           // Map all of the error messages from activation and display.
           Object.keys(activateResultErrors).map((key) => {
             const error = activateResultErrors[key];
-            if (error[0].code === "invalid_token" || error[0].code === "expired_token")
+            const firstError = error[0];
+            if (!firstError) return null;
+            if (firstError.code === "invalid_token" || firstError.code === "expired_token")
               return (
-                <span key={`activate-err-${error[0].code}`}>
-                  <p className="has-text-danger">{error[0].message}</p>
+                <span key={`activate-err-${firstError.code}`}>
+                  <p className="has-text-danger">{firstError.message}</p>
                   <div className="field has-addons mr-3 pt-3">
                     <span className="control">
                       <input
@@ -111,9 +135,11 @@ const ActivateAccount = ({ token = "" }: { token?: string }) => {
                   {resendResultErrors ? (
                     Object.keys(resendResultErrors).map((key) => {
                       const error = resendResultErrors[key];
+                      const firstError = error[0];
+                      if (!firstError) return null;
                       return (
-                        <p key={`resend-err-${error[0].code}`} className="help is-danger">
-                          {error[0].message}
+                        <p key={`resend-err-${firstError.code}`} className="help is-danger">
+                          {firstError.message}
                         </p>
                       );
                     })
@@ -125,7 +151,11 @@ const ActivateAccount = ({ token = "" }: { token?: string }) => {
                   ) : null}
                 </span>
               );
-            return <p className="has-text-danger">{error[0].message}</p>;
+            return (
+              <p key={`activate-err-${key}`} className="has-text-danger">
+                {firstError.message}
+              </p>
+            );
           })
         ) : activateResult?.success ? (
           <p className="has-text-success">

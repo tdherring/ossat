@@ -16,6 +16,8 @@ const AssessmentLandingPage = () => {
   const [initialAssessmentID, setInitialAssessmentID] = useState<string | null>(null);
   const [generatedAssessmentID, setGeneratedAssessmentID] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
+  const [isActive] = useContext(UserContext).isActive;
   const client = useApolloClient();
 
   const getAssessments = useCallback(
@@ -53,6 +55,13 @@ const AssessmentLandingPage = () => {
             setAssessments(results);
             setLoading(false);
           }
+        })
+        .catch(() => {
+          if (variant === null) {
+            setAssessments([]);
+            setLoadError(true);
+            setLoading(false);
+          }
         });
     },
     [client, username],
@@ -83,12 +92,21 @@ const AssessmentLandingPage = () => {
       </div>
     );
 
+  if (loadError)
+    return (
+      <div className="col-span-12 border border-destructive/40 px-5 py-8 text-sm text-destructive">
+        Assessments could not be loaded.
+      </div>
+    );
+
   if (assessments.length === 0) {
     return (
       <section className="col-span-12 mx-auto w-full max-w-4xl border px-6 py-10">
         <h1 className="font-display text-4xl font-semibold tracking-wide">Assessments</h1>
         <p className="mt-4 text-sm text-muted-foreground">
-          Activate your account to access assessment material.
+          {isActive === false
+            ? "Activate your account to access assessment material."
+            : "No assessments are currently available."}
         </p>
       </section>
     );

@@ -13,9 +13,9 @@ const AddCPUProcess = ({ isPriorityProcess = false }: { isPriorityProcess?: bool
 
   // State for processes.
   const [processName, setProcessName] = useState("");
-  const [arrivalTime, setArrivalTime] = useState(0);
-  const [burstTime, setBurstTime] = useState(1);
-  const [priority, setPriority] = useState(0);
+  const [arrivalTime, setArrivalTime] = useState("0");
+  const [burstTime, setBurstTime] = useState("1");
+  const [priority, setPriority] = useState("0");
 
   // Track whether user has attempted to submit the add process form.
   const [submissionAttempt, setSubmissionAttempt] = useState(false);
@@ -23,20 +23,39 @@ const AddCPUProcess = ({ isPriorityProcess = false }: { isPriorityProcess?: bool
   useEffect(() => {
     if (activeModal === "addCPUProcess") {
       setProcessName(getNextProcessName(jobQueue));
+      setArrivalTime("0");
+      setBurstTime("1");
+      setPriority("0");
       setSubmissionAttempt(false);
     }
-  }, [activeModal, jobQueue]);
+    // Generate the name once per opening; queue updates must not overwrite user input.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeModal]);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault(); // Stop the page from refreshing upon submission.
+    const parsedArrivalTime = Number(arrivalTime);
+    const parsedBurstTime = Number(burstTime);
+    const parsedPriority = Number(priority);
 
     // Only add the process the the GUI if there isn't already one with the same name and the process name field isn't empty.
-    if (!jobQueue.some((process) => process.name === processName) && processName !== "") {
+    if (
+      !jobQueue.some((process) => process.name === processName) &&
+      processName !== "" &&
+      arrivalTime !== "" &&
+      burstTime !== "" &&
+      Number.isFinite(parsedArrivalTime) &&
+      parsedArrivalTime >= 0 &&
+      Number.isFinite(parsedBurstTime) &&
+      parsedBurstTime >= 1 &&
+      (!isPriorityProcess ||
+        (priority !== "" && Number.isFinite(parsedPriority) && parsedPriority >= 0))
+    ) {
       activeCPUScheduler.createProcess(
         processName,
-        arrivalTime,
-        burstTime,
-        isPriorityProcess ? priority : null,
+        parsedArrivalTime,
+        parsedBurstTime,
+        isPriorityProcess ? parsedPriority : null,
       );
       // Flip this hook var to cause a rerender of the job and ready queues.
       setRunning(!running);
@@ -45,9 +64,9 @@ const AddCPUProcess = ({ isPriorityProcess = false }: { isPriorityProcess?: bool
       setActiveModal(null);
       event.currentTarget.reset();
       setProcessName("");
-      setArrivalTime(0);
-      setBurstTime(1);
-      setPriority(0);
+      setArrivalTime("0");
+      setBurstTime("1");
+      setPriority("0");
     } else {
       setSubmissionAttempt(true);
     }
@@ -74,10 +93,13 @@ const AddCPUProcess = ({ isPriorityProcess = false }: { isPriorityProcess?: bool
           <section className="modal-card-body">
             <div className="content">
               <div className="field">
-                <label className="label">Process Name</label>
+                <label className="label" htmlFor="cpu-process-name">
+                  Process Name
+                </label>
                 <div className="control">
                   <input
                     className={`input ${submissionAttempt && (processName === "" || jobQueue.some((process) => process.name === processName)) ? "is-danger" : null}`}
+                    id="cpu-process-name"
                     type="text"
                     value={processName}
                     autoFocus
@@ -92,39 +114,51 @@ const AddCPUProcess = ({ isPriorityProcess = false }: { isPriorityProcess?: bool
                 ) : null}
               </div>
               <div className="field">
-                <label className="label">Arrival Time</label>
+                <label className="label" htmlFor="cpu-arrival-time">
+                  Arrival Time
+                </label>
                 <div className="control">
                   <input
                     className="input"
+                    id="cpu-arrival-time"
                     type="number"
-                    defaultValue="0"
+                    value={arrivalTime}
                     min="0"
-                    onInput={(event) => setArrivalTime(parseInt(event.currentTarget.value))}
+                    required
+                    onChange={(event) => setArrivalTime(event.currentTarget.value)}
                   />
                 </div>
               </div>
               <div className="field">
-                <label className="label">Burst Time</label>
+                <label className="label" htmlFor="cpu-burst-time">
+                  Burst Time
+                </label>
                 <div className="control">
                   <input
                     className="input"
+                    id="cpu-burst-time"
                     type="number"
-                    defaultValue="1"
-                    min="0"
-                    onInput={(event) => setBurstTime(parseInt(event.currentTarget.value))}
+                    value={burstTime}
+                    min="1"
+                    required
+                    onChange={(event) => setBurstTime(event.currentTarget.value)}
                   />
                 </div>
               </div>
               {isPriorityProcess && (
                 <div className="field">
-                  <label className="label">Priority</label>
+                  <label className="label" htmlFor="cpu-priority">
+                    Priority
+                  </label>
                   <div className="control">
                     <input
                       className="input"
+                      id="cpu-priority"
                       type="number"
-                      defaultValue="0"
+                      value={priority}
                       min="0"
-                      onInput={(event) => setPriority(parseInt(event.currentTarget.value))}
+                      required
+                      onChange={(event) => setPriority(event.currentTarget.value)}
                     />
                   </div>
                 </div>

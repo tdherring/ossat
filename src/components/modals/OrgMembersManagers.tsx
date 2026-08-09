@@ -4,7 +4,7 @@ import { gql } from "@apollo/client";
 import { useMutation } from "@apollo/client/react";
 import { ModalContext } from "../../contexts/ModalContext";
 import Button from "../ui/Button";
-import type { MutationPayload } from "../../types/api";
+import type { ApiErrors, MutationPayload } from "../../types/api";
 import type { Organisation, Person } from "../../types/organisation";
 
 const PAGE_SIZE = 10;
@@ -16,8 +16,9 @@ const OrgMembersManagers = ({ managers, org }: { managers: boolean; org: Organis
   const [activeModal, setActiveModal] = useContext(ModalContext);
   const [people, setPeople] = useState<Person[]>([]);
   const [page, setPage] = useState(1);
+  const [actionErrors, setActionErrors] = useState<ApiErrors>({});
 
-  const [kickOrganisationMember] = useMutation<
+  const [kickOrganisationMember, { loading: removing }] = useMutation<
     { kickOrganisationMember: RolePayload },
     RoleVariables
   >(gql`
@@ -35,7 +36,7 @@ const OrgMembersManagers = ({ managers, org }: { managers: boolean; org: Organis
       }
     }
   `);
-  const [promoteOrganisationMember] = useMutation<
+  const [promoteOrganisationMember, { loading: promoting }] = useMutation<
     { promoteOrganisationMember: RolePayload },
     RoleVariables
   >(gql`
@@ -53,7 +54,7 @@ const OrgMembersManagers = ({ managers, org }: { managers: boolean; org: Organis
       }
     }
   `);
-  const [demoteOrganisationManager] = useMutation<
+  const [demoteOrganisationManager, { loading: demoting }] = useMutation<
     { demoteOrganisationManager: RolePayload },
     RoleVariables
   >(gql`
@@ -76,47 +77,82 @@ const OrgMembersManagers = ({ managers, org }: { managers: boolean; org: Organis
     if (activeModal !== "orgMembersManagers") return;
     setPeople(managers ? (org?.managers ?? []) : (org?.members ?? []));
     setPage(1);
+    setActionErrors({});
   }, [activeModal, managers, org]);
 
   const pageCount = Math.max(1, Math.ceil(people.length / PAGE_SIZE));
+  useEffect(() => {
+    setPage((value) => Math.min(Math.max(value, 1), pageCount));
+  }, [pageCount]);
   const visiblePeople = useMemo(
     () => people.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE),
     [page, people],
   );
-  const close = () => setActiveModal(null);
+  const actionPending = promoting || demoting || removing;
+  const close = () => {
+    setActionErrors({});
+    setActiveModal(null);
+  };
 
   const changeRole = (person: Person) => {
-    if (!org) return;
+    if (!org || actionPending) return;
     const variables = {
       orgName: org.name,
       username: person.username,
       token: localStorage.getItem("accessToken") ?? "",
     };
     if (managers) {
-      demoteOrganisationManager({ variables }).then((result) => {
-        const response = result.data?.demoteOrganisationManager;
-        if (response?.success) setPeople(response.organisation.managers);
-      });
+      demoteOrganisationManager({ variables })
+        .then((result) => {
+          const response = result.data?.demoteOrganisationManager;
+          if (response?.success) {
+            setActionErrors({});
+            setPeople(response.organisation.managers);
+          } else setActionErrors(response?.errors ?? {});
+        })
+        .catch(() =>
+          setActionErrors({
+            nonFieldErrors: [{ code: "request_failed", message: "The role could not be changed." }],
+          }),
+        );
     } else {
-      promoteOrganisationMember({ variables }).then((result) => {
-        const response = result.data?.promoteOrganisationMember;
-        if (response?.success) setPeople(response.organisation.members);
-      });
+      promoteOrganisationMember({ variables })
+        .then((result) => {
+          const response = result.data?.promoteOrganisationMember;
+          if (response?.success) {
+            setActionErrors({});
+            setPeople(response.organisation.members);
+          } else setActionErrors(response?.errors ?? {});
+        })
+        .catch(() =>
+          setActionErrors({
+            nonFieldErrors: [{ code: "request_failed", message: "The role could not be changed." }],
+          }),
+        );
     }
   };
 
   const removeMember = (person: Person) => {
-    if (!org) return;
+    if (!org || actionPending) return;
     kickOrganisationMember({
       variables: {
         orgName: org.name,
         username: person.username,
         token: localStorage.getItem("accessToken") ?? "",
       },
-    }).then((result) => {
-      const response = result.data?.kickOrganisationMember;
-      if (response?.success) setPeople(response.organisation.members);
-    });
+    })
+      .then((result) => {
+        const response = result.data?.kickOrganisationMember;
+        if (response?.success) {
+          setActionErrors({});
+          setPeople(response.organisation.members);
+        } else setActionErrors(response?.errors ?? {});
+      })
+      .catch(() =>
+        setActionErrors({
+          nonFieldErrors: [{ code: "request_failed", message: "The member could not be removed." }],
+        }),
+      );
   };
 
   return (
@@ -173,6 +209,7 @@ const OrgMembersManagers = ({ managers, org }: { managers: boolean; org: Organis
                               size="sm"
                               variant="outline"
                               className="gap-2"
+                              disabled={actionPending}
                               onClick={() => changeRole(person)}
                             >
                               {managers ? (
@@ -188,6 +225,7 @@ const OrgMembersManagers = ({ managers, org }: { managers: boolean; org: Organis
                                 variant="ghost"
                                 className="h-9 w-9 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
                                 aria-label={`Remove ${person.username}`}
+                                disabled={actionPending}
                                 onClick={() => removeMember(person)}
                               >
                                 <UserRoundX className="h-4 w-4" />
@@ -214,6 +252,7 @@ const OrgMembersManagers = ({ managers, org }: { managers: boolean; org: Organis
                         size="sm"
                         variant="outline"
                         className="flex-1 gap-2"
+                        disabled={actionPending}
                         onClick={() => changeRole(person)}
                       >
                         {managers ? (
@@ -229,6 +268,7 @@ const OrgMembersManagers = ({ managers, org }: { managers: boolean; org: Organis
                           variant="ghost"
                           className="h-9 w-9 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
                           aria-label={`Remove ${person.username}`}
+                          disabled={actionPending}
                           onClick={() => removeMember(person)}
                         >
                           <UserRoundX className="h-4 w-4" />
@@ -241,6 +281,16 @@ const OrgMembersManagers = ({ managers, org }: { managers: boolean; org: Organis
             </div>
           )}
         </section>
+        {Object.values(actionErrors)
+          .flat()
+          .map((error) => (
+            <p
+              key={`${error.code}-${error.message}`}
+              className="px-6 py-2 text-sm text-destructive"
+            >
+              {error.message}
+            </p>
+          ))}
         <footer className="modal-card-foot justify-between">
           <span className="text-xs text-muted-foreground">
             Page {page} of {pageCount}

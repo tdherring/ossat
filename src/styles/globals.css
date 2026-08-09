@@ -1,8 +1,5 @@
-@use "shell" as *;
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@config "../../tailwind.config.cjs";
 
 @font-face {
   font-family: "Open Sans";
@@ -94,6 +91,9 @@
   select {
     font: inherit;
   }
+  button:not(:disabled) {
+    @apply cursor-pointer;
+  }
   ::selection {
     @apply bg-primary/20 text-foreground;
   }
@@ -106,15 +106,15 @@
   #page-body {
     @apply w-full flex-1 px-4 py-8 sm:px-6;
 
-    @media (min-width: $desktop-breakpoint) {
+    @media (min-width: 64rem) {
       padding-bottom: 2rem;
-      padding-left: calc($sidebar-width + 2rem);
+      padding-left: calc(13.5rem + 2rem);
       padding-right: 2rem;
       padding-top: 2.5rem;
     }
   }
   #page-body.simulation-workspace {
-    @media (min-width: $desktop-breakpoint) {
+    @media (min-width: 64rem) {
       flex: none;
       height: 100vh;
       min-height: 0;
@@ -123,13 +123,15 @@
     }
   }
   #page-body.overview-page {
-    @media (min-width: $desktop-breakpoint) {
+    @media (min-width: 64rem) {
       display: flex;
       padding-bottom: 1rem;
 
       .page-grid {
         flex: 1;
         height: auto;
+        min-height: 0;
+        align-self: stretch;
       }
     }
   }

@@ -60,14 +60,18 @@ const QuizModule = ({ readOnly = false }: { readOnly?: boolean }) => {
       .then((result) => {
         const results = result.data?.getQuestions ?? [];
         setQuestions(results);
-        setIsSubmitted(results[0]?.assessment.submitted ?? false);
-        setVariant(results[0]?.assessment.variant ?? "Assessment");
-        setScore(results[0]?.assessment.score ?? null);
+        setIsSubmitted(results[0]?.assessment?.submitted ?? false);
+        setVariant(results[0]?.assessment?.variant ?? "Assessment");
+        setScore(results[0]?.assessment?.score ?? null);
+        setLoading(false);
+      })
+      .catch(() => {
+        setQuestions([]);
         setLoading(false);
       });
   }, [assessmentId, client, username]);
 
-  const [submitAssessment] = useMutation<
+  const [submitAssessment, { loading: submitting }] = useMutation<
     { submitAssessment: { assessment: { submitted: boolean } } },
     { id: string; username: string; token: string }
   >(gql`
@@ -144,6 +148,7 @@ const QuizModule = ({ readOnly = false }: { readOnly?: boolean }) => {
       {!isSubmitted && !readOnly && (
         <div className="flex items-center gap-4 border-t pt-6">
           <Button
+            disabled={submitting}
             onClick={() =>
               submitAssessment({
                 variables: {
@@ -151,11 +156,13 @@ const QuizModule = ({ readOnly = false }: { readOnly?: boolean }) => {
                   username: username ?? "",
                   token: localStorage.getItem("accessToken") ?? "",
                 },
-              }).then((result) =>
-                result.data?.submitAssessment.assessment.submitted
-                  ? (setSuccessfulSubmit(true), getQuestions())
-                  : setSuccessfulSubmit(false),
-              )
+              })
+                .then((result) =>
+                  result.data?.submitAssessment.assessment.submitted
+                    ? (setSuccessfulSubmit(true), getQuestions())
+                    : setSuccessfulSubmit(false),
+                )
+                .catch(() => setSuccessfulSubmit(false))
             }
           >
             Submit assessment

@@ -69,7 +69,7 @@ export const CPUSimulatorProvider = ({ children }: { children: ReactNode }) => {
     }
 
     setReadyQueue(activeCPUScheduler.getReadyQueue(timeDelta));
-  }, [timeDelta, activeCPUScheduler]);
+  }, [timeDelta, activeCPUScheduler, running]);
 
   return (
     <CPUSimulatorContext.Provider

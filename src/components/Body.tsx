@@ -1,11 +1,9 @@
 import { Navigate, Outlet, Route, Routes, useLocation, useParams } from "react-router-dom";
 import { lazy, Suspense, useContext } from "react";
-import { useCookies } from "react-cookie";
 import { MemoryManagerProvider } from "../contexts/MemoryManagerContext";
 import { CPUSimulatorProvider } from "../contexts/CPUSimulatorContext";
 import { routes, simulatorPaths } from "../lib/routes";
 import { UserContext } from "../contexts/UserContext";
-import { isApiMode } from "../lib/demoMode";
 
 const SimulationLandingPage = lazy(() => import("./body/simulator/SimulationLandingPage"));
 const CPUModule = lazy(() => import("./body/simulator/cpu/CPUModule"));
@@ -38,7 +36,11 @@ const Body = () => {
     >
       <MemoryManagerProvider>
         <CPUSimulatorProvider>
-          <div className="page-grid mx-auto grid h-full min-h-0 w-full max-w-[1800px] gap-6 lg:grid-cols-12">
+          <div
+            className={`page-grid mx-auto min-h-0 w-full max-w-[1800px] gap-6 ${
+              isOverview ? "grid lg:flex lg:flex-1 lg:self-stretch" : "grid h-full lg:grid-cols-12"
+            }`}
+          >
             <Suspense fallback={<RouteLoading />}>
               <Routes>
                 <Route path={routes.home} element={<SimulationLandingPage />} />
@@ -68,13 +70,9 @@ const Body = () => {
 };
 
 function AuthenticatedRoute() {
-  const [cookies] = useCookies(["refreshToken"]);
-  const [loggedIn] = useContext(UserContext).loggedIn;
-  return loggedIn || (isApiMode && cookies.refreshToken) ? (
-    <Outlet />
-  ) : (
-    <Navigate to={routes.home} replace />
-  );
+  const { sessionStatus } = useContext(UserContext);
+  if (sessionStatus === "pending") return <RouteLoading />;
+  return sessionStatus === "authenticated" ? <Outlet /> : <Navigate to={routes.home} replace />;
 }
 
 function ActivateAccountRoute() {

@@ -1,4 +1,4 @@
-import { useContext, useState, type FormEvent } from "react";
+import { useContext, useRef, useState, type FormEvent } from "react";
 import { ModalContext } from "../../contexts/ModalContext";
 import { gql } from "@apollo/client";
 import { useMutation } from "@apollo/client/react";
@@ -52,6 +52,18 @@ const ChangePassword = () => {
   const [submissionAttempt, setSubmissionAttempt] = useState(false);
 
   const [loading, setLoading] = useState(false);
+  const requestIdRef = useRef(0);
+  const closeModal = () => {
+    requestIdRef.current += 1;
+    setLoading(false);
+    setOldPassword("");
+    setNewPassword("");
+    setConfirmNewPassword("");
+    setSubmissionAttempt(false);
+    setChangePasswordResult(null);
+    setChangePasswordResultErrors(null);
+    setActiveModal(null);
+  };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault(); // Stop the page from refreshing upon submission.
@@ -59,8 +71,10 @@ const ChangePassword = () => {
     if (oldPassword !== "" && newPassword !== "" && confirmNewPassword !== "") {
       setSubmissionAttempt(false);
       setLoading(true);
-      changePassword({ variables: { oldPassword, newPassword, confirmNewPassword } }).then(
-        (result) => {
+      const requestId = ++requestIdRef.current;
+      changePassword({ variables: { oldPassword, newPassword, confirmNewPassword } })
+        .then((result) => {
+          if (requestId !== requestIdRef.current) return;
           const payload = result.data?.passwordChange;
           if (!payload) return;
           setChangePasswordResult(payload);
@@ -68,13 +82,27 @@ const ChangePassword = () => {
             setChangePasswordResultErrors(null);
             if (payload.token) localStorage.setItem("accessToken", payload.token);
             if (payload.refreshToken)
-              setCookie("refreshToken", payload.refreshToken, { path: "/" }); //! SET secure : true in production
+              setCookie("refreshToken", payload.refreshToken, {
+                path: "/",
+                sameSite: "strict",
+                secure: import.meta.env.PROD,
+              });
           } else {
             setChangePasswordResultErrors(payload.errors);
           }
-          setLoading(false);
-        },
-      );
+        })
+        .catch((error) => {
+          if (requestId !== requestIdRef.current) return;
+          console.warn("The password change request failed.", error);
+          setChangePasswordResultErrors({
+            nonFieldErrors: [
+              { code: "request_failed", message: "Password change failed. Please try again." },
+            ],
+          });
+        })
+        .finally(() => {
+          if (requestId === requestIdRef.current) setLoading(false);
+        });
     } else {
       setSubmissionAttempt(true);
     }
@@ -90,12 +118,8 @@ const ChangePassword = () => {
             <button
               className="delete"
               type="button"
-              onClick={(event) => {
-                event.preventDefault();
-                setActiveModal(null);
-                setChangePasswordResult(null);
-                setChangePasswordResultErrors(null);
-              }}
+              aria-label="Close change password dialog"
+              onClick={closeModal}
             />
           </header>
           <section className="modal-card-body">
@@ -112,7 +136,8 @@ const ChangePassword = () => {
                         : null
                     }`}
                     type="password"
-                    onInput={(event) => setOldPassword(event.currentTarget.value)}
+                    value={oldPassword}
+                    onChange={(event) => setOldPassword(event.currentTarget.value)}
                   />
                 </div>
               </div>
@@ -129,7 +154,8 @@ const ChangePassword = () => {
                         : null
                     }`}
                     type="password"
-                    onInput={(event) => setNewPassword(event.currentTarget.value)}
+                    value={newPassword}
+                    onChange={(event) => setNewPassword(event.currentTarget.value)}
                   />
                 </div>
               </div>
@@ -146,7 +172,8 @@ const ChangePassword = () => {
                         : null
                     }`}
                     type="password"
-                    onInput={(event) => setConfirmNewPassword(event.currentTarget.value)}
+                    value={confirmNewPassword}
+                    onChange={(event) => setConfirmNewPassword(event.currentTarget.value)}
                   />
                 </div>
               </div>
@@ -160,9 +187,11 @@ const ChangePassword = () => {
               // Map all of the error messages from profile update and display at bottom of form.
               Object.keys(changePasswordResultErrors).map((key) => {
                 const error = changePasswordResultErrors[key];
+                const firstError = error[0];
+                if (!firstError) return null;
                 return (
-                  <p key={`change-pwd-err-${error[0].code}`} className="help is-danger">
-                    {error[0].message}
+                  <p key={`change-pwd-err-${firstError.code}`} className="help is-danger">
+                    {firstError.message}
                   </p>
                 );
               })
@@ -174,16 +203,7 @@ const ChangePassword = () => {
             <button className={`button is-primary ${loading && "is-loading"}`} type="submit">
               Change
             </button>
-            <button
-              type="button"
-              className="button"
-              onClick={(event) => {
-                event.preventDefault();
-                setActiveModal(null);
-                setChangePasswordResult(null);
-                setChangePasswordResultErrors(null);
-              }}
-            >
+            <button type="button" className="button" onClick={closeModal}>
               Close
             </button>
           </footer>

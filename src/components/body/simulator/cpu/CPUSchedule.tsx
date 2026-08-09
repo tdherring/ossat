@@ -51,6 +51,7 @@ const CPUSchedule = () => {
   };
 
   const getProgress = (burst: ScheduleEntry, offset = 0) => {
+    if (burst.burstTime <= 0) return "100%";
     const elapsed = Math.min(Math.max(timeDelta + offset - burst.timeDelta, 0), burst.burstTime);
     return `${(elapsed / burst.burstTime) * 100}%`;
   };

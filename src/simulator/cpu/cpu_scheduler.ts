@@ -113,18 +113,12 @@ class CPUScheduler {
    * @return An array of Processes, sorted by burst time.
    */
   sortProcessesByBurstTime(jobQueue: CPUProcess[]) {
-    return jobQueue.sort((a, b) => {
-      if (a.getBurstTime() > b.getBurstTime()) {
-        return 1;
-      } else if (a.getBurstTime() === b.getBurstTime()) {
-        if (a.getArrivalTime() > b.getArrivalTime()) {
-          return 1;
-        } else if (a.getArrivalTime() === b.getArrivalTime() && a.getName() > b.getName()) {
-          return 1;
-        }
-      }
-      return -1;
-    });
+    return jobQueue.sort(
+      (a, b) =>
+        a.getBurstTime() - b.getBurstTime() ||
+        a.getArrivalTime() - b.getArrivalTime() ||
+        a.getName().localeCompare(b.getName()),
+    );
   }
 
   /**
@@ -136,18 +130,12 @@ class CPUScheduler {
    * @return An array of Processes, sorted by arrival time.
    */
   sortProcessesByArrivalTime(jobQueue: CPUProcess[]) {
-    return jobQueue.sort((a, b) => {
-      if (a.getArrivalTime() > b.getArrivalTime()) {
-        return 1;
-      } else if (a.getArrivalTime() === b.getArrivalTime()) {
-        if (a.getBurstTime() > b.getBurstTime()) {
-          return 1;
-        } else if (a.getBurstTime() === b.getBurstTime() && a.getName() > b.getName()) {
-          return 1;
-        }
-      }
-      return -1;
-    });
+    return jobQueue.sort(
+      (a, b) =>
+        a.getArrivalTime() - b.getArrivalTime() ||
+        a.getBurstTime() - b.getBurstTime() ||
+        a.getName().localeCompare(b.getName()),
+    );
   }
 
   /**
@@ -160,29 +148,13 @@ class CPUScheduler {
    * @return An array of Processes, sorted by burst time.
    */
   sortProcessesByPriority(jobQueue: CPUProcess[]) {
-    return jobQueue.sort((a, b) => {
-      const priorityA = (a as CPUPriorityProcess).getPriority();
-      const priorityB = (b as CPUPriorityProcess).getPriority();
-      if (priorityA > priorityB) {
-        return 1;
-      } else if (priorityA === priorityB) {
-        if (a.getArrivalTime() > b.getArrivalTime()) {
-          return 1;
-        } else if (
-          a.getArrivalTime() === b.getArrivalTime() &&
-          a.getBurstTime() > b.getBurstTime()
-        ) {
-          return 1;
-        } else if (
-          a.getArrivalTime() === b.getArrivalTime() &&
-          a.getBurstTime() === b.getBurstTime() &&
-          a.getName() > b.getName()
-        ) {
-          return 1;
-        }
-      }
-      return -1;
-    });
+    return jobQueue.sort(
+      (a, b) =>
+        (a as CPUPriorityProcess).getPriority() - (b as CPUPriorityProcess).getPriority() ||
+        a.getArrivalTime() - b.getArrivalTime() ||
+        a.getBurstTime() - b.getBurstTime() ||
+        a.getName().localeCompare(b.getName()),
+    );
   }
 
   /**
@@ -195,27 +167,13 @@ class CPUScheduler {
    * @return An array of Processes, sorted by arrival time.
    */
   sortProcessesByRemainingTime(jobQueue: CPUProcess[]) {
-    return jobQueue.sort((a, b) => {
-      if (a.getRemainingTime() >= b.getRemainingTime()) {
-        return 1;
-      } else if (a.getRemainingTime() === b.getRemainingTime()) {
-        if (a.getArrivalTime() > b.getArrivalTime()) {
-          return 1;
-        } else if (
-          a.getArrivalTime() === b.getArrivalTime() &&
-          a.getBurstTime() > b.getBurstTime()
-        ) {
-          return 1;
-        } else if (
-          a.getArrivalTime() === b.getArrivalTime() &&
-          a.getBurstTime() === b.getBurstTime() &&
-          a.getName() > b.getName()
-        ) {
-          return 1;
-        }
-      }
-      return -1;
-    });
+    return jobQueue.sort(
+      (a, b) =>
+        a.getRemainingTime() - b.getRemainingTime() ||
+        a.getArrivalTime() - b.getArrivalTime() ||
+        a.getBurstTime() - b.getBurstTime() ||
+        a.getName().localeCompare(b.getName()),
+    );
   }
 
   /**

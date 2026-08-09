@@ -1,13 +1,17 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Trash2 } from "lucide-react";
 import { gql } from "@apollo/client";
 import { useMutation } from "@apollo/client/react";
 import { ModalContext } from "../../contexts/ModalContext";
 import Button from "../ui/Button";
+import type { ApiErrors, MutationPayload } from "../../types/api";
 
 const ConfirmDeleteOrg = ({ name }: { name: string }) => {
   const [activeModal, setActiveModal] = useContext(ModalContext);
-  const [deleteOrganisation] = useMutation(gql`
+  const [deleteOrganisation, { loading }] = useMutation<
+    { deleteOrganisation: MutationPayload },
+    { name: string; token: string }
+  >(gql`
     mutation DeleteOrganisation($name: String!, $token: String!) {
       deleteOrganisation(name: $name, token: $token) {
         success
@@ -15,7 +19,12 @@ const ConfirmDeleteOrg = ({ name }: { name: string }) => {
       }
     }
   `);
-  const close = () => setActiveModal(null);
+  const [errors, setErrors] = useState<ApiErrors>({});
+  const close = () => {
+    if (loading) return;
+    setErrors({});
+    setActiveModal(null);
+  };
 
   return (
     <div
@@ -28,6 +37,7 @@ const ConfirmDeleteOrg = ({ name }: { name: string }) => {
         type="button"
         className="modal-background"
         aria-label="Cancel deletion"
+        disabled={loading}
         onClick={close}
       />
       <div className="modal-card max-w-md rounded-[4px]">
@@ -38,25 +48,54 @@ const ConfirmDeleteOrg = ({ name }: { name: string }) => {
               Delete Group
             </p>
           </div>
-          <button type="button" className="delete" aria-label="Close" onClick={close} />
+          <button
+            type="button"
+            className="delete"
+            aria-label="Close"
+            disabled={loading}
+            onClick={close}
+          />
         </header>
         <section className="modal-card-body">
           <p className="text-sm leading-6 text-muted-foreground">
             <strong className="text-foreground">{name}</strong> will be permanently deleted. Members
             and managers will lose access to the group and its performance view.
           </p>
+          {Object.values(errors)
+            .flat()
+            .map((error) => (
+              <p key={`${error.code}-${error.message}`} className="mt-3 text-sm text-destructive">
+                {error.message}
+              </p>
+            ))}
         </section>
         <footer className="modal-card-foot">
-          <Button variant="outline" onClick={close}>
+          <Button variant="outline" disabled={loading} onClick={close}>
             Cancel
           </Button>
           <Button
             variant="destructive"
-            onClick={() =>
+            disabled={loading}
+            onClick={() => (
+              setErrors({}),
               deleteOrganisation({
                 variables: { name, token: localStorage.getItem("accessToken") ?? "" },
-              }).then(close)
-            }
+              })
+                .then((result) => {
+                  const payload = result.data?.deleteOrganisation;
+                  if (payload?.success) {
+                    setErrors({});
+                    close();
+                  } else setErrors(payload?.errors ?? {});
+                })
+                .catch(() =>
+                  setErrors({
+                    nonFieldErrors: [
+                      { code: "request_failed", message: "The group could not be deleted." },
+                    ],
+                  }),
+                )
+            )}
           >
             Delete group
           </Button>

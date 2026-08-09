@@ -27,7 +27,11 @@ const AddMemoryProcess = () => {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault(); // Stop the page from refreshing upon submission.
 
-    if (!jobQueue.some((process) => process.name === processName) && processName !== "") {
+    if (
+      !jobQueue.some((process) => process.name === processName) &&
+      processName !== "" &&
+      Number.isFinite(size)
+    ) {
       activeManager.createProcess(processName, size);
       setRunning(!running);
       setSubmissionAttempt(false);
@@ -62,7 +66,7 @@ const AddMemoryProcess = () => {
                 <label className="label">Process Name</label>
                 <div className="control">
                   <input
-                    className={`input ${submissionAttempt && (processName === "" || jobQueue.some((process) => process.name === processName)) ? "is-danger" : null}`}
+                    className={`input ${submissionAttempt && (processName === "" || jobQueue.some((process) => process.name === processName)) ? "is-danger" : ""}`}
                     type="text"
                     value={processName}
                     autoFocus
@@ -84,7 +88,11 @@ const AddMemoryProcess = () => {
                     type="number"
                     defaultValue="100"
                     min="10"
-                    onInput={(event) => setSize(parseInt(event.currentTarget.value))}
+                    required
+                    onInput={(event) => {
+                      const nextSize = event.currentTarget.valueAsNumber;
+                      if (Number.isFinite(nextSize)) setSize(nextSize);
+                    }}
                   />
                 </div>
               </div>

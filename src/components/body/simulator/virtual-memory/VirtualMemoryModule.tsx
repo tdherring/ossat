@@ -271,7 +271,7 @@ const VirtualMemoryModule = () => {
                         Page {page}
                       </span>
                     ))}
-                  {pages.every((page) => frames.includes(page)) && (
+                  {pages.length > 0 && pages.every((page) => frames.includes(page)) && (
                     <span className="text-xs text-muted-foreground">
                       All referenced pages are resident.
                     </span>

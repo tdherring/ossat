@@ -8,8 +8,8 @@ import type { ApiErrors, MutationPayload } from "../../types/api";
 const MyProfile = () => {
   const [activeModal, setActiveModal] = useContext(ModalContext);
   const [username] = useContext(UserContext).username;
-  const [firstName] = useContext(UserContext).firstName;
-  const [lastName] = useContext(UserContext).lastName;
+  const [firstName, setFirstName] = useContext(UserContext).firstName;
+  const [lastName, setLastName] = useContext(UserContext).lastName;
   const [email] = useContext(UserContext).email;
 
   // State for any profile updates.
@@ -36,8 +36,8 @@ const MyProfile = () => {
 
     updateAccount({
       variables: {
-        firstName: newFirstName ? newFirstName : firstName,
-        lastName: newLastName ? newLastName : lastName,
+        firstName: newFirstName ?? firstName,
+        lastName: newLastName ?? lastName,
       },
     }).then((result) => {
       const payload = result.data?.updateAccount;
@@ -45,6 +45,8 @@ const MyProfile = () => {
       setUpdateResult(payload);
       if (!payload.errors) {
         setUpdateResultErrors(null);
+        setFirstName(newFirstName ?? firstName);
+        setLastName(newLastName ?? lastName);
       } else {
         setUpdateResultErrors(payload.errors);
       }

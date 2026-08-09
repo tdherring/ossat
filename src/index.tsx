@@ -1,6 +1,6 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import "./styles/globals.scss";
+import "./styles/globals.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { CookiesProvider } from "react-cookie";
@@ -12,7 +12,7 @@ import { isDemoMode } from "./lib/demoMode";
 import { BrowserRouter } from "react-router-dom";
 
 const httpLink = createHttpLink({
-  uri: "http://localhost:8000/graphql",
+  uri: import.meta.env.VITE_GRAPHQL_URI ?? "http://localhost:8000/graphql",
 });
 
 const authLink = setContext((_, { headers }) => {

@@ -85,12 +85,17 @@ const MemoryControls = ({ policyDescription }: { policyDescription: string }) =>
       icon: autoAllocating ? Pause : Play,
       action: () => {
         if (jobQueue.length === 0 || blocks.length === 0) return;
+        if (autoAllocating) {
+          setAutoAllocating(false);
+          if (intervalVal) clearInterval(intervalVal);
+          setIntervalVal(null);
+          return;
+        }
         activeManager.allocateProcesses();
         const nextAllocation = activeManager.getAllocated();
         setAllocated(nextAllocation);
-        if (Object.keys(nextAllocation).length > 0) setAutoAllocating(!autoAllocating);
-        if (autoAllocating && intervalVal) clearInterval(intervalVal);
-        if (!autoAllocating && timeDelta < Object.keys(nextAllocation).length) {
+        if (timeDelta < Object.keys(nextAllocation).length) {
+          setAutoAllocating(true);
           setIntervalVal(
             setInterval(
               () => setTimeDelta((currentTime) => currentTime + 1),
@@ -164,7 +169,10 @@ const MemoryControls = ({ policyDescription }: { policyDescription: string }) =>
                   step="0.1"
                   aria-label="Playback speed multiplier"
                   onChange={(event) => {
-                    setSimulationSpeed(event.currentTarget.valueAsNumber);
+                    const nextSpeed = event.currentTarget.valueAsNumber;
+                    if (Number.isFinite(nextSpeed) && nextSpeed >= 0.1 && nextSpeed <= 10) {
+                      setSimulationSpeed(nextSpeed);
+                    }
                   }}
                 />
               </span>

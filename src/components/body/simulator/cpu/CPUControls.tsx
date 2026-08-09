@@ -226,7 +226,10 @@ const CPUControls = ({ policyDescription }: { policyDescription: string }) => {
                   aria-label="Playback speed multiplier"
                   disabled={autoScheduling}
                   onChange={(event) => {
-                    setSimulationSpeed(event.currentTarget.valueAsNumber);
+                    const nextSpeed = event.currentTarget.valueAsNumber;
+                    if (Number.isFinite(nextSpeed) && nextSpeed >= 0.1 && nextSpeed <= 10) {
+                      setSimulationSpeed(nextSpeed);
+                    }
                   }}
                 />
               </span>

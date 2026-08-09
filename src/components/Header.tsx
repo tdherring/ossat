@@ -107,6 +107,7 @@ const Header = () => {
         setFirstName(null);
         setLastName(null);
         setUsername(null);
+        setEmail(null);
         removeCookie("refreshToken");
         localStorage.removeItem("accessToken");
         routerNavigate(routes.home);

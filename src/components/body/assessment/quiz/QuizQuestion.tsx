@@ -1,48 +1,51 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { CheckCircle2, XCircle } from "lucide-react";
 import { UserContext } from "../../../../contexts/UserContext";
 import { gql } from "@apollo/client";
 import { useMutation } from "@apollo/client/react";
 import type { QuizBlock, QuizProcess } from "../../../../types/assessment";
 
-const ProcessTable = ({ processes, memory }: { processes: QuizProcess[]; memory: boolean }) => (
-  <div className="table-container border-t">
-    <table className="table table-fixed w-full text-xs">
-      <thead>
-        <tr>
-          <th className="px-2">Process</th>
-          {memory ? (
-            <th className="px-2 text-right">Size</th>
-          ) : (
-            <>
-              <th className="px-2 text-right">Arrival</th>
-              <th className="px-2 text-right">Burst</th>
-              {processes[0]?.priority !== null && <th className="px-2 text-right">Priority</th>}
-            </>
-          )}
-        </tr>
-      </thead>
-      <tbody>
-        {processes.map((process) => (
-          <tr key={process.name}>
-            <td className="px-2 py-2 font-mono font-semibold">{process.name}</td>
+const ProcessTable = ({ processes, memory }: { processes: QuizProcess[]; memory: boolean }) => {
+  const hasPriority = !memory && processes.some((process) => process.priority != null);
+  return (
+    <div className="table-container border-t">
+      <table className="table table-fixed w-full text-xs">
+        <thead>
+          <tr>
+            <th className="px-2">Process</th>
             {memory ? (
-              <td className="px-2 py-2 text-right font-mono">{process.size}</td>
+              <th className="px-2 text-right">Size</th>
             ) : (
               <>
-                <td className="px-2 py-2 text-right font-mono">{process.arrival_time ?? "—"}</td>
-                <td className="px-2 py-2 text-right font-mono">{process.burst_time}</td>
-                {process.priority !== null && (
-                  <td className="px-2 py-2 text-right font-mono">{process.priority}</td>
-                )}
+                <th className="px-2 text-right">Arrival</th>
+                <th className="px-2 text-right">Burst</th>
+                {hasPriority && <th className="px-2 text-right">Priority</th>}
               </>
             )}
           </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
-);
+        </thead>
+        <tbody>
+          {processes.map((process) => (
+            <tr key={process.name}>
+              <td className="px-2 py-2 font-mono font-semibold">{process.name}</td>
+              {memory ? (
+                <td className="px-2 py-2 text-right font-mono">{process.size}</td>
+              ) : (
+                <>
+                  <td className="px-2 py-2 text-right font-mono">{process.arrival_time ?? "—"}</td>
+                  <td className="px-2 py-2 text-right font-mono">{process.burst_time}</td>
+                  {hasPriority && (
+                    <td className="px-2 py-2 text-right font-mono">{process.priority ?? "—"}</td>
+                  )}
+                </>
+              )}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+};
 
 const BlockTable = ({ blocks }: { blocks: QuizBlock[] }) => (
   <div className="table-container border-t">
@@ -98,7 +101,11 @@ const QuizQuestion = ({
   const [username] = useContext(UserContext).username;
   const isReadOnly = submitted || readOnly;
   const isMemoryQuestion = Boolean(blocks);
-  const isCorrect = submitted && selectedAnswer?.name === correctAnswer?.name;
+  const [currentAnswer, setCurrentAnswer] = useState(selectedAnswer);
+  const isCorrect =
+    submitted && currentAnswer?.name !== undefined && currentAnswer.name === correctAnswer?.name;
+
+  useEffect(() => setCurrentAnswer(selectedAnswer), [selectedAnswer]);
 
   const [setQuestionAnswer] = useMutation<
     { setQuestionAnswer: { question: { selectedAnswer: string } } },
@@ -142,7 +149,7 @@ const QuizQuestion = ({
           </span>
           <div className="mt-3 grid gap-2">
             {answers?.map((answer) => {
-              const selected = selectedAnswer?.name === answer.name;
+              const selected = currentAnswer?.name === answer.name;
               const correct = submitted && correctAnswer?.name === answer.name;
               return (
                 <label
@@ -153,8 +160,10 @@ const QuizQuestion = ({
                     type="radio"
                     name={`question-${id}`}
                     className="mt-1 accent-[hsl(var(--primary))]"
-                    defaultChecked={selected}
-                    onChange={() =>
+                    checked={selected}
+                    onChange={() => {
+                      const previousAnswer = currentAnswer;
+                      setCurrentAnswer(answer);
                       setQuestionAnswer({
                         variables: {
                           id,
@@ -162,8 +171,11 @@ const QuizQuestion = ({
                           username: username ?? "",
                           token: localStorage.getItem("accessToken") ?? "",
                         },
-                      })
-                    }
+                      }).catch((error) => {
+                        console.error("Could not save the selected answer.", error);
+                        setCurrentAnswer(previousAnswer);
+                      });
+                    }}
                     disabled={isReadOnly}
                   />
                   <span className="min-w-0 flex-1">

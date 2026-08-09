@@ -69,6 +69,10 @@ const OrganisationLandingPage = () => {
           setManagerOrganisations(user.managerOf ?? []);
           setIsOrgCreator(Boolean(user.isOrgCreator));
           setMemberOrganisation(user.memberOf?.[0] ?? null);
+        })
+        .catch(() => {
+          setLoading(false);
+          setLoadError(true);
         }),
     [client],
   );
@@ -202,8 +206,8 @@ const OrganisationLandingPage = () => {
                       token: localStorage.getItem("accessToken") ?? "",
                     },
                   }).then((result) => {
-                    if (result.data?.createOrganisation.errors)
-                      setCreateOrganisationErrors(result.data.createOrganisation.errors);
+                    const payload = result.data?.createOrganisation;
+                    if (!payload?.success) setCreateOrganisationErrors(payload?.errors ?? {});
                     else {
                       setCreateOrganisationErrors({});
                       setNewOrgName("");
@@ -372,7 +376,7 @@ const OrganisationLandingPage = () => {
       </form>
       {joinOrganisationResult?.success && (
         <p className="border-l-2 border-primary pl-3 text-sm text-primary">
-          Joined {joinOrganisationResult.organisation.name}.
+          Joined {joinOrganisationResult.organisation?.name ?? "the group"}.
         </p>
       )}
       {Object.values(joinOrganisationResultErrors)

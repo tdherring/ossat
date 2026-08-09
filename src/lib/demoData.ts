@@ -76,13 +76,13 @@ const commonAssessments = (prefix: string, scores: number[]) => [
 ];
 
 export const demoAssessmentsByUser: Record<string, DemoAssessment[]> = {
-  "demo.teacher": commonAssessments("teacher", [3, 3, 3, 2, 3, 3, 2, 3, 3]),
-  ada: commonAssessments("ada", [2, 3, 3, 3, 2, 3, 3, 3, 2]),
-  ben: commonAssessments("ben", [2, 2, 2, 3, 1, 2, 2, 2, 3]),
-  charlie: commonAssessments("charlie", [3, 2, 3, 2, 3, 2, 1, 2, 2]),
-  dina: commonAssessments("dina", [1, 2, 2, 1, 2, 3, 2, 3, 3]),
-  eli: commonAssessments("eli", [3, 3, 3, 3, 3, 2, 3, 2, 3]),
-  fatima: commonAssessments("fatima", [2, 3, 2, 3, 3, 3, 2, 2, 2]),
+  "demo.teacher": commonAssessments("teacher", [3, 3, 3, 3, 3, 3, 2, 2, 2]),
+  ada: commonAssessments("ada", [3, 3, 3, 3, 3, 3, 2, 2, 2]),
+  ben: commonAssessments("ben", [3, 3, 3, 3, 3, 3, 2, 2, 2]),
+  charlie: commonAssessments("charlie", [3, 3, 3, 3, 3, 3, 2, 2, 2]),
+  dina: commonAssessments("dina", [3, 3, 3, 3, 3, 3, 2, 2, 2]),
+  eli: commonAssessments("eli", [3, 3, 3, 3, 3, 3, 2, 2, 2]),
+  fatima: commonAssessments("fatima", [3, 3, 3, 3, 3, 3, 2, 2, 2]),
 };
 
 const cpuProcesses = [
