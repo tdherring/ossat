@@ -47,4 +47,27 @@ describe("simulateVirtualMemory", () => {
     expect(finalStep?.evicted).toBe(1);
     expect(finalStep?.tlb.some(({ page }) => page === 1)).toBe(false);
   });
+
+  it("distinguishes memory hits from TLB hits", () => {
+    const trace = simulateVirtualMemory([1, 2, 1, 2], 2, 1, "FIFO");
+
+    expect(trace[2]).toMatchObject({ hit: true, tlbHit: false, faults: 2, hits: 1 });
+    expect(trace[3]).toMatchObject({ hit: true, tlbHit: false, faults: 2, hits: 2 });
+  });
+
+  it("reports a TLB hit when the translation remains cached", () => {
+    const trace = simulateVirtualMemory([1, 1], 1, 1, "LRU");
+
+    expect(trace[1]).toMatchObject({ hit: true, tlbHit: true, frame: 0 });
+  });
+
+  it("supports a disabled TLB", () => {
+    const trace = simulateVirtualMemory([1, 1], 1, 0, "FIFO");
+
+    expect(trace.every(({ tlb, tlbHit }) => tlb.length === 0 && !tlbHit)).toBe(true);
+  });
+
+  it("returns no steps for an empty reference string", () => {
+    expect(simulateVirtualMemory([], 3, 2, "Optimal")).toEqual([]);
+  });
 });

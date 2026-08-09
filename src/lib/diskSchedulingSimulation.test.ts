@@ -25,6 +25,14 @@ describe("simulateDiskScheduling", () => {
     expect(requestOrder("SSTF")).toEqual([65, 67, 37, 14, 98, 122, 124, 183]);
   });
 
+  it("breaks equal-distance SSTF ties toward the lower cylinder", () => {
+    const trace = simulateDiskScheduling([60, 40], 50, 199, "SSTF", "right");
+
+    expect(trace.filter(({ kind }) => kind === "request").map(({ cylinder }) => cylinder)).toEqual([
+      40, 60,
+    ]);
+  });
+
   it.each([
     ["SCAN", [65, 67, 98, 122, 124, 183, 37, 14], [199]],
     ["C-SCAN", [65, 67, 98, 122, 124, 183, 14, 37], [199, 0]],
@@ -50,6 +58,31 @@ describe("simulateDiskScheduling", () => {
     expect(trace.filter(({ kind }) => kind === "request")).toHaveLength(2);
     expect(trace.at(-1)?.cumulativeMovement).toBe(10);
   });
+
+  it.each([
+    ["SCAN", [37, 14, 65, 67, 98, 122, 124, 183], [0]],
+    ["C-SCAN", [37, 14, 183, 124, 122, 98, 67, 65], [0, 199]],
+    ["LOOK", [37, 14, 65, 67, 98, 122, 124, 183], []],
+    ["C-LOOK", [37, 14, 183, 124, 122, 98, 67, 65], []],
+  ] satisfies [DiskSchedulingPolicy, number[], number[]][])(
+    "%s supports leftward traversal",
+    (policy, expectedRequests, expectedBoundaries) => {
+      const trace = simulateDiskScheduling(requests, 53, 199, policy, "left");
+
+      expect(
+        trace.filter(({ kind }) => kind === "request").map(({ cylinder }) => cylinder),
+      ).toEqual(expectedRequests);
+      expect(
+        trace.filter(({ kind }) => kind === "boundary").map(({ cylinder }) => cylinder),
+      ).toEqual(expectedBoundaries);
+    },
+  );
+
+  it("returns only the starting position for an empty queue", () => {
+    expect(simulateDiskScheduling([], 12, 199, "FCFS", "right")).toEqual([
+      { index: 0, cylinder: 12, kind: "start", movement: 0, cumulativeMovement: 0 },
+    ]);
+  });
 });
 
 describe("constrainDiskGeometry", () => {
@@ -60,5 +93,9 @@ describe("constrainDiskGeometry", () => {
   it("enforces disk and head boundaries", () => {
     expect(constrainDiskGeometry(2_000, -5)).toEqual({ maxCylinder: 999, head: 0 });
     expect(constrainDiskGeometry(Number.NaN, 150)).toEqual({ maxCylinder: 199, head: 150 });
+  });
+
+  it("raises a too-small disk to its minimum geometry", () => {
+    expect(constrainDiskGeometry(-10, 5)).toEqual({ maxCylinder: 20, head: 5 });
   });
 });
