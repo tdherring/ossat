@@ -115,6 +115,18 @@ export const MEMORY_DEMOS = [
     blocks: COMPARISON_BLOCKS,
     processes: COMPARISON_PROCESSES,
   },
+  {
+    id: "first-fit-fragmentation",
+    label: "First Fit · Fragmentation pressure",
+    policy: "First Fit",
+    blocks: [120, 300, 180, 420, 260],
+    processes: [
+      { name: "Process 1", size: 110 },
+      { name: "Process 2", size: 170 },
+      { name: "Process 3", size: 250 },
+      { name: "Process 4", size: 190 },
+    ],
+  },
 ] satisfies MemoryDemo[];
 
 type DemoScheduler = CPUScheduler & { setTimeQuantum?: (timeQuantum: number) => void };

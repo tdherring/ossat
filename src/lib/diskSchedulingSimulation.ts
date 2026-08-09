@@ -52,6 +52,15 @@ export const DISK_DEMOS: DiskDemo[] = [
     maxCylinder: 199,
     requests: [10, 44, 77, 89, 120, 150, 176, 188],
   },
+  {
+    id: "look-direction-change",
+    label: "LOOK · Direction reversal",
+    policy: "LOOK",
+    direction: "left",
+    head: 110,
+    maxCylinder: 199,
+    requests: [12, 38, 72, 96, 118, 142, 168, 190],
+  },
 ];
 
 export const constrainDiskGeometry = (requestedMaxCylinder: number, currentHead: number) => {
