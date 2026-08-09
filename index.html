@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#101722" />
+    <meta
+      name="description"
+      content="OSSAT — the Operating System Simulation &amp; Assessment Tool for interactive CPU scheduling and memory management learning."
+    />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <title>OSSAT · Operating System Simulation &amp; Assessment Tool</title>
+    <script>
+      const savedTheme = localStorage.getItem("theme");
+      const preferredTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
+      document.documentElement.dataset.theme = savedTheme ?? preferredTheme;
+    </script>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <script type="module" src="/src/index.tsx"></script>
+  </body>
+</html>
