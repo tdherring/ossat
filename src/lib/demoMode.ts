@@ -1,1 +1,4 @@
-export const isDemoMode = import.meta.env.VITE_DATA_MODE === "demo";
+const dataMode = import.meta.env.VITE_DATA_MODE;
+
+export const isDemoMode = dataMode === "demo";
+export const isApiMode = dataMode === "api";

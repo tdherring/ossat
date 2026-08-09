@@ -32,7 +32,7 @@ import { ModalContext } from "../contexts/ModalContext";
 import { UserContext } from "../contexts/UserContext";
 import Button from "./ui/Button";
 import { getInitialThemePreference, resolveTheme, type ThemePreference } from "../lib/theme";
-import { isDemoMode } from "../lib/demoMode";
+import { isApiMode, isDemoMode } from "../lib/demoMode";
 import { demoUser } from "../lib/demoData";
 import type { MutationPayload } from "../types/api";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -227,28 +227,26 @@ const Header = () => {
   const accountControls = (mobile = false) => (
     <div className="relative grid gap-2">
       {!loggedIn ? (
-        <div className="flex items-center gap-2">
+        <div className="grid gap-2">
           {isDemoMode ? (
-            <Button variant="outline" className="min-w-0 flex-1 gap-3" onClick={enterDemo}>
+            <Button variant="outline" className="w-full gap-3" onClick={enterDemo}>
               <User className="h-[18px] w-[18px]" strokeWidth={1.75} /> Enter demo
             </Button>
-          ) : (
-            import.meta.env.VITE_DISABLE_LOGIN !== "true" && (
-              <>
-                <Button className="min-w-0 flex-1 px-2" onClick={() => setActiveModal("register")}>
-                  Register
-                </Button>
-                <Button
-                  variant="outline"
-                  className="min-w-0 flex-1 px-2"
-                  onClick={() => setActiveModal("logIn")}
-                >
-                  Log in
-                </Button>
-              </>
-            )
-          )}
-          {themeControl()}
+          ) : isApiMode ? (
+            <div className="flex items-center gap-2">
+              <Button className="min-w-0 flex-1 px-2" onClick={() => setActiveModal("register")}>
+                Register
+              </Button>
+              <Button
+                variant="outline"
+                className="min-w-0 flex-1 px-2"
+                onClick={() => setActiveModal("logIn")}
+              >
+                Log in
+              </Button>
+            </div>
+          ) : null}
+          {themeControl(true)}
         </div>
       ) : isDemoMode ? (
         <>
@@ -374,12 +372,16 @@ const Header = () => {
         )}
       </header>
 
-      <LogIn />
-      <Register />
       <About />
-      <MyProfile />
-      <ChangePassword />
-      <RequestPasswordReset />
+      {isApiMode && (
+        <>
+          <LogIn />
+          <Register />
+          <MyProfile />
+          <ChangePassword />
+          <RequestPasswordReset />
+        </>
+      )}
     </>
   );
 };

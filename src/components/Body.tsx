@@ -5,6 +5,7 @@ import { MemoryManagerProvider } from "../contexts/MemoryManagerContext";
 import { CPUSimulatorProvider } from "../contexts/CPUSimulatorContext";
 import { routes, simulatorPaths } from "../lib/routes";
 import { UserContext } from "../contexts/UserContext";
+import { isApiMode } from "../lib/demoMode";
 
 const SimulationLandingPage = lazy(() => import("./body/simulator/SimulationLandingPage"));
 const CPUModule = lazy(() => import("./body/simulator/cpu/CPUModule"));
@@ -69,7 +70,11 @@ const Body = () => {
 function AuthenticatedRoute() {
   const [cookies] = useCookies(["refreshToken"]);
   const [loggedIn] = useContext(UserContext).loggedIn;
-  return cookies.refreshToken || loggedIn ? <Outlet /> : <Navigate to={routes.home} replace />;
+  return loggedIn || (isApiMode && cookies.refreshToken) ? (
+    <Outlet />
+  ) : (
+    <Navigate to={routes.home} replace />
+  );
 }
 
 function ActivateAccountRoute() {

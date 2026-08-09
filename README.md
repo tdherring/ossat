@@ -9,7 +9,7 @@
 
 ## Frontend demo data
 
-`yarn dev` uses local demo data in development, so the authenticated assessment, learning-group, and performance-chart pages can be viewed without running the API or a database. Production builds continue to use `http://localhost:8000/graphql` unless demo mode is explicitly enabled.
+`yarn dev` uses local demo data in development, so the authenticated assessment, learning-group, and performance-chart pages can be viewed without running the API or a database. Production builds default to frontend-only mode: API-backed account controls are hidden unless API mode is explicitly enabled at build time.
 
 To override the mode for a command:
 
@@ -17,6 +17,8 @@ To override the mode for a command:
 VITE_DATA_MODE=demo yarn dev
 VITE_DATA_MODE=api yarn dev
 ```
+
+Set `VITE_DATA_MODE=api` in a production host only when the GraphQL API is available. Leaving it unset keeps registration, login, and authenticated routes disabled.
 
 > A Final Year Master's Project, developed for [King's College London](https://www.kcl.ac.uk/).
 

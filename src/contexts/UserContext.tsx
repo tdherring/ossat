@@ -10,7 +10,7 @@ import { gql } from "@apollo/client";
 import { useMutation, useApolloClient } from "@apollo/client/react";
 import { useCookies } from "react-cookie";
 import { demoUser } from "../lib/demoData";
-import { isDemoMode } from "../lib/demoMode";
+import { isApiMode, isDemoMode } from "../lib/demoMode";
 
 type StatePair<T> = [T, Dispatch<SetStateAction<T>>];
 type UserContextValue = {
@@ -99,6 +99,11 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       setLastName(demoUser.lastName);
       setUsername(demoUser.username);
       setEmail(demoUser.email);
+      return undefined;
+    }
+
+    if (!isApiMode) {
+      invalidate();
       return undefined;
     }
 
