@@ -1,4 +1,4 @@
-import { useCallback, useContext, useState, useEffect } from "react";
+import { useCallback, useContext, useState, useEffect, useRef } from "react";
 import { Pause, Play, SkipBack, SkipForward, StepBack, StepForward } from "lucide-react";
 import { ModalContext } from "../../../../contexts/ModalContext";
 import { MemoryManagerContext, type ManagerName } from "../../../../contexts/MemoryManagerContext";
@@ -25,15 +25,17 @@ const MemoryControls = ({ policyDescription }: { policyDescription: string }) =>
 
   const [autoAllocating, setAutoAllocating] = useState(false);
   const [intervalVal, setIntervalVal] = useState<ReturnType<typeof setInterval> | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const [pendingManagerName, setPendingManagerName] = useState<ManagerName | null>(null);
 
   const stopPlayback = useCallback(() => {
     setAutoAllocating(false);
-    setIntervalVal((currentInterval) => {
-      if (currentInterval) clearInterval(currentInterval);
-      return null;
-    });
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+    setIntervalVal(null);
   }, []);
 
   // Stop the auto allocator from overflowing the allocation boundaries.
@@ -46,7 +48,10 @@ const MemoryControls = ({ policyDescription }: { policyDescription: string }) =>
 
   useEffect(
     () => () => {
-      if (intervalVal) clearInterval(intervalVal);
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
     },
     [intervalVal],
   );
@@ -98,12 +103,12 @@ const MemoryControls = ({ policyDescription }: { policyDescription: string }) =>
         setAllocated(nextAllocation);
         if (timeDelta < Object.keys(nextAllocation).length) {
           setAutoAllocating(true);
-          setIntervalVal(
-            setInterval(
-              () => setTimeDelta((currentTime) => currentTime + 1),
-              1000 / simulationSpeed,
-            ),
+          const newInterval = setInterval(
+            () => setTimeDelta((currentTime) => currentTime + 1),
+            1000 / simulationSpeed,
           );
+          intervalRef.current = newInterval;
+          setIntervalVal(newInterval);
         } else {
           stopPlayback();
         }
