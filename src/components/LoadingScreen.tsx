@@ -1,7 +1,8 @@
 import fullLogo from "../assets/images/full-logo.svg";
 import fullLogoDark from "../assets/images/full-logo-dark.svg";
+import type { Theme } from "../lib/theme";
 
-const LoadingScreen = ({ theme }: { theme: "light" | "dark" }) => (
+const LoadingScreen = ({ theme }: { theme: Theme }) => (
   <section
     className="fixed inset-0 z-50 flex min-h-screen items-center justify-center overflow-hidden bg-background px-6 text-foreground"
     aria-busy="true"

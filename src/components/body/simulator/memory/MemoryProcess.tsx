@@ -1,7 +1,7 @@
 import { useContext } from "react";
-import { Trash2 } from "lucide-react";
 import { MemoryManagerContext } from "../../../../contexts/MemoryManagerContext";
 import type MemoryProcessData from "../../../../simulator/memory/memory_process";
+import DeleteProcessButton from "../DeleteProcessButton";
 
 type ProcessStatus = "Allocating" | "Allocated" | "No fit" | "Waiting";
 
@@ -21,17 +21,6 @@ const ProcessStatusLabel = ({ status }: { status: ProcessStatus }) => (
     )}
     {status}
   </span>
-);
-
-const DeleteProcessButton = ({ name, onDelete }: { name: string; onDelete: () => void }) => (
-  <button
-    type="button"
-    className="inline-flex h-7 w-7 items-center justify-center rounded-[3px] text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-    aria-label={`Delete ${name}`}
-    onClick={onDelete}
-  >
-    <Trash2 className="h-3.5 w-3.5" strokeWidth={1.75} />
-  </button>
 );
 
 const MemoryProcess = ({
@@ -54,7 +43,7 @@ const MemoryProcess = ({
 
   let status: ProcessStatus = "Waiting";
   if (isAllocating) status = "Allocating";
-  if (hasDecision) status = allocated[process.name] ? "Allocated" : "No fit";
+  if (hasDecision) status = allocatedBlock ? "Allocated" : "No fit";
 
   const allocatingClass = isAllocating ? "executing-process" : "";
 

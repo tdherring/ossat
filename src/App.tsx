@@ -16,8 +16,8 @@ function App() {
   }, [initialTheme]);
 
   useEffect(() => {
-    const t = setTimeout(() => setSplashDone(true), 2000);
-    return () => clearTimeout(t);
+    const splashTimer = setTimeout(() => setSplashDone(true), 2000);
+    return () => clearTimeout(splashTimer);
   }, []);
 
   return (
