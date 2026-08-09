@@ -1,0 +1,65 @@
+import { useContext } from "react";
+import { ModalContext } from "../../contexts/ModalContext";
+import { CPUSimulatorContext, type SchedulerName } from "../../contexts/CPUSimulatorContext";
+
+const ConfirmSwitchCPU = ({ schedulerName }: { schedulerName: SchedulerName | null }) => {
+  const [activeModal, setActiveModal] = useContext(ModalContext);
+  const [, setActiveCPUScheduler] = useContext(CPUSimulatorContext).active;
+  const [, setActiveSchedulerName] = useContext(CPUSimulatorContext).activeName;
+  const [, setJobQueue] = useContext(CPUSimulatorContext).jQueue;
+  const [, setTimeDelta] = useContext(CPUSimulatorContext).time;
+  const Scheduler = useContext(CPUSimulatorContext).scheduler;
+
+  return (
+    <div className={`modal p-3 ${activeModal === "confirmSwitchCPU" ? "is-active" : ""}`}>
+      <div className="modal-background" />
+      <div className="modal-card">
+        <header className="modal-card-head">
+          <p className="modal-card-title">Are you sure?</p>
+          <button
+            className="delete"
+            onClick={(event) => {
+              event.preventDefault();
+              setActiveModal(null);
+            }}
+          />
+        </header>
+        <section className="modal-card-body">
+          <div className="content">
+            Are you sure you want to switch CPU scheduling algorithms? The job queue, ready queue,
+            and schedule will be cleared.
+          </div>
+        </section>
+        <footer className="modal-card-foot" style={{ gap: "10px" }}>
+          <a
+            className="button is-primary"
+            href="/#"
+            onClick={(event) => {
+              event.preventDefault();
+              if (!schedulerName) return;
+              setActiveSchedulerName(schedulerName);
+              setActiveCPUScheduler(Scheduler[schedulerName]);
+              setJobQueue([]);
+              setTimeDelta(0);
+              setActiveModal(null);
+            }}
+          >
+            <strong>Yes</strong>
+          </a>
+          <a
+            className="button"
+            href="/#"
+            onClick={(event) => {
+              event.preventDefault();
+              setActiveModal(null);
+            }}
+          >
+            Cancel
+          </a>
+        </footer>
+      </div>
+    </div>
+  );
+};
+
+export default ConfirmSwitchCPU;

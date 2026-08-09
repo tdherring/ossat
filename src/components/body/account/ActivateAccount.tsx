@@ -1,0 +1,150 @@
+import { useState, useEffect, useContext } from "react";
+import { gql } from "@apollo/client";
+import { useMutation } from "@apollo/client/react";
+import { ModalContext } from "../../../contexts/ModalContext";
+import { Mail } from "lucide-react";
+import type { ApiErrors, MutationPayload } from "../../../types/api";
+
+type VerifyData = { verifyAccount: MutationPayload };
+type ResendData = { resendActivationEmail: MutationPayload };
+
+const ActivateAccount = ({ token = "" }: { token?: string }) => {
+  const [, setActiveModal] = useContext(ModalContext);
+
+  const [resendEmail, setResendEmail] = useState("");
+  const [resendLoading, setResendLoading] = useState(false);
+
+  const [activateAccount] = useMutation<VerifyData, { token: string }>(gql`
+    mutation VerifyAccount($token: String!) {
+      verifyAccount(token: $token) {
+        success
+        errors
+      }
+    }
+  `);
+
+  const [activateResult, setActivateResult] = useState<MutationPayload | null>(null);
+  const [activateResultErrors, setActivateResultErrors] = useState<ApiErrors | null>(null);
+
+  const [resendActivationEmail] = useMutation<ResendData, { email: string }>(gql`
+    mutation ResendActivationEmail($email: String!) {
+      resendActivationEmail(email: $email) {
+        success
+        errors
+      }
+    }
+  `);
+
+  const [resendResult, setResendResult] = useState<MutationPayload | null>(null);
+  const [resendResultErrors, setResendResultErrors] = useState<ApiErrors | null>(null);
+
+  useEffect(() => {
+    activateAccount({ variables: { token } }).then((result) => {
+      const payload = result.data?.verifyAccount;
+      if (!payload) return;
+      setActivateResult(payload);
+      if (!payload.errors) {
+        setActivateResultErrors(null);
+      } else {
+        setActivateResultErrors(payload.errors);
+      }
+    });
+  }, [activateAccount, token]);
+
+  return (
+    <div className="container">
+      <div className="box">
+        <p className="title is-size-4">Account Activation</p>
+        <hr className="is-divider mt-2" />
+        {activateResult === null ? (
+          <span className="has-text-vcentered">
+            <p className="py-0 my-0">
+              <button className="button is-primary is-outlined is-loading is-inverted"></button>
+            </p>
+          </span>
+        ) : activateResultErrors ? (
+          // Map all of the error messages from activation and display.
+          Object.keys(activateResultErrors).map((key) => {
+            const error = activateResultErrors[key];
+            if (error[0].code === "invalid_token" || error[0].code === "expired_token")
+              return (
+                <span key={`activate-err-${error[0].code}`}>
+                  <p className="has-text-danger">{error[0].message}</p>
+                  <div className="field has-addons mr-3 pt-3">
+                    <span className="control">
+                      <input
+                        placeholder="Email Address"
+                        className="input"
+                        type="email"
+                        onChange={(event) => {
+                          setResendEmail(event.currentTarget.value);
+                        }}
+                      />
+                    </span>
+                    <span className="control">
+                      <a
+                        className={`button is-primary ${resendLoading && "is-loading"}`}
+                        href="/#"
+                        onClick={(event) => {
+                          event.preventDefault();
+                          setResendLoading(true);
+                          resendActivationEmail({ variables: { email: resendEmail } }).then(
+                            (result) => {
+                              setResendLoading(false);
+                              const payload = result.data?.resendActivationEmail;
+                              if (!payload) return;
+                              setResendResult(payload);
+                              if (!payload.errors) {
+                                setResendResultErrors(null);
+                              } else {
+                                setResendResultErrors(payload.errors);
+                              }
+                            },
+                          );
+                        }}
+                      >
+                        <Mail className="mr-2 h-4 w-4" strokeWidth={1.75} />
+                        Resend Activation Email
+                      </a>
+                    </span>
+                  </div>
+                  {resendResultErrors ? (
+                    Object.keys(resendResultErrors).map((key) => {
+                      const error = resendResultErrors[key];
+                      return (
+                        <p key={`resend-err-${error[0].code}`} className="help is-danger">
+                          {error[0].message}
+                        </p>
+                      );
+                    })
+                  ) : resendResult?.success ? (
+                    <p className="help is-success">
+                      If an account with the email provided exists, a new activation email was sent.
+                      Please check your inbox.
+                    </p>
+                  ) : null}
+                </span>
+              );
+            return <p className="has-text-danger">{error[0].message}</p>;
+          })
+        ) : activateResult?.success ? (
+          <p className="has-text-success">
+            Account successfully activated! Click{" "}
+            <a
+              href="/#"
+              onClick={(event) => {
+                event.preventDefault();
+                setActiveModal("logIn");
+              }}
+            >
+              here
+            </a>{" "}
+            to login.
+          </p>
+        ) : null}
+      </div>
+    </div>
+  );
+};
+
+export default ActivateAccount;
