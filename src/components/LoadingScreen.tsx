@@ -3,7 +3,7 @@ import fullLogoDark from "../assets/images/full-logo-dark.svg";
 
 const LoadingScreen = ({ theme }: { theme: "light" | "dark" }) => (
   <section
-    className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-6 text-foreground"
+    className="fixed inset-0 z-50 flex min-h-screen items-center justify-center overflow-hidden bg-background px-6 text-foreground"
     aria-busy="true"
     aria-live="polite"
   >

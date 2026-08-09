@@ -24,6 +24,10 @@ class MemoryManager {
     this.jobQueue.push(new MemoryProcess(name, size));
   }
 
+  removeProcess(name: string) {
+    this.jobQueue = this.jobQueue.filter((process) => process.name !== name);
+  }
+
   reset() {
     this.jobQueue = [];
     this.blocks = [];

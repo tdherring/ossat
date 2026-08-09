@@ -55,6 +55,16 @@ describe("memory models and manager", () => {
     expect(manager.getJobQueue()).toEqual([]);
     expect(manager.getAllocated()).toEqual({});
   });
+
+  it("removes a process from the job queue by name", () => {
+    const manager = new MemoryManager();
+    manager.createProcess("P1", 50);
+    manager.createProcess("P2", 75);
+
+    manager.removeProcess("P1");
+
+    expect(manager.getJobQueue().map((process) => process.getName())).toEqual(["P2"]);
+  });
 });
 
 describe("contiguous allocation policies", () => {

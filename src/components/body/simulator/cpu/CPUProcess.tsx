@@ -50,7 +50,7 @@ const CPUProcess = ({
   status,
   onDelete,
 }: CPUProcessProps) => {
-  const columnCount = 5 + (showPriority ? 1 : 0) + (onDelete ? 1 : 0);
+  const columnCount = 5 + (showPriority ? 1 : 0);
   const executingClass = status === "EXECUTING" ? "executing-process" : "";
 
   return (
@@ -61,14 +61,14 @@ const CPUProcess = ({
         <td className="px-2 py-2 font-mono tabular-nums">{burstTime}</td>
         <td className="px-2 py-2 font-mono tabular-nums">{remainingTime}</td>
         {showPriority && <td className="px-2 py-2 font-mono tabular-nums">{priority ?? "—"}</td>}
-        <td className="px-2 py-2">
+        <td className="relative px-2 py-2">
           <ProcessStatus status={status} />
+          {onDelete && (
+            <span className="absolute right-1 top-1/2 -translate-y-1/2">
+              <DeleteProcessButton name={name} onDelete={onDelete} />
+            </span>
+          )}
         </td>
-        {onDelete && (
-          <td className="px-1 py-2 text-right">
-            <DeleteProcessButton name={name} onDelete={onDelete} />
-          </td>
-        )}
       </tr>
 
       <tr className={`process-table__mobile-row ${executingClass}`}>

@@ -1,8 +1,46 @@
 import { useContext } from "react";
+import { Trash2 } from "lucide-react";
 import { MemoryManagerContext } from "../../../../contexts/MemoryManagerContext";
 import type MemoryProcessData from "../../../../simulator/memory/memory_process";
 
-const MemoryProcess = ({ process }: { process: MemoryProcessData }) => {
+type ProcessStatus = "Allocating" | "Allocated" | "No fit" | "Waiting";
+
+const statusStyles: Record<ProcessStatus, string> = {
+  Allocating: "text-primary",
+  Allocated: "text-muted-foreground",
+  "No fit": "text-destructive",
+  Waiting: "text-muted-foreground",
+};
+
+const ProcessStatusLabel = ({ status }: { status: ProcessStatus }) => (
+  <span
+    className={`inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.1em] ${statusStyles[status]}`}
+  >
+    {status === "Allocating" && (
+      <span className="h-1.5 w-1.5 animate-pulse bg-primary" aria-hidden="true" />
+    )}
+    {status}
+  </span>
+);
+
+const DeleteProcessButton = ({ name, onDelete }: { name: string; onDelete: () => void }) => (
+  <button
+    type="button"
+    className="inline-flex h-7 w-7 items-center justify-center rounded-[3px] text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+    aria-label={`Delete ${name}`}
+    onClick={onDelete}
+  >
+    <Trash2 className="h-3.5 w-3.5" strokeWidth={1.75} />
+  </button>
+);
+
+const MemoryProcess = ({
+  process,
+  onDelete,
+}: {
+  process: MemoryProcessData;
+  onDelete?: () => void;
+}) => {
   const [timeDelta] = useContext(MemoryManagerContext).time;
   const [allocated] = useContext(MemoryManagerContext).allocated;
   const [blocks] = useContext(MemoryManagerContext).blocks;
@@ -14,49 +52,39 @@ const MemoryProcess = ({ process }: { process: MemoryProcessData }) => {
   const size = process.getSize ? process.getSize() : process.size;
   const placement = blockIndex >= 0 ? `Block ${blockIndex + 1}` : "—";
 
-  let status = "Waiting";
+  let status: ProcessStatus = "Waiting";
   if (isAllocating) status = "Allocating";
   if (hasDecision) status = allocated[process.name] ? "Allocated" : "No fit";
 
-  const statusStyle = {
-    Allocating: "bg-primary",
-    Allocated: "bg-primary/50",
-    "No fit": "bg-destructive",
-    Waiting: "border border-border bg-background",
-  }[status];
-  const statusText = isAllocating
-    ? "text-primary"
-    : status === "No fit"
-      ? "text-destructive"
-      : "text-muted-foreground";
   const allocatingClass = isAllocating ? "executing-process" : "";
-
-  const processIdentity = (
-    <div className="flex min-w-0 items-center gap-3">
-      <span
-        className={`h-2.5 w-2.5 shrink-0 ${statusStyle} ${isAllocating ? "animate-pulse" : ""}`}
-        aria-hidden="true"
-      />
-      <div className="min-w-0">
-        <strong className="block truncate font-mono text-sm text-foreground">{process.name}</strong>
-        <span className={`text-[10px] font-semibold uppercase tracking-[0.12em] ${statusText}`}>
-          {status}
-        </span>
-      </div>
-    </div>
-  );
 
   return (
     <>
       <tr className={`process-table__desktop-row ${allocatingClass}`}>
-        <td className="min-w-[9rem] px-2">{processIdentity}</td>
-        <td className="px-2 font-mono tabular-nums">{size}</td>
-        <td className="px-2 font-mono text-muted-foreground">{placement}</td>
+        <td className="min-w-[9rem] px-2 py-2 font-mono font-semibold text-foreground">
+          {process.name}
+        </td>
+        <td className="px-2 py-2 font-mono tabular-nums">{size}</td>
+        <td className="px-2 py-2 font-mono text-muted-foreground">{placement}</td>
+        <td className="relative px-2 py-2">
+          <ProcessStatusLabel status={status} />
+          {onDelete && (
+            <span className="absolute right-1 top-1/2 -translate-y-1/2">
+              <DeleteProcessButton name={process.name} onDelete={onDelete} />
+            </span>
+          )}
+        </td>
       </tr>
 
       <tr className={`process-table__mobile-row ${allocatingClass}`}>
-        <td colSpan={3} className="px-3 py-3">
-          {processIdentity}
+        <td colSpan={4} className="px-3 py-3">
+          <div className="flex items-center justify-between gap-3">
+            <strong className="truncate font-mono text-sm text-foreground">{process.name}</strong>
+            <div className="flex shrink-0 items-center gap-2">
+              <ProcessStatusLabel status={status} />
+              {onDelete && <DeleteProcessButton name={process.name} onDelete={onDelete} />}
+            </div>
+          </div>
           <dl className="mt-3 grid grid-cols-2 gap-4">
             <div>
               <dt className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">

@@ -5,9 +5,16 @@ import { MemoryManagerContext } from "../../../../contexts/MemoryManagerContext"
 import { ModalContext } from "../../../../contexts/ModalContext";
 
 const MemoryJobQueue = () => {
-  const [jobQueue] = useContext(MemoryManagerContext).jQueue;
+  const [jobQueue, setJobQueue] = useContext(MemoryManagerContext).jQueue;
+  const [activeManager] = useContext(MemoryManagerContext).active;
   const [allocated] = useContext(MemoryManagerContext).allocated;
   const [, setActiveModal] = useContext(ModalContext);
+  const hasStarted = Object.keys(allocated).length > 0;
+
+  const deleteProcess = (processName: string) => {
+    activeManager.removeProcess(processName);
+    setJobQueue([...activeManager.getJobQueue()]);
+  };
 
   return (
     <div className="lg:flex lg:h-full lg:min-h-0 lg:flex-col">
@@ -19,7 +26,7 @@ const MemoryJobQueue = () => {
           type="button"
           className="button h-9 px-3"
           onClick={() => setActiveModal("addMemoryProcess")}
-          disabled={Object.keys(allocated).length > 0}
+          disabled={hasStarted}
         >
           <Plus className="mr-2 h-4 w-4" strokeWidth={1.75} /> Add process
         </button>
@@ -33,14 +40,19 @@ const MemoryJobQueue = () => {
           <table className="table table-fixed w-full">
             <thead className="process-table__desktop-header">
               <tr>
-                <th className="w-[46%] px-2">Process</th>
-                <th className="w-[22%] px-2">Size</th>
+                <th className="w-[36%] px-2">Process</th>
+                <th className="w-[18%] px-2">Size</th>
                 <th className="px-2">Placement</th>
+                <th className="px-2">State</th>
               </tr>
             </thead>
             <tbody>
               {jobQueue.map((process) => (
-                <MemoryProcess key={process.name} process={process} />
+                <MemoryProcess
+                  key={process.name}
+                  process={process}
+                  onDelete={hasStarted ? undefined : () => deleteProcess(process.name)}
+                />
               ))}
             </tbody>
           </table>

@@ -54,11 +54,6 @@ const CPUJobQueue = () => {
                 <th className="px-2">Remaining</th>
                 {showPriority && <th className="px-2">Priority</th>}
                 <th className="px-2">State</th>
-                {!hasStarted && (
-                  <th className="w-10 px-1">
-                    <span className="sr-only">Actions</span>
-                  </th>
-                )}
               </tr>
             </thead>
             <tbody>

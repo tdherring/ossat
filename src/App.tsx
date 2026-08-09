@@ -20,9 +20,7 @@ function App() {
     return () => clearTimeout(t);
   }, []);
 
-  return !splashDone ? (
-    <LoadingScreen theme={initialTheme} />
-  ) : (
+  return (
     <>
       <UserProvider>
         <ModalProvider>
@@ -31,6 +29,7 @@ function App() {
           <Footer />
         </ModalProvider>
       </UserProvider>
+      {!splashDone && <LoadingScreen theme={initialTheme} />}
     </>
   );
 }
