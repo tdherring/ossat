@@ -39,18 +39,32 @@ const MyProfile = () => {
         firstName: newFirstName ?? firstName,
         lastName: newLastName ?? lastName,
       },
-    }).then((result) => {
-      const payload = result.data?.updateAccount;
-      if (!payload) return;
-      setUpdateResult(payload);
-      if (!payload.errors) {
-        setUpdateResultErrors(null);
-        setFirstName(newFirstName ?? firstName);
-        setLastName(newLastName ?? lastName);
-      } else {
-        setUpdateResultErrors(payload.errors);
-      }
-    });
+    })
+      .then((result) => {
+        const payload = result.data?.updateAccount;
+        if (!payload) throw new Error("Missing profile update response");
+        setUpdateResult(payload);
+        if (payload.success) {
+          setUpdateResultErrors(null);
+          setFirstName(newFirstName ?? firstName);
+          setLastName(newLastName ?? lastName);
+        } else {
+          setUpdateResultErrors(
+            payload.errors ?? {
+              nonFieldErrors: [
+                { code: "request_failed", message: "The profile could not be updated." },
+              ],
+            },
+          );
+        }
+      })
+      .catch(() =>
+        setUpdateResultErrors({
+          nonFieldErrors: [
+            { code: "request_failed", message: "The profile could not be updated." },
+          ],
+        }),
+      );
   };
 
   return (
@@ -123,9 +137,11 @@ const MyProfile = () => {
               // Map all of the error messages from profile update and display at bottom of form.
               Object.keys(updateResultErrors).map((key) => {
                 const error = updateResultErrors[key];
+                const firstError = error[0];
+                if (!firstError) return null;
                 return (
-                  <p key={`update-result-err-${error[0].code}`} className="help is-danger">
-                    {error[0].message}
+                  <p key={`update-result-err-${firstError.code}`} className="help is-danger">
+                    {firstError.message}
                   </p>
                 );
               })

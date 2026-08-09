@@ -107,7 +107,7 @@ const QuizQuestion = ({
 
   useEffect(() => setCurrentAnswer(selectedAnswer), [selectedAnswer]);
 
-  const [setQuestionAnswer] = useMutation<
+  const [setQuestionAnswer, { loading: savingAnswer }] = useMutation<
     { setQuestionAnswer: { question: { selectedAnswer: string } } },
     { id: string; answer: string; username: string; token: string }
   >(gql`
@@ -176,7 +176,7 @@ const QuizQuestion = ({
                         setCurrentAnswer(previousAnswer);
                       });
                     }}
-                    disabled={isReadOnly}
+                    disabled={isReadOnly || savingAnswer}
                   />
                   <span className="min-w-0 flex-1">
                     <strong className="font-mono">{answer.name}</strong>

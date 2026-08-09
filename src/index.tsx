@@ -13,6 +13,7 @@ import { BrowserRouter } from "react-router-dom";
 
 const httpLink = createHttpLink({
   uri: import.meta.env.VITE_GRAPHQL_URI ?? "http://localhost:8000/graphql",
+  credentials: "include",
 });
 
 const authLink = setContext((_, { headers }) => {

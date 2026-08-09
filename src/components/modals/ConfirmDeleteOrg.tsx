@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Trash2 } from "lucide-react";
 import { gql } from "@apollo/client";
 import { useMutation } from "@apollo/client/react";
@@ -20,18 +20,59 @@ const ConfirmDeleteOrg = ({ name }: { name: string }) => {
     }
   `);
   const [errors, setErrors] = useState<ApiErrors>({});
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
   const close = () => {
     if (loading) return;
     setErrors({});
     setActiveModal(null);
   };
 
+  useEffect(() => {
+    if (activeModal !== "confirmDeleteOrg") return;
+    previousFocusRef.current = document.activeElement as HTMLElement | null;
+    const dialog = dialogRef.current;
+    const getFocusable = () =>
+      dialog?.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      );
+    const focusable = getFocusable();
+    focusable?.[0]?.focus();
+
+    const trapFocus = (event: KeyboardEvent) => {
+      if (event.key !== "Tab") return;
+      const currentFocusable = getFocusable();
+      if (!currentFocusable?.length) {
+        event.preventDefault();
+        dialog?.focus();
+        return;
+      }
+      const first = currentFocusable[0];
+      const last = currentFocusable[currentFocusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", trapFocus);
+    return () => {
+      document.removeEventListener("keydown", trapFocus);
+      previousFocusRef.current?.focus();
+    };
+  }, [activeModal]);
+
   return (
     <div
+      ref={dialogRef}
       className={`modal ${activeModal === "confirmDeleteOrg" ? "is-active" : ""}`}
       role="alertdialog"
       aria-modal="true"
       aria-labelledby="delete-group-title"
+      tabIndex={-1}
     >
       <button
         type="button"

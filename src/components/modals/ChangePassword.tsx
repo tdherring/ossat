@@ -67,6 +67,7 @@ const ChangePassword = () => {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault(); // Stop the page from refreshing upon submission.
+    if (loading) return;
 
     if (oldPassword !== "" && newPassword !== "" && confirmNewPassword !== "") {
       setSubmissionAttempt(false);
@@ -76,7 +77,15 @@ const ChangePassword = () => {
         .then((result) => {
           if (requestId !== requestIdRef.current) return;
           const payload = result.data?.passwordChange;
-          if (!payload) return;
+          if (!payload) {
+            setChangePasswordResult(null);
+            setChangePasswordResultErrors({
+              nonFieldErrors: [
+                { code: "request_failed", message: "Password change failed. Please try again." },
+              ],
+            });
+            return;
+          }
           setChangePasswordResult(payload);
           if (!payload.errors) {
             setChangePasswordResultErrors(null);
@@ -200,7 +209,11 @@ const ChangePassword = () => {
             ) : null}
           </section>
           <footer className="modal-card-foot" style={{ gap: "10px" }}>
-            <button className={`button is-primary ${loading && "is-loading"}`} type="submit">
+            <button
+              className={`button is-primary ${loading && "is-loading"}`}
+              type="submit"
+              disabled={loading}
+            >
               Change
             </button>
             <button type="button" className="button" onClick={closeModal}>

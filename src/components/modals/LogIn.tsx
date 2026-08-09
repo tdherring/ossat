@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect, type FormEvent } from "react";
+import { useContext, useState, useEffect, useRef, type FormEvent } from "react";
 import { ModalContext } from "../../contexts/ModalContext";
 import { UserContext } from "../../contexts/UserContext";
 import { gql } from "@apollo/client";
@@ -28,7 +28,7 @@ const LogIn = () => {
   const [password, setPassword] = useState("");
 
   // GraphQL mutation to login.
-  const [logIn] = useMutation<LogInData, { username: string; password: string }>(gql`
+  const [logIn, { loading }] = useMutation<LogInData, { username: string; password: string }>(gql`
     mutation LogIn($username: String!, $password: String!) {
       tokenAuth(username: $username, password: $password) {
         success
@@ -51,7 +51,9 @@ const LogIn = () => {
 
   // Track whether user has attempted to submit the login form.
   const [submissionAttempt, setSubmissionAttempt] = useState(false);
+  const requestIdRef = useRef(0);
   const closeModal = () => {
+    requestIdRef.current += 1;
     _setUsername("");
     setPassword("");
     setSubmissionAttempt(false);
@@ -62,10 +64,13 @@ const LogIn = () => {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault(); // Stop the page from refreshing upon submission.
+    if (loading) return;
     if (!(_username === "" || password === "")) {
       setSubmissionAttempt(false);
+      const requestId = ++requestIdRef.current;
       logIn({ variables: { username: _username, password } })
         .then((result) => {
+          if (requestId !== requestIdRef.current) return;
           const payload = result.data?.tokenAuth;
           if (!payload) {
             setLogInResultErrors({
@@ -90,13 +95,14 @@ const LogIn = () => {
             setLogInResultErrors(payload.errors);
           }
         })
-        .catch(() =>
+        .catch(() => {
+          if (requestId !== requestIdRef.current) return;
           setLogInResultErrors({
             nonFieldErrors: [
               { code: "request_failed", message: "Login failed. Please try again." },
             ],
-          }),
-        );
+          });
+        });
     } else {
       setSubmissionAttempt(true);
     }
@@ -181,7 +187,7 @@ const LogIn = () => {
             </button>
           </section>
           <footer className="modal-card-foot" style={{ gap: "10px" }}>
-            <button className="button is-primary" type="submit">
+            <button className="button is-primary" type="submit" disabled={loading}>
               Login
             </button>
             <button type="button" className="button" onClick={closeModal}>

@@ -148,9 +148,16 @@ class CPUScheduler {
    * @return An array of Processes, sorted by burst time.
    */
   sortProcessesByPriority(jobQueue: CPUProcess[]) {
+    if (
+      !jobQueue.every(
+        (process): process is CPUPriorityProcess => process instanceof CPUPriorityProcess,
+      )
+    ) {
+      throw new TypeError("Priority queues can only contain priority processes.");
+    }
     return jobQueue.sort(
       (a, b) =>
-        (a as CPUPriorityProcess).getPriority() - (b as CPUPriorityProcess).getPriority() ||
+        a.getPriority() - b.getPriority() ||
         a.getArrivalTime() - b.getArrivalTime() ||
         a.getBurstTime() - b.getBurstTime() ||
         a.getName().localeCompare(b.getName()),

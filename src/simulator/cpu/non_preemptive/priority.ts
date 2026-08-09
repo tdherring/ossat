@@ -1,5 +1,17 @@
 import CPUScheduler from "../cpu_scheduler";
 class Priority extends CPUScheduler {
+  override createProcess(
+    name: string,
+    arrivalTime: number,
+    burstTime: number,
+    priority: number | null = null,
+  ) {
+    if (priority === null) {
+      throw new TypeError("Priority processes require a priority value.");
+    }
+    super.createProcess(name, arrivalTime, burstTime, priority);
+  }
+
   /** Generates a SJF schedule for a set of input priority processes. */
   dispatchProcesses() {
     console.debug("\nOSSAT-Priority\n-----------------------------------------");

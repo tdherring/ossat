@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react";
+import { useCallback, useContext, useState, useEffect } from "react";
 import { Pause, Play, SkipBack, SkipForward, StepBack, StepForward } from "lucide-react";
 import { ModalContext } from "../../../../contexts/ModalContext";
 import { MemoryManagerContext, type ManagerName } from "../../../../contexts/MemoryManagerContext";
@@ -28,15 +28,21 @@ const MemoryControls = ({ policyDescription }: { policyDescription: string }) =>
 
   const [pendingManagerName, setPendingManagerName] = useState<ManagerName | null>(null);
 
+  const stopPlayback = useCallback(() => {
+    setAutoAllocating(false);
+    setIntervalVal((currentInterval) => {
+      if (currentInterval) clearInterval(currentInterval);
+      return null;
+    });
+  }, []);
+
   // Stop the auto allocator from overflowing the allocation boundaries.
   useEffect(() => {
     if (Object.keys(allocated).length > 0 && timeDelta >= Object.keys(allocated).length) {
-      setAutoAllocating(false);
-      if (intervalVal) clearInterval(intervalVal);
+      stopPlayback();
     }
-    if (!autoAllocating && intervalVal) clearInterval(intervalVal);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [timeDelta, intervalVal]);
+    if (!autoAllocating && intervalVal) stopPlayback();
+  }, [allocated, autoAllocating, intervalVal, stopPlayback, timeDelta]);
 
   useEffect(
     () => () => {
@@ -49,9 +55,7 @@ const MemoryControls = ({ policyDescription }: { policyDescription: string }) =>
     const demo = MEMORY_DEMOS.find(({ id }) => id === demoId);
     if (!demo) return;
 
-    setAutoAllocating(false);
-    if (intervalVal) clearInterval(intervalVal);
-    setIntervalVal(null);
+    stopPlayback();
 
     const nextManager = populateMemoryDemo(Manager, demo);
 
@@ -69,7 +73,7 @@ const MemoryControls = ({ policyDescription }: { policyDescription: string }) =>
       icon: SkipBack,
       action: () => {
         setTimeDelta(0);
-        setAutoAllocating(false);
+        stopPlayback();
       },
     },
     {
@@ -77,7 +81,7 @@ const MemoryControls = ({ policyDescription }: { policyDescription: string }) =>
       icon: StepBack,
       action: () => {
         if (timeDelta > 0) setTimeDelta(timeDelta - 1);
-        setAutoAllocating(false);
+        stopPlayback();
       },
     },
     {
@@ -86,9 +90,7 @@ const MemoryControls = ({ policyDescription }: { policyDescription: string }) =>
       action: () => {
         if (jobQueue.length === 0 || blocks.length === 0) return;
         if (autoAllocating) {
-          setAutoAllocating(false);
-          if (intervalVal) clearInterval(intervalVal);
-          setIntervalVal(null);
+          stopPlayback();
           return;
         }
         activeManager.allocateProcesses();
@@ -103,7 +105,7 @@ const MemoryControls = ({ policyDescription }: { policyDescription: string }) =>
             ),
           );
         } else {
-          setAutoAllocating(false);
+          stopPlayback();
         }
       },
     },
@@ -112,7 +114,7 @@ const MemoryControls = ({ policyDescription }: { policyDescription: string }) =>
       icon: StepForward,
       action: () => {
         if (timeDelta < Object.keys(allocated).length) setTimeDelta(timeDelta + 1);
-        setAutoAllocating(false);
+        stopPlayback();
       },
     },
     {
@@ -120,7 +122,7 @@ const MemoryControls = ({ policyDescription }: { policyDescription: string }) =>
       icon: SkipForward,
       action: () => {
         setTimeDelta(Object.keys(allocated).length);
-        setAutoAllocating(false);
+        stopPlayback();
       },
     },
   ];
@@ -135,7 +137,7 @@ const MemoryControls = ({ policyDescription }: { policyDescription: string }) =>
               <select
                 value={activeManagerName}
                 onChange={(event) => {
-                  setAutoAllocating(false);
+                  stopPlayback();
                   const managerName = event.currentTarget.value as ManagerName;
 
                   if (blocks.length > 0 || jobQueue.length > 0) {
@@ -192,7 +194,7 @@ const MemoryControls = ({ policyDescription }: { policyDescription: string }) =>
         showReset={jobQueue.length > 0 || blocks.length > 0}
         onReset={() => {
           setActiveModal("resetMemory");
-          setAutoAllocating(false);
+          stopPlayback();
         }}
       />
       <AddMemoryBlock />

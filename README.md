@@ -5,7 +5,7 @@
   </a>
 </p>
 
-> A visually pleasing and easy to use web-based CPU Scheduler and Memory Management Simulator, implementing assessment mechanisms with machine learning, organisation management, and data visualisation capabilities. The API for this project can be found [here](https://github.com/tdherring/ossat-api/).
+> A visually pleasing and easy to use web-based CPU Scheduler and Memory Management Simulator, implementing assessment mechanisms with machine learning, organisation management, and data visualisation capabilities. The API for this project is available in the [OSSAT API repository](https://github.com/tdherring/ossat-api/).
 
 ## Frontend demo data
 
